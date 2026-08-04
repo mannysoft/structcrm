@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StructCRM - Construction Management</title>
+    <meta name="description" content="Premium Construction CRM — manage leads, projects, tasks, invoices, and change orders in one place.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div id="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="brand">
+                <i data-lucide="building-2" class="brand-icon"></i>
+                <h1>StructCRM</h1>
+            </div>
+
+            <nav class="nav-menu">
+                <a href="#dashboard" class="nav-item active" data-view="dashboard">
+                    <i data-lucide="layout-dashboard"></i> Dashboard
+                </a>
+                <div class="nav-section">CRM</div>
+                <a href="#leads" class="nav-item" data-view="leads">
+                    <i data-lucide="users"></i> Leads &amp; Estimates
+                </a>
+                <a href="#client-portal" class="nav-item" data-view="client-portal">
+                    <i data-lucide="globe"></i> Client Portal
+                </a>
+
+                <div class="nav-section">Project Management</div>
+                <a href="#projects" class="nav-item" data-view="projects">
+                    <i data-lucide="briefcase"></i> Projects
+                </a>
+                <a href="#tasks" class="nav-item" data-view="tasks">
+                    <i data-lucide="check-square"></i> Tasks
+                </a>
+                <a href="#change-orders" class="nav-item" data-view="change-orders">
+                    <i data-lucide="file-diff"></i> Change Orders
+                </a>
+                <a href="#photos" class="nav-item" data-view="photos">
+                    <i data-lucide="camera"></i> Photos
+                </a>
+
+                <div class="nav-section">Financials</div>
+                <a href="#invoices" class="nav-item" data-view="invoices">
+                    <i data-lucide="receipt"></i> Invoices
+                </a>
+
+                <div class="nav-section">System</div>
+                <a href="#settings" class="nav-item" data-view="settings">
+                    <i data-lucide="settings"></i> Settings
+                </a>
+            </nav>
+
+            <div class="theme-toggle-container">
+                <button class="theme-toggle-btn" id="theme-toggle-btn">
+                    <i data-lucide="moon"></i>
+                    <span>Dark Mode</span>
+                </button>
+            </div>
+
+            <div class="user-profile" id="user-profile-btn">
+                <img src="https://ui-avatars.com/api/?name=Admin+User&background=0D8ABC&color=fff" alt="User Avatar" class="avatar">
+                <div class="user-info">
+                    <span class="user-name">Admin User</span>
+                    <span class="user-role">Project Manager</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-left">
+                    <button id="mobile-menu-btn" class="icon-btn mobile-only">
+                        <i data-lucide="menu"></i>
+                    </button>
+                    <h2 id="current-view-title">Dashboard</h2>
+                </div>
+                <div class="header-right">
+                    <div class="search-wrapper" id="search-wrapper">
+                        <div class="search-bar">
+                            <i data-lucide="search"></i>
+                            <input type="text" id="global-search-input" placeholder="Search projects, tasks, or leads...">
+                        </div>
+                        <div class="search-results" id="search-results"></div>
+                    </div>
+                    <div style="position:relative;">
+                        <button class="icon-btn notification-btn" id="notification-btn">
+                            <i data-lucide="bell"></i>
+                            <span class="badge" id="notification-badge">0</span>
+                        </button>
+                        <div class="notification-panel" id="notification-panel">
+                            <div class="notification-panel-header">
+                                <h4>Notifications</h4>
+                                <button class="btn-sm" id="mark-all-read-btn" style="margin-top:0;">Mark all read</button>
+                            </div>
+                            <div class="notification-panel-body" id="notification-list"></div>
+                        </div>
+                    </div>
+                    <button class="primary-btn" id="new-item-btn">
+                        <i data-lucide="plus"></i> New
+                    </button>
+                </div>
+            </header>
+
+            <div class="content-area" id="content-area">
+                <!-- Views will be injected here by app.js -->
+            </div>
+        </main>
+
+        <!-- Global Modal -->
+        <div class="modal-overlay" id="global-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modal-title">Create New</h3>
+                    <button class="icon-btn" id="close-modal-btn">
+                        <i data-lucide="x"></i>
+                    </button>
+                </div>
+                <div class="modal-body" id="modal-body">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================
+         TEMPLATES
+         ======================================== -->
+
+    <!-- DASHBOARD -->
+    <template id="view-dashboard">
+        <div class="dashboard-grid" id="dashboard-stats">
+            <!-- Populated by JS from data store -->
+        </div>
+        <div class="dashboard-widgets">
+            <div class="widget recent-activity">
+                <h3>Recent Activity</h3>
+                <ul class="activity-list" id="dashboard-activity"></ul>
+            </div>
+            <div class="widget upcoming-deadlines">
+                <h3>Upcoming Tasks</h3>
+                <ul class="task-list" id="dashboard-tasks"></ul>
+            </div>
+        </div>
+        <div class="dashboard-charts">
+            <div class="chart-container">
+                <h3>Revenue Overview</h3>
+                <div class="chart-canvas-wrapper">
+                    <canvas id="revenue-chart" height="220"></canvas>
+                </div>
+                <div class="chart-legend" id="revenue-legend"></div>
+            </div>
+            <div class="chart-container">
+                <h3>Project Status</h3>
+                <div class="chart-canvas-wrapper" style="max-width:220px;margin:0 auto;">
+                    <canvas id="status-chart" width="220" height="220"></canvas>
+                    <div class="donut-center-label">
+                        <span class="donut-value" id="donut-total">0</span>
+                        <span class="donut-label">Projects</span>
+                    </div>
+                </div>
+                <div class="chart-legend" id="status-legend"></div>
+            </div>
+        </div>
+    </template>
+
+    <!-- LEADS -->
+    <template id="view-leads">
+        <div class="page-header">
+            <p class="subtitle">Manage potential clients and generate estimates.</p>
+        </div>
+        <div class="kanban-board" id="leads-board">
+            <div class="kanban-column" data-status="New">
+                <div class="column-header">
+                    <h4>New Leads <span class="count" id="count-new">0</span></h4>
+                </div>
+                <div class="column-content" id="leads-new"></div>
+            </div>
+            <div class="kanban-column" data-status="Contacted">
+                <div class="column-header">
+                    <h4>Contacted <span class="count" id="count-contacted">0</span></h4>
+                </div>
+                <div class="column-content" id="leads-contacted"></div>
+            </div>
+            <div class="kanban-column" data-status="Estimate Sent">
+                <div class="column-header">
+                    <h4>Estimate Sent <span class="count" id="count-estimate">0</span></h4>
+                </div>
+                <div class="column-content" id="leads-estimate"></div>
+            </div>
+            <div class="kanban-column" data-status="Won">
+                <div class="column-header">
+                    <h4>Won <span class="count" id="count-won">0</span></h4>
+                </div>
+                <div class="column-content" id="leads-won"></div>
+            </div>
+        </div>
+    </template>
+
+    <!-- PROJECTS -->
+    <template id="view-projects">
+        <div class="page-header">
+            <p class="subtitle">Overview of all active and completed construction projects.</p>
+        </div>
+        <div class="data-table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Project Name</th>
+                        <th>Client</th>
+                        <th>Status</th>
+                        <th>Progress</th>
+                        <th>Timeline</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="projects-table-body"></tbody>
+            </table>
+        </div>
+    </template>
+
+    <!-- PROJECT DETAIL -->
+    <template id="view-project-detail">
+        <div class="project-detail" id="project-detail-container">
+            <!-- Populated by JS -->
+        </div>
+    </template>
+
+    <!-- TASKS -->
+    <template id="view-tasks">
+        <div class="page-header">
+            <p class="subtitle">Manage your daily tasks and project milestones.</p>
+            <div class="filters">
+                <select class="select-input" id="task-filter-project"><option value="">All Projects</option></select>
+                <select class="select-input" id="task-filter-priority">
+                    <option value="">All Priorities</option>
+                    <option value="high">High</option>
+                    <option value="med">Medium</option>
+                    <option value="low">Low</option>
+                </select>
+            </div>
+        </div>
+        <div class="task-grid" id="tasks-container"></div>
+    </template>
+
+    <!-- CHANGE ORDERS -->
+    <template id="view-change-orders">
+        <div class="page-header">
+            <p class="subtitle">Track and approve modifications to project scope and budget.</p>
+        </div>
+        <div class="cards-grid" id="co-container"></div>
+    </template>
+
+    <!-- PHOTOS -->
+    <template id="view-photos">
+        <div class="page-header">
+            <p class="subtitle">Site photos and progress documentation.</p>
+            <div class="action-bar">
+                <button class="secondary-btn"><i data-lucide="upload"></i> Upload Photos</button>
+            </div>
+        </div>
+        <div class="photo-gallery" id="photo-gallery"></div>
+    </template>
+
+    <!-- INVOICES -->
+    <template id="view-invoices">
+        <div class="page-header">
+            <p class="subtitle">Manage client billing and track payments.</p>
+        </div>
+        <div class="data-table-container">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Invoice #</th>
+                        <th>Project</th>
+                        <th>Amount</th>
+                        <th>Issue Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="invoices-table-body"></tbody>
+            </table>
+        </div>
+    </template>
+
+    <!-- CLIENT PORTAL -->
+    <template id="view-client-portal">
+        <div class="client-portal-preview">
+            <div class="portal-banner">
+                <h2>Client Portal Preview</h2>
+                <p>This is what your clients see when they log in to view their project progress.</p>
+            </div>
+            <div class="portal-mockup" id="portal-mockup">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </template>
+
+    <!-- SETTINGS -->
+    <template id="view-settings">
+        <div class="settings-page">
+            <div class="settings-section">
+                <div class="settings-section-header">
+                    <i data-lucide="user"></i> Profile
+                </div>
+                <div class="settings-section-body">
+                    <div class="settings-profile-card">
+                        <img src="https://ui-avatars.com/api/?name=Admin+User&background=0D8ABC&color=fff&size=128" alt="Avatar" class="settings-avatar">
+                        <div class="settings-profile-info">
+                            <h4>Admin User</h4>
+                            <p>Project Manager</p>
+                        </div>
+                    </div>
+                    <div class="modal-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Full Name</label>
+                                <input type="text" class="form-input" id="settings-name" value="Admin User">
+                            </div>
+                            <div class="form-group">
+                                <label>Role</label>
+                                <input type="text" class="form-input" id="settings-role" value="Project Manager">
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button class="primary-btn" id="save-profile-btn" style="padding:8px 20px;">Save Profile</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <div class="settings-section-header">
+                    <i data-lucide="palette"></i> Appearance
+                </div>
+                <div class="settings-section-body">
+                    <div class="settings-row">
+                        <div class="settings-label">
+                            <strong>Dark Mode</strong>
+                            <span>Switch between light and dark themes</span>
+                        </div>
+                        <button class="secondary-btn" id="settings-theme-toggle">
+                            <i data-lucide="moon"></i> Toggle
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <div class="settings-section-header">
+                    <i data-lucide="database"></i> Data Management
+                </div>
+                <div class="settings-section-body">
+                    <div class="settings-row">
+                        <div class="settings-label">
+                            <strong>Export Data</strong>
+                            <span>Download all your data as a JSON file</span>
+                        </div>
+                        <button class="secondary-btn" id="export-data-btn">
+                            <i data-lucide="download"></i> Export
+                        </button>
+                    </div>
+                    <div class="settings-row">
+                        <div class="settings-label">
+                            <strong>Import Data</strong>
+                            <span>Restore data from a previously exported file</span>
+                        </div>
+                        <button class="secondary-btn" id="import-data-btn">
+                            <i data-lucide="upload"></i> Import
+                        </button>
+                        <input type="file" id="import-file-input" accept=".json" style="display:none;">
+                    </div>
+                    <div class="settings-row">
+                        <div class="settings-label">
+                            <strong>Clear All Data</strong>
+                            <span>Permanently delete all stored data</span>
+                        </div>
+                        <button class="danger-btn" id="clear-data-btn">
+                            <i data-lucide="trash-2"></i> Clear
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script src="app.js"></script>
+</body>
+</html>
