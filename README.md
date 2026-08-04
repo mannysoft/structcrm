@@ -57,7 +57,7 @@ The software should help contractors:
 
 ## Backend
 
-- Laravel 12
+- Laravel 13
 - PHP 8.4+
 - MySQL
 - Redis
