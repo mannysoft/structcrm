@@ -30,11 +30,14 @@ $logout = function (Logout $logout) {
                     <x-nav-link :href="route('projects.index')" :active="request()->routeIs('projects.*')" wire:navigate>
                         {{ __('Projects') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('companies.index')" :active="request()->routeIs('companies.*')" wire:navigate>
-                        {{ __('Company') }}
+                    <x-nav-link :href="route('clients.index')" :active="request()->routeIs('clients.*')" wire:navigate>
+                        {{ __('Clients') }}
                     </x-nav-link>
                     <x-nav-link :href="route('leads.index')" :active="request()->routeIs('leads.*')" wire:navigate>
                         {{ __('Leads') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('companies.index')" :active="request()->routeIs('companies.*')" wire:navigate>
+                        {{ __('Company') }}
                     </x-nav-link>
                 </div>
             </div>
@@ -90,11 +93,14 @@ $logout = function (Logout $logout) {
             <x-responsive-nav-link :href="route('projects.index')" :active="request()->routeIs('projects.*')" wire:navigate>
                 {{ __('Projects') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('companies.index')" :active="request()->routeIs('companies.*')" wire:navigate>
-                {{ __('Company') }}
+            <x-responsive-nav-link :href="route('clients.index')" :active="request()->routeIs('clients.*')" wire:navigate>
+                {{ __('Clients') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('leads.index')" :active="request()->routeIs('leads.*')" wire:navigate>
                 {{ __('Leads') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('companies.index')" :active="request()->routeIs('companies.*')" wire:navigate>
+                {{ __('Company') }}
             </x-responsive-nav-link>
         </div>
 
