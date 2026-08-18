@@ -36,6 +36,9 @@ Route::middleware('auth')->group(function () {
     Volt::route('change-orders', 'change_orders.index')->name('change_orders.index');
     Volt::route('change-orders/create', 'change_orders.create')->name('change_orders.create');
     Volt::route('change-orders/{changeOrder}/edit', 'change_orders.edit')->name('change_orders.edit');
+    Volt::route('purchase-orders', 'purchase_orders.index')->name('purchase_orders.index');
+    Volt::route('purchase-orders/create', 'purchase_orders.create')->name('purchase_orders.create');
+    Volt::route('purchase-orders/{purchaseOrder}/edit', 'purchase_orders.edit')->name('purchase_orders.edit');
 });
 
 require __DIR__.'/auth.php';
