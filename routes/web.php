@@ -1,15 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Livewire\Volt\Volt;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::view('/', 'welcome');
 
-// For now, protecting routes behind auth is commented out until Auth is fully scaffolded,
-// but the Volt components are ready to be used.
-// Volt::route('/projects', 'projects.index')->name('projects.index');
-// Volt::route('/projects/create', 'projects.create')->name('projects.create');
-// Volt::route('/companies', 'companies.index')->name('companies.index');
-// Volt::route('/companies/settings', 'companies.settings')->name('companies.settings');
+Route::view('dashboard', 'dashboard')
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
+
+Route::view('profile', 'profile')
+    ->middleware(['auth'])
+    ->name('profile');
+
+require __DIR__.'/auth.php';
