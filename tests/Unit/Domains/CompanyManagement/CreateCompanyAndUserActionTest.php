@@ -2,34 +2,40 @@
 
 declare(strict_types=1);
 
+namespace Tests\Unit\Domains\CompanyManagement;
+
 use App\Domains\CompanyManagement\Actions\CreateCompanyAndUserAction;
 use App\Domains\CompanyManagement\DTOs\RegisterTenantData;
-use Illuminate\Support\Facades\Hash;
-use App\Models\User;
 use App\Domains\CompanyManagement\Models\Company;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
+use Tests\TestCase;
 
-uses(Tests\TestCase::class, Illuminate\Foundation\Testing\RefreshDatabase::class);
+class CreateCompanyAndUserActionTest extends TestCase
+{
+    use RefreshDatabase;
 
-test('create company and user action provisions new tenant', function () {
-    $action = app(CreateCompanyAndUserAction::class);
-    
-    $dto = new RegisterTenantData(
-        companyName: 'Stark Industries',
-        userName: 'Tony Stark',
-        email: 'tony@stark.com',
-        password: 'password123',
-    );
+    public function test_create_company_and_user_action_provisions_new_tenant(): void
+    {
+        $action = app(CreateCompanyAndUserAction::class);
 
-    $user = $action->execute($dto);
+        $dto = new RegisterTenantData(
+            companyName: 'Stark Industries',
+            userName: 'Tony Stark',
+            email: 'tony@stark.com',
+            password: 'password123',
+        );
 
-    // Assert user created
-    expect($user)->toBeInstanceOf(User::class)
-        ->and($user->name)->toBe('Tony Stark')
-        ->and($user->email)->toBe('tony@stark.com')
-        ->and(Hash::check('password123', $user->password))->toBeTrue();
+        $user = $action->execute($dto);
 
-    // Assert company created and linked
-    $company = Company::find($user->company_id);
-    expect($company)->not->toBeNull()
-        ->and($company->name)->toBe('Stark Industries');
-});
+        $this->assertInstanceOf(User::class, $user);
+        $this->assertSame('Tony Stark', $user->name);
+        $this->assertSame('tony@stark.com', $user->email);
+        $this->assertTrue(Hash::check('password123', $user->password));
+
+        $company = Company::find($user->company_id);
+        $this->assertNotNull($company);
+        $this->assertSame('Stark Industries', $company->name);
+    }
+}

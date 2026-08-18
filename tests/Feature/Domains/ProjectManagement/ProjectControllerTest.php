@@ -2,56 +2,58 @@
 
 declare(strict_types=1);
 
+namespace Tests\Feature\Domains\ProjectManagement;
+
 use App\Domains\CompanyManagement\Models\Company;
-use App\Models\User;
-use App\Domains\ProjectManagement\Models\Project;
 use App\Domains\ProjectManagement\Enums\ProjectStatus;
+use App\Domains\ProjectManagement\Models\Project;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
-uses(Tests\TestCase::class, Illuminate\Foundation\Testing\RefreshDatabase::class);
+class ProjectControllerTest extends TestCase
+{
+    use RefreshDatabase;
 
-test('a user can create a project and it is scoped to their company', function () {
-    // Arrange
-    $company = Company::create(['name' => 'Acme Corp', 'uuid' => str()->uuid()]);
-    $user = User::factory()->create(['company_id' => $company->id]);
-    
-    // Act
-    $response = $this->actingAs($user)->postJson('/api/projects', [
-        'name' => 'Highrise Construction',
-        'status' => ProjectStatus::Active->value,
-        'budget' => 50000.50,
-    ]);
-    
-    // Assert
-    $response->assertCreated();
-    
-    $this->assertDatabaseHas('projects', [
-        'company_id' => $company->id,
-        'name' => 'Highrise Construction',
-        'budget_amount' => 5000050, // Stored in cents
-    ]);
-});
+    public function test_a_user_can_create_a_project_and_it_is_scoped_to_their_company(): void
+    {
+        $company = Company::factory()->create();
+        $user = User::factory()->create(['company_id' => $company->id]);
 
-test('a user cannot access projects belonging to another tenant', function () {
-    $companyA = Company::create(['name' => 'Company A', 'uuid' => str()->uuid()]);
-    $companyB = Company::create(['name' => 'Company B', 'uuid' => str()->uuid()]);
-    
-    $userA = User::factory()->create(['company_id' => $companyA->id]);
-    
-    // Insert bypassing scope or via factory mapping
-    $projectB = Project::withoutEvents(function () use ($companyB) {
-        return Project::create([
-            'company_id' => $companyB->id,
-            'name' => 'Project B',
-            'status' => ProjectStatus::Draft,
-            'budget_amount' => 1000,
-            'budget_currency' => 'USD'
+        $response = $this->actingAs($user)->postJson('/api/projects', [
+            'name' => 'Highrise Construction',
+            'status' => ProjectStatus::Active->value,
+            'budget' => 50000.50,
         ]);
-    });
-    
-    $this->actingAs($userA);
-    
-    // Attempting to retrieve a project from another company via global scope
-    $project = Project::find($projectB->id);
-    
-    expect($project)->toBeNull();
-});
+
+        $response->assertCreated();
+
+        $this->assertDatabaseHas('projects', [
+            'company_id' => $company->id,
+            'name' => 'Highrise Construction',
+            'budget_amount' => 5000050,
+        ]);
+    }
+
+    public function test_a_user_cannot_access_projects_belonging_to_another_tenant(): void
+    {
+        $companyA = Company::factory()->create();
+        $companyB = Company::factory()->create();
+
+        $userA = User::factory()->create(['company_id' => $companyA->id]);
+
+        $projectB = Project::withoutEvents(function () use ($companyB) {
+            return Project::create([
+                'company_id' => $companyB->id,
+                'name' => 'Project B',
+                'status' => ProjectStatus::Draft,
+                'budget_amount' => 1000,
+                'budget_currency' => 'USD',
+            ]);
+        });
+
+        $this->actingAs($userA);
+
+        $this->assertNull(Project::find($projectB->id));
+    }
+}
