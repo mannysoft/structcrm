@@ -11,3 +11,5 @@ Route::get('/', function () {
 // but the Volt components are ready to be used.
 // Volt::route('/projects', 'projects.index')->name('projects.index');
 // Volt::route('/projects/create', 'projects.create')->name('projects.create');
+// Volt::route('/companies', 'companies.index')->name('companies.index');
+// Volt::route('/companies/settings', 'companies.settings')->name('companies.settings');

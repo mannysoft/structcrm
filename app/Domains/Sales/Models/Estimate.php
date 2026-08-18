@@ -35,6 +35,16 @@ class Estimate extends Model
         'amount' => 'integer',
     ];
 
+    /**
+     * The columns that should receive a unique identifier.
+     *
+     * @return array<int, string>
+     */
+    public function uniqueIds(): array
+    {
+        return ['uuid'];
+    }
+
     public Money $estimateAmount {
         get => new Money($this->amount, $this->currency);
         set (Money $money) {

@@ -28,4 +28,14 @@ class Lead extends Model
     protected $casts = [
         'status' => LeadStatus::class,
     ];
+
+    /**
+     * The columns that should receive a unique identifier.
+     *
+     * @return array<int, string>
+     */
+    public function uniqueIds(): array
+    {
+        return ['uuid'];
+    }
 }
