@@ -1,9 +1,10 @@
 <?php
 
+use App\Domains\CompanyManagement\Actions\CreateCompanyAndUserAction;
+use App\Domains\CompanyManagement\DTOs\RegisterTenantData;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 
 use function Livewire\Volt\layout;
@@ -13,6 +14,7 @@ use function Livewire\Volt\state;
 layout('layouts.guest');
 
 state([
+    'company_name' => '',
     'name' => '',
     'email' => '',
     'password' => '',
@@ -20,6 +22,7 @@ state([
 ]);
 
 rules([
+    'company_name' => ['required', 'string', 'max:255'],
     'name' => ['required', 'string', 'max:255'],
     'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
     'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
@@ -28,9 +31,14 @@ rules([
 $register = function () {
     $validated = $this->validate();
 
-    $validated['password'] = Hash::make($validated['password']);
+    $user = app(CreateCompanyAndUserAction::class)->execute(new RegisterTenantData(
+        companyName: $validated['company_name'],
+        userName: $validated['name'],
+        email: $validated['email'],
+        password: $validated['password'],
+    ));
 
-    event(new Registered($user = User::create($validated)));
+    event(new Registered($user));
 
     Auth::login($user);
 
@@ -41,10 +49,17 @@ $register = function () {
 
 <div>
     <form wire:submit="register">
-        <!-- Name -->
+        <!-- Company Name -->
         <div>
+            <x-input-label for="company_name" :value="__('Company Name')" />
+            <x-text-input wire:model="company_name" id="company_name" class="block mt-1 w-full" type="text" name="company_name" required autofocus autocomplete="organization" />
+            <x-input-error :messages="$errors->get('company_name')" class="mt-2" />
+        </div>
+
+        <!-- Name -->
+        <div class="mt-4">
             <x-input-label for="name" :value="__('Name')" />
-            <x-text-input wire:model="name" id="name" class="block mt-1 w-full" type="text" name="name" required autofocus autocomplete="name" />
+            <x-text-input wire:model="name" id="name" class="block mt-1 w-full" type="text" name="name" required autocomplete="name" />
             <x-input-error :messages="$errors->get('name')" class="mt-2" />
         </div>
 
