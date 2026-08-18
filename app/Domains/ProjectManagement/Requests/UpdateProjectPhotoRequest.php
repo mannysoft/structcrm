@@ -12,7 +12,7 @@ class UpdateProjectPhotoRequest extends StoreProjectPhotoRequest
 {
     public function authorize(): bool
     {
-        $photo = $this->route('projectPhoto');
+        $photo = $this->route('project_photo');
 
         return $this->user()?->can('update', $photo) ?? false;
     }
@@ -31,7 +31,7 @@ class UpdateProjectPhotoRequest extends StoreProjectPhotoRequest
 
     public function toDTO(): ProjectPhotoData
     {
-        $photo = $this->route('projectPhoto');
+        $photo = $this->route('project_photo');
 
         return new ProjectPhotoData(
             projectId: (int) $this->validated('project_id'),

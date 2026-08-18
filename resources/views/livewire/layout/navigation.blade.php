@@ -36,6 +36,12 @@ $logout = function (Logout $logout) {
                     <x-nav-link :href="route('daily_logs.index')" :active="request()->routeIs('daily_logs.*')" wire:navigate>
                         {{ __('Daily Logs') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('project_photos.index')" :active="request()->routeIs('project_photos.*')" wire:navigate>
+                        {{ __('Site Photos') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('documents.index')" :active="request()->routeIs('documents.*')" wire:navigate>
+                        {{ __('Documents') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('clients.index')" :active="request()->routeIs('clients.*')" wire:navigate>
                         {{ __('Clients') }}
                     </x-nav-link>
@@ -122,6 +128,12 @@ $logout = function (Logout $logout) {
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('daily_logs.index')" :active="request()->routeIs('daily_logs.*')" wire:navigate>
                 {{ __('Daily Logs') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('project_photos.index')" :active="request()->routeIs('project_photos.*')" wire:navigate>
+                {{ __('Site Photos') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('documents.index')" :active="request()->routeIs('documents.*')" wire:navigate>
+                {{ __('Documents') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('clients.index')" :active="request()->routeIs('clients.*')" wire:navigate>
                 {{ __('Clients') }}

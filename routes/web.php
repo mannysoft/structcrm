@@ -31,6 +31,10 @@ Route::middleware('auth')->group(function () {
     Volt::route('daily-logs', 'daily_logs.index')->name('daily_logs.index');
     Volt::route('daily-logs/create', 'daily_logs.create')->name('daily_logs.create');
     Volt::route('daily-logs/{dailyLog}/edit', 'daily_logs.edit')->name('daily_logs.edit');
+    Volt::route('project-photos', 'project_photos.index')->name('project_photos.index');
+    Volt::route('project-photos/create', 'project_photos.create')->name('project_photos.create');
+    Volt::route('documents', 'documents.index')->name('documents.index');
+    Volt::route('documents/create', 'documents.create')->name('documents.create');
     Volt::route('suppliers', 'suppliers.index')->name('suppliers.index');
     Volt::route('suppliers/create', 'suppliers.create')->name('suppliers.create');
     Volt::route('suppliers/{supplier}/edit', 'suppliers.edit')->name('suppliers.edit');
