@@ -10,4 +10,5 @@ enum EstimateStatus: string
     case Sent = 'sent';
     case Approved = 'approved';
     case Rejected = 'rejected';
+    case Converted = 'converted';
 }
