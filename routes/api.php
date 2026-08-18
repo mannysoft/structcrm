@@ -6,6 +6,7 @@ use App\Domains\ProjectManagement\Controllers\TaskController;
 use App\Domains\Sales\Controllers\ChangeOrderController;
 use App\Domains\Sales\Controllers\ClientController;
 use App\Domains\Sales\Controllers\ExpenseController;
+use App\Domains\Sales\Controllers\InvoiceController;
 use App\Domains\Sales\Controllers\PurchaseOrderController;
 use App\Domains\Sales\Controllers\SupplierController;
 use Illuminate\Support\Facades\Route;
@@ -21,4 +22,5 @@ Route::name('api.')->group(function () {
     Route::apiResource('expenses', ExpenseController::class);
     Route::apiResource('change-orders', ChangeOrderController::class);
     Route::apiResource('purchase-orders', PurchaseOrderController::class);
+    Route::apiResource('invoices', InvoiceController::class);
 });
