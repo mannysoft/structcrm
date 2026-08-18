@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[ObservedBy([ProjectObserver::class])]
@@ -25,7 +26,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Project extends Model
 {
     /** @use HasFactory<ProjectFactory> */
-    use HasFactory, HasUuids, SoftDeletes, BelongsToTenant;
+    use BelongsToTenant, HasFactory, HasUuids, SoftDeletes;
 
     protected $fillable = [
         'company_id',
@@ -51,7 +52,7 @@ class Project extends Model
     // PHP 8.4 Property Hooks for Value Object hydration
     public Money $budget {
         get => new Money($this->budget_amount, $this->budget_currency);
-        set (Money $money) {
+        set(Money $money) {
             $this->budget_amount = $money->amountInCents;
             $this->budget_currency = $money->currency;
         }
@@ -103,5 +104,25 @@ class Project extends Model
     public function manager(): BelongsTo
     {
         return $this->belongsTo(User::class, 'manager_id');
+    }
+
+    /**
+     * Get the photos captured for the project.
+     *
+     * @return HasMany<ProjectPhoto, $this>
+     */
+    public function photos(): HasMany
+    {
+        return $this->hasMany(ProjectPhoto::class);
+    }
+
+    /**
+     * Get the documents attached to the project.
+     *
+     * @return HasMany<Document, $this>
+     */
+    public function documents(): HasMany
+    {
+        return $this->hasMany(Document::class);
     }
 }

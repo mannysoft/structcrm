@@ -35,6 +35,15 @@ Route::middleware('auth')->group(function () {
     Volt::route('project-photos/create', 'project_photos.create')->name('project_photos.create');
     Volt::route('documents', 'documents.index')->name('documents.index');
     Volt::route('documents/create', 'documents.create')->name('documents.create');
+    Volt::route('time-entries', 'time_entries.index')->name('time_entries.index');
+    Volt::route('time-entries/create', 'time_entries.create')->name('time_entries.create');
+    Volt::route('time-entries/{timeEntry}/edit', 'time_entries.edit')->name('time_entries.edit');
+    Volt::route('equipment', 'equipment.index')->name('equipment.index');
+    Volt::route('equipment/create', 'equipment.create')->name('equipment.create');
+    Volt::route('equipment/{equipment}/edit', 'equipment.edit')->name('equipment.edit');
+    Volt::route('maintenance-logs', 'maintenance_logs.index')->name('maintenance_logs.index');
+    Volt::route('maintenance-logs/create', 'maintenance_logs.create')->name('maintenance_logs.create');
+    Volt::route('portal', 'portal.index')->name('portal.index');
     Volt::route('suppliers', 'suppliers.index')->name('suppliers.index');
     Volt::route('suppliers/create', 'suppliers.create')->name('suppliers.create');
     Volt::route('suppliers/{supplier}/edit', 'suppliers.edit')->name('suppliers.edit');

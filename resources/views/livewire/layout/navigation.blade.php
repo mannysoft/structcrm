@@ -42,6 +42,18 @@ $logout = function (Logout $logout) {
                     <x-nav-link :href="route('documents.index')" :active="request()->routeIs('documents.*')" wire:navigate>
                         {{ __('Documents') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('time_entries.index')" :active="request()->routeIs('time_entries.*')" wire:navigate>
+                        {{ __('Time') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('equipment.index')" :active="request()->routeIs('equipment.*')" wire:navigate>
+                        {{ __('Equipment') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('maintenance_logs.index')" :active="request()->routeIs('maintenance_logs.*')" wire:navigate>
+                        {{ __('Maintenance') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('portal.index')" :active="request()->routeIs('portal.*')" wire:navigate>
+                        {{ __('Portal') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('clients.index')" :active="request()->routeIs('clients.*')" wire:navigate>
                         {{ __('Clients') }}
                     </x-nav-link>
@@ -134,6 +146,18 @@ $logout = function (Logout $logout) {
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('documents.index')" :active="request()->routeIs('documents.*')" wire:navigate>
                 {{ __('Documents') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('time_entries.index')" :active="request()->routeIs('time_entries.*')" wire:navigate>
+                {{ __('Time') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('equipment.index')" :active="request()->routeIs('equipment.*')" wire:navigate>
+                {{ __('Equipment') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('maintenance_logs.index')" :active="request()->routeIs('maintenance_logs.*')" wire:navigate>
+                {{ __('Maintenance') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('portal.index')" :active="request()->routeIs('portal.*')" wire:navigate>
+                {{ __('Portal') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('clients.index')" :active="request()->routeIs('clients.*')" wire:navigate>
                 {{ __('Clients') }}
