@@ -1,5 +1,6 @@
 <?php
 
+use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 use Livewire\Attributes\Validate;
 use Livewire\WithFileUploads;
@@ -8,7 +9,7 @@ use App\Domains\CompanyManagement\DTOs\CompanyData;
 use App\Domains\CompanyManagement\Enums\Currency;
 use App\Domains\CompanyManagement\Models\Company;
 
-new class extends Component {
+new #[Layout('layouts.app')] class extends Component {
     use WithFileUploads;
 
     #[Validate('required|string|max:255')]

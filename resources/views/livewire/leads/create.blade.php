@@ -1,12 +1,13 @@
 <?php
 
+use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 use Livewire\Attributes\Validate;
 use App\Domains\Sales\Actions\CreateLeadAction;
 use App\Domains\Sales\DTOs\LeadData;
 use App\Domains\Sales\Enums\LeadStatus;
 
-new class extends Component {
+new #[Layout('layouts.app')] class extends Component {
     #[Validate('required|string|max:255')]
     public string $first_name = '';
     

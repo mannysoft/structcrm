@@ -1,5 +1,6 @@
 <?php
 
+use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 use Livewire\Attributes\Validate;
 use App\Domains\ProjectManagement\Actions\CreateProjectAction;
@@ -8,7 +9,7 @@ use App\Domains\ProjectManagement\Enums\ProjectStatus;
 use App\Common\ValueObjects\Money;
 use Carbon\CarbonImmutable;
 
-new class extends Component {
+new #[Layout('layouts.app')] class extends Component {
     #[Validate('required|string|max:255')]
     public string $name = '';
     

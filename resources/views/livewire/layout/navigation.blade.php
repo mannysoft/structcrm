@@ -27,6 +27,15 @@ $logout = function (Logout $logout) {
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('projects.index')" :active="request()->routeIs('projects.*')" wire:navigate>
+                        {{ __('Projects') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('companies.index')" :active="request()->routeIs('companies.*')" wire:navigate>
+                        {{ __('Company') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('leads.index')" :active="request()->routeIs('leads.*')" wire:navigate>
+                        {{ __('Leads') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -77,6 +86,15 @@ $logout = function (Logout $logout) {
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" wire:navigate>
                 {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('projects.index')" :active="request()->routeIs('projects.*')" wire:navigate>
+                {{ __('Projects') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('companies.index')" :active="request()->routeIs('companies.*')" wire:navigate>
+                {{ __('Company') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('leads.index')" :active="request()->routeIs('leads.*')" wire:navigate>
+                {{ __('Leads') }}
             </x-responsive-nav-link>
         </div>
 

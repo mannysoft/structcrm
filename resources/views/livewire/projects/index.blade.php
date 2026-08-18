@@ -1,9 +1,10 @@
 <?php
 
+use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
 use App\Domains\ProjectManagement\Models\Project;
 
-new class extends Component {
+new #[Layout('layouts.app')] class extends Component {
     public function with(): array
     {
         return [
