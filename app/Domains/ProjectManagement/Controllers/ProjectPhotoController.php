@@ -45,27 +45,25 @@ final class ProjectPhotoController extends Controller
         return response()->json(new ProjectPhotoResource($photo), Response::HTTP_CREATED);
     }
 
-    public function show(Request $request, ProjectPhoto $photo): JsonResponse
+    public function show(Request $request, ProjectPhoto $projectPhoto): JsonResponse
     {
-        $this->authorize('view', $photo);
+        $this->authorize('view', $projectPhoto);
 
-        return response()->json(new ProjectPhotoResource($photo));
+        return response()->json(new ProjectPhotoResource($projectPhoto));
     }
 
-    public function update(UpdateProjectPhotoRequest $request, ProjectPhoto $photo): JsonResponse
+    public function update(UpdateProjectPhotoRequest $request, ProjectPhoto $projectPhoto): JsonResponse
     {
-        $dto = $request->toDTO();
+        $projectPhoto = $this->updateProjectPhotoAction->execute($projectPhoto, $request->toDTO());
 
-        $photo = $this->updateProjectPhotoAction->execute($photo, $dto);
-
-        return response()->json(new ProjectPhotoResource($photo));
+        return response()->json(new ProjectPhotoResource($projectPhoto));
     }
 
-    public function destroy(Request $request, ProjectPhoto $photo): JsonResponse
+    public function destroy(Request $request, ProjectPhoto $projectPhoto): JsonResponse
     {
-        $this->authorize('delete', $photo);
+        $this->authorize('delete', $projectPhoto);
 
-        $this->deleteProjectPhotoAction->execute($photo);
+        $this->deleteProjectPhotoAction->execute($projectPhoto);
 
         return response()->json(null, Response::HTTP_NO_CONTENT);
     }
