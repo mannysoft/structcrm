@@ -30,6 +30,9 @@ Route::middleware('auth')->group(function () {
     Volt::route('suppliers', 'suppliers.index')->name('suppliers.index');
     Volt::route('suppliers/create', 'suppliers.create')->name('suppliers.create');
     Volt::route('suppliers/{supplier}/edit', 'suppliers.edit')->name('suppliers.edit');
+    Volt::route('expenses', 'expenses.index')->name('expenses.index');
+    Volt::route('expenses/create', 'expenses.create')->name('expenses.create');
+    Volt::route('expenses/{expense}/edit', 'expenses.edit')->name('expenses.edit');
 });
 
 require __DIR__.'/auth.php';
