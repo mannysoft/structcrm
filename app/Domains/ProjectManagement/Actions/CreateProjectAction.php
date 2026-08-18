@@ -16,10 +16,14 @@ final class CreateProjectAction
         return DB::transaction(function () use ($data, $companyId) {
             $project = Project::create([
                 'company_id' => $companyId,
-                'name' => $data->name,
+                'client_id' => $data->clientId,
+                'project_number' => $data->projectNumber,
+                'title' => $data->title,
+                'description' => $data->description,
                 'status' => $data->status,
                 'budget_amount' => $data->budget->amountInCents,
                 'budget_currency' => $data->budget->currency,
+                'manager_id' => $data->managerId,
                 'start_date' => $data->startDate,
                 'end_date' => $data->endDate,
             ]);

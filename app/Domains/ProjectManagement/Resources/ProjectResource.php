@@ -13,10 +13,14 @@ class ProjectResource extends JsonResource
     {
         return [
             'id' => $this->uuid,
-            'name' => $this->name,
+            'project_number' => $this->project_number,
+            'title' => $this->title,
+            'description' => $this->description,
             'status' => $this->status->value,
             'budget' => $this->budget->toDecimal(),
             'currency' => $this->budget->currency,
+            'client_id' => $this->client_id,
+            'manager_id' => $this->manager_id,
             'start_date' => $this->start_date?->format('Y-m-d'),
             'end_date' => $this->end_date?->format('Y-m-d'),
             'created_at' => $this->created_at?->toIso8601String(),

@@ -1,15 +1,29 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 use App\Domains\CompanyManagement\Models\Company;
 use App\Domains\ProjectManagement\Models\Project;
+use App\Domains\Sales\Models\Client;
 use Illuminate\Database\Seeder;
 
 class ProjectSeeder extends Seeder
 {
     public function run(): void
     {
-        // Projects are created inside CompanySeeder or manually
+        $company = Company::factory()->create([
+            'name' => 'ConstructFlow Demo Builders',
+        ]);
+
+        $client = Client::factory()->create([
+            'company_id' => $company->id,
+        ]);
+
+        Project::factory()->count(3)->create([
+            'company_id' => $company->id,
+            'client_id' => $client->id,
+        ]);
     }
 }
