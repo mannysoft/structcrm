@@ -9,6 +9,7 @@ use App\Domains\CompanyManagement\Observers\CompanyObserver;
 use App\Models\User;
 use Database\Factories\CompanyFactory;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[ObservedBy([CompanyObserver::class])]
+#[UseFactory(CompanyFactory::class)]
 class Company extends Model
 {
     /** @use HasFactory<CompanyFactory> */

@@ -18,7 +18,7 @@ class CreateCompanyActionTest extends TestCase
 
     public function test_it_creates_a_company_with_a_uuid_and_slug(): void
     {
-        Event::fake();
+        Event::fake([CompanyCreated::class]);
 
         $action = app(CreateCompanyAction::class);
 
