@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Domains\ProjectManagement\Requests;
 
-use Illuminate\Validation\Rule;
+use App\Domains\ProjectManagement\DTOs\ProjectPhotoData;
 use App\Domains\ProjectManagement\Enums\PhotoCategory;
+use Illuminate\Validation\Rule;
 
 class UpdateProjectPhotoRequest extends StoreProjectPhotoRequest
 {
@@ -26,5 +27,19 @@ class UpdateProjectPhotoRequest extends StoreProjectPhotoRequest
             'photo' => ['nullable', 'image', 'max:5120'],
             'caption' => ['nullable', 'string', 'max:255'],
         ];
+    }
+
+    public function toDTO(): ProjectPhotoData
+    {
+        $photo = $this->route('projectPhoto');
+
+        return new ProjectPhotoData(
+            projectId: (int) $this->validated('project_id'),
+            category: PhotoCategory::from($this->validated('category')),
+            filePath: $this->hasFile('photo')
+                ? $this->file('photo')->store('project-photos')
+                : $photo->file_path,
+            caption: $this->validated('caption'),
+        );
     }
 }
