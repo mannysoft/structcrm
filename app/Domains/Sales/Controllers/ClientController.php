@@ -24,7 +24,7 @@ final class ClientController extends Controller
     {
         $clients = $this->clientService->list($request->user()->company_id);
 
-        return response()->json(ClientResource::collection($clients));
+        return ClientResource::collection($clients)->response();
     }
 
     public function store(StoreClientRequest $request): JsonResponse
