@@ -3,6 +3,7 @@
 use App\Domains\CompanyManagement\Controllers\CompanyController;
 use App\Domains\ProjectManagement\Controllers\ProjectController;
 use App\Domains\ProjectManagement\Controllers\TaskController;
+use App\Domains\Sales\Controllers\ChangeOrderController;
 use App\Domains\Sales\Controllers\ClientController;
 use App\Domains\Sales\Controllers\ExpenseController;
 use App\Domains\Sales\Controllers\SupplierController;
@@ -17,4 +18,5 @@ Route::name('api.')->group(function () {
     Route::apiResource('tasks', TaskController::class);
     Route::apiResource('suppliers', SupplierController::class);
     Route::apiResource('expenses', ExpenseController::class);
+    Route::apiResource('change-orders', ChangeOrderController::class);
 });

@@ -45,6 +45,9 @@ $logout = function (Logout $logout) {
                     <x-nav-link :href="route('expenses.index')" :active="request()->routeIs('expenses.*')" wire:navigate>
                         {{ __('Expenses') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('change_orders.index')" :active="request()->routeIs('change_orders.*')" wire:navigate>
+                        {{ __('Change Orders') }}
+                    </x-nav-link>
                     <x-nav-link :href="route('companies.index')" :active="request()->routeIs('companies.*')" wire:navigate>
                         {{ __('Company') }}
                     </x-nav-link>
@@ -113,6 +116,9 @@ $logout = function (Logout $logout) {
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('suppliers.index')" :active="request()->routeIs('suppliers.*')" wire:navigate>
                 {{ __('Suppliers') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('change_orders.index')" :active="request()->routeIs('change_orders.*')" wire:navigate>
+                {{ __('Change Orders') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('expenses.index')" :active="request()->routeIs('expenses.*')" wire:navigate>
                 {{ __('Expenses') }}
