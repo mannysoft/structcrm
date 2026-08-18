@@ -1,6 +1,7 @@
 <?php
 
 use App\Domains\CompanyManagement\Controllers\CompanyController;
+use App\Domains\ProjectManagement\Controllers\DailyLogController;
 use App\Domains\ProjectManagement\Controllers\ProjectController;
 use App\Domains\ProjectManagement\Controllers\TaskController;
 use App\Domains\Sales\Controllers\ChangeOrderController;
@@ -20,6 +21,7 @@ Route::name('api.')->group(function () {
     Route::apiResource('clients', ClientController::class);
     Route::apiResource('projects', ProjectController::class);
     Route::apiResource('tasks', TaskController::class);
+    Route::apiResource('daily-logs', DailyLogController::class);
     Route::apiResource('suppliers', SupplierController::class);
     Route::apiResource('expenses', ExpenseController::class);
     Route::apiResource('change-orders', ChangeOrderController::class);
