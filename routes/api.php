@@ -4,6 +4,7 @@ use App\Domains\CompanyManagement\Controllers\CompanyController;
 use App\Domains\ProjectManagement\Controllers\ProjectController;
 use App\Domains\ProjectManagement\Controllers\TaskController;
 use App\Domains\Sales\Controllers\ClientController;
+use App\Domains\Sales\Controllers\SupplierController;
 use Illuminate\Support\Facades\Route;
 
 // Note: these routes are intentionally not wrapped in auth middleware yet.
@@ -13,4 +14,5 @@ Route::name('api.')->group(function () {
     Route::apiResource('clients', ClientController::class);
     Route::apiResource('projects', ProjectController::class);
     Route::apiResource('tasks', TaskController::class);
+    Route::apiResource('suppliers', SupplierController::class);
 });
