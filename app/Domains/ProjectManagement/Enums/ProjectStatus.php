@@ -7,6 +7,7 @@ namespace App\Domains\ProjectManagement\Enums;
 enum ProjectStatus: string
 {
     case Draft = 'draft';
+    case Pending = 'pending';
     case Active = 'active';
     case OnHold = 'on_hold';
     case Completed = 'completed';

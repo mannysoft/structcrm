@@ -11,9 +11,13 @@ use Carbon\CarbonImmutable;
 final readonly class ProjectData
 {
     public function __construct(
-        public string $name,
+        public string $title,
+        public int $clientId,
         public ProjectStatus $status,
         public Money $budget,
+        public ?string $description = null,
+        public ?int $managerId = null,
+        public ?string $projectNumber = null,
         public ?CarbonImmutable $startDate = null,
         public ?CarbonImmutable $endDate = null,
     ) {}
