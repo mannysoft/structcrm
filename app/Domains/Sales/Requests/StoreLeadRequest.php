@@ -14,7 +14,7 @@ class StoreLeadRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user()->can('create', Lead::class);
+        return $this->user()?->can('create', Lead::class) ?? false;
     }
 
     public function rules(): array

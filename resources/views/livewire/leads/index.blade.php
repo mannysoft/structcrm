@@ -2,6 +2,7 @@
 
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
+use App\Domains\Sales\Actions\DeleteLeadAction;
 use App\Domains\Sales\Models\Lead;
 
 new #[Layout('layouts.app')] class extends Component {
@@ -10,6 +11,21 @@ new #[Layout('layouts.app')] class extends Component {
         return [
             'leads' => Lead::latest()->get(),
         ];
+    }
+
+    public function delete(DeleteLeadAction $action, string $uuid): void
+    {
+        $lead = Lead::where('uuid', $uuid)
+            ->where('company_id', auth()->user()->company_id)
+            ->first();
+
+        abort_unless($lead, 404);
+
+        $this->authorize('delete', $lead);
+
+        $action->execute($lead);
+
+        session()->flash('status', 'Lead deleted.');
     }
 }; ?>
 
@@ -20,7 +36,7 @@ new #[Layout('layouts.app')] class extends Component {
             <p class="mt-2 text-sm text-gray-700">A list of all prospective clients and leads.</p>
         </div>
         <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-            <a href="/leads/create" wire:navigate class="block px-3 py-2 text-sm font-semibold text-center text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+            <a href="{{ route('leads.create') }}" wire:navigate class="block px-3 py-2 text-sm font-semibold text-center text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                 Add lead
             </a>
         </div>
@@ -54,7 +70,8 @@ new #[Layout('layouts.app')] class extends Component {
                                         </span>
                                     </td>
                                     <td class="relative py-4 pl-3 pr-4 text-sm font-medium text-right whitespace-nowrap sm:pr-6">
-                                        <a href="#" class="text-indigo-600 hover:text-indigo-900">View<span class="sr-only">, {{ $lead->first_name }}</span></a>
+                                        <a href="{{ route('leads.edit', $lead) }}" wire:navigate class="text-indigo-600 hover:text-indigo-900">Edit</a>
+                                        <button wire:click="delete('{{ $lead->uuid }}')" wire:confirm="Are you sure you want to delete this lead?" class="ml-4 text-red-600 hover:text-red-900">Delete</button>
                                     </td>
                                 </tr>
                             @empty
