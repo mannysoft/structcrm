@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PurchaseOrderItem extends Model
 {
+    protected $table = 'po_items';
+
     protected $fillable = [
         'purchase_order_id',
         'description',
