@@ -16,6 +16,7 @@ Route::view('profile', 'profile')
 Route::middleware('auth')->group(function () {
     Volt::route('projects', 'projects.index')->name('projects.index');
     Volt::route('projects/create', 'projects.create')->name('projects.create');
+    Volt::route('projects/{project}/edit', 'projects.edit')->name('projects.edit');
     Volt::route('companies', 'companies.index')->name('companies.index');
     Volt::route('companies/settings', 'companies.settings')->name('companies.settings');
     Volt::route('leads', 'leads.index')->name('leads.index');

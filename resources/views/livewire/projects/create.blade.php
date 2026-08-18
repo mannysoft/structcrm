@@ -7,11 +7,19 @@ use App\Domains\ProjectManagement\Actions\CreateProjectAction;
 use App\Domains\ProjectManagement\DTOs\ProjectData;
 use App\Domains\ProjectManagement\Enums\ProjectStatus;
 use App\Common\ValueObjects\Money;
+use App\Domains\Sales\Models\Client;
+use App\Models\User;
 use Carbon\CarbonImmutable;
 
 new #[Layout('layouts.app')] class extends Component {
     #[Validate('required|string|max:255')]
-    public string $name = '';
+    public string $title = '';
+
+    #[Validate('required|integer|exists:clients,id')]
+    public string $client_id = '';
+
+    #[Validate('nullable|string')]
+    public string $description = '';
     
     #[Validate('required|string')]
     public string $status = 'draft';
@@ -19,19 +27,32 @@ new #[Layout('layouts.app')] class extends Component {
     #[Validate('required|numeric|min:0')]
     public string $budget = '';
     
-    #[Validate('nullable|date')]
-    public string $start_date = '';
-    
-    #[Validate('nullable|date|after_or_equal:start_date')]
-    public string $end_date = '';
+    #[Validate('nullable|integer|exists:users,id')]
+    public string $manager_id = '';
 
-    public function save(CreateProjectAction $action)
+    public function with(): array
     {
-        $this->validate();
+        $companyId = auth()->user()->company_id;
 
-        $dto = new ProjectData(
-            name: $this->name,
+        return [
+            'clients' => Client::where('company_id', $companyId)->latest()->get(),
+            'managers' => User::where('company_id', $companyId)->get(),
+        ];
+    }title: $this->title,
+            clientId: (int) $this->client_id,
             status: ProjectStatus::from($this->status),
+            budget: Money::fromDecimal((float) $this->budget),
+            description: $this->description ?: null,
+            managerId: $this->manager_id ? (int) $this->manager_id : null,
+            startDate: $this->start_date ? CarbonImmutable::parse($this->start_date) : null,
+            endDate: $this->end_date ? CarbonImmutable::parse($this->end_date) : null,
+        );
+
+        $action->execute($dto, auth()->user()->company_id);
+
+        session()->flash('status', 'Project successfully created.');
+
+        $this->redirect(route('projects.index')from($this->status),
             budget: Money::fromDecimal((float) $this->budget),
             startDate: $this->start_date ? CarbonImmutable::parse($this->start_date) : null,
             endDate: $this->end_date ? CarbonImmutable::parse($this->end_date) : null,
@@ -54,11 +75,45 @@ new #[Layout('layouts.app')] class extends Component {
             <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                 
                 <div class="sm:col-span-4">
-                    <label for="name" class="block text-sm font-medium leading-6 text-gray-900">Project Name</label>
+                    <label for="title" class="block text-sm font-medium leading-6 text-gray-900">Title</label>
                     <div class="mt-2">
-                        <input type="text" wire:model="name" id="name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <input type="text" wire:model="title" id="title" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                     </div>
-                    @error('name') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    @error('title') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                </div>
+
+                <div class="sm:col-span-3">
+                    <label for="client_id" class="block text-sm font-medium leading-6 text-gray-900">Client</label>
+                    <div class="mt-2">
+                        <select id="client_id" wire:model="client_id" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            <option value="">Select a client</option>
+                            @foreach ($clients as $client)
+                                <option value="{{ $client->id }}">{{ $client->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @error('client_id') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                </div>
+
+                <div class="sm:col-span-3">
+                    <label for="manager_id" class="block text-sm font-medium leading-6 text-gray-900">Manager</label>
+                    <div class="mt-2">
+                        <select id="manager_id" wire:model="manager_id" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            <option value="">No manager</option>
+                            @foreach ($managers as $manager)
+                                <option value="{{ $manager->id }}">{{ $manager->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @error('manager_id') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                </div>
+
+                <div class="col-span-full">
+                    <label for="description" class="block text-sm font-medium leading-6 text-gray-900">Description</label>
+                    <div class="mt-2">
+                        <textarea id="description" wire:model="description" rows="3" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                    </div>
+                    @error('description') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
                 </div>
 
                 <div class="sm:col-span-3">
@@ -66,9 +121,11 @@ new #[Layout('layouts.app')] class extends Component {
                     <div class="mt-2">
                         <select id="status" wire:model="status" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                             <option value="draft">Draft</option>
+                            <option value="pending">Pending</option>
                             <option value="active">Active</option>
                             <option value="on_hold">On Hold</option>
                             <option value="completed">Completed</option>
+                            <option value="archived">Archived</option>
                         </select>
                     </div>
                     @error('status') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
