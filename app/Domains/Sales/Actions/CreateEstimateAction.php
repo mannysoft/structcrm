@@ -13,18 +13,34 @@ final class CreateEstimateAction
     public function execute(EstimateData $data, int $companyId): Estimate
     {
         return DB::transaction(function () use ($data, $companyId) {
+            $subtotal = collect($data->items)->sum(
+                fn (array $item) => $item['quantity'] * $item['unit_price'],
+            );
+            $taxAmount = (int) round($subtotal * $data->taxRate / 100);
+            $total = $subtotal + $taxAmount;
+
             $estimate = Estimate::create([
                 'company_id' => $companyId,
                 'lead_id' => $data->leadId,
                 'project_id' => $data->projectId,
                 'title' => $data->title,
-                'amount' => $data->amount->amountInCents,
-                'currency' => $data->amount->currency,
+                'subtotal' => $subtotal,
+                'tax_amount' => $taxAmount,
+                'amount' => $total,
                 'status' => $data->status,
                 'valid_until' => $data->validUntil,
             ]);
 
-            return $estimate;
+            foreach ($data->items as $item) {
+                $estimate->items()->create([
+                    'description' => $item['description'],
+                    'quantity' => $item['quantity'],
+                    'unit_price' => $item['unit_price'],
+                    'total' => $item['quantity'] * $item['unit_price'],
+                ]);
+            }
+
+            return $estimate->load('items');
         });
     }
 }
