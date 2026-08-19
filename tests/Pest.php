@@ -1,6 +1,10 @@
 <?php
 
+use App\Domains\CompanyManagement\Models\Company;
+use App\Domains\ProjectManagement\Models\Project;
+use App\Domains\Sales\Models\Client;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +18,22 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 */
 
 uses(
-    Tests\TestCase::class,
+    TestCase::class,
     RefreshDatabase::class,
 )->in('Feature', 'Unit');
+
+/*
+|--------------------------------------------------------------------------
+| Shared helpers
+|--------------------------------------------------------------------------
+*/
+
+function makeProject(Company $company): Project
+{
+    $client = Client::factory()->create(['company_id' => $company->id]);
+
+    return Project::factory()->create([
+        'company_id' => $company->id,
+        'client_id' => $client->id,
+    ]);
+}

@@ -10,50 +10,44 @@ use App\Domains\Sales\Actions\DecideChangeOrderAction;
 use App\Domains\Sales\Enums\ChangeOrderStatus;
 use App\Domains\Sales\Models\ChangeOrder;
 use App\Domains\Sales\Models\Client;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class DecideChangeOrderActionTest extends TestCase
+function makeChangeOrder(ChangeOrderStatus $status): ChangeOrder
 {
-    use RefreshDatabase;
 
-    public function test_it_approves_a_change_order(): void
-    {
-        $changeOrder = $this->makeChangeOrder(ChangeOrderStatus::Pending);
+    $company = Company::factory()->create();
+    $client = Client::factory()->create(['company_id' => $company->id]);
+    $project = Project::factory()->create([
+        'company_id' => $company->id,
+        'client_id' => $client->id,
+    ]);
 
-        app(DecideChangeOrderAction::class)->execute($changeOrder, ChangeOrderStatus::Approved);
-
-        $changeOrder->refresh();
-
-        $this->assertSame(ChangeOrderStatus::Approved, $changeOrder->status);
-        $this->assertNotNull($changeOrder->approved_at);
-    }
-
-    public function test_it_rejects_a_change_order(): void
-    {
-        $changeOrder = $this->makeChangeOrder(ChangeOrderStatus::Pending);
-
-        app(DecideChangeOrderAction::class)->execute($changeOrder, ChangeOrderStatus::Rejected);
-
-        $changeOrder->refresh();
-
-        $this->assertSame(ChangeOrderStatus::Rejected, $changeOrder->status);
-        $this->assertNull($changeOrder->approved_at);
-    }
-
-    private function makeChangeOrder(ChangeOrderStatus $status): ChangeOrder
-    {
-        $company = Company::factory()->create();
-        $client = Client::factory()->create(['company_id' => $company->id]);
-        $project = Project::factory()->create([
-            'company_id' => $company->id,
-            'client_id' => $client->id,
-        ]);
-
-        return ChangeOrder::factory()->create([
-            'company_id' => $company->id,
-            'project_id' => $project->id,
-            'status' => $status,
-        ]);
-    }
+    return ChangeOrder::factory()->create([
+        'company_id' => $company->id,
+        'project_id' => $project->id,
+        'status' => $status,
+    ]);
 }
+
+test('it approves a change order', function () {
+
+    $changeOrder = makeChangeOrder(ChangeOrderStatus::Pending);
+
+    app(DecideChangeOrderAction::class)->execute($changeOrder, ChangeOrderStatus::Approved);
+
+    $changeOrder->refresh();
+
+    $this->assertSame(ChangeOrderStatus::Approved, $changeOrder->status);
+    $this->assertNotNull($changeOrder->approved_at);
+});
+
+test('it rejects a change order', function () {
+
+    $changeOrder = makeChangeOrder(ChangeOrderStatus::Pending);
+
+    app(DecideChangeOrderAction::class)->execute($changeOrder, ChangeOrderStatus::Rejected);
+
+    $changeOrder->refresh();
+
+    $this->assertSame(ChangeOrderStatus::Rejected, $changeOrder->status);
+    $this->assertNull($changeOrder->approved_at);
+});

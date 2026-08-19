@@ -7,102 +7,95 @@ namespace Tests\Feature;
 use App\Domains\CompanyManagement\Models\Company;
 use App\Domains\Sales\Models\Client;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
-use Tests\TestCase;
 
-class ApiAuthTest extends TestCase
-{
-    use RefreshDatabase;
+test('a staff user can issue a token', function () {
 
-    public function test_a_staff_user_can_issue_a_token(): void
-    {
-        $company = Company::factory()->create();
-        User::factory()->create([
-            'company_id' => $company->id,
-            'email' => 'staff@example.test',
-            'password' => Hash::make('secret123'),
-        ]);
+    $company = Company::factory()->create();
+    User::factory()->create([
+        'company_id' => $company->id,
+        'email' => 'staff@example.test',
+        'password' => Hash::make('secret123'),
+    ]);
 
-        $response = $this->postJson('/api/login', [
-            'email' => 'staff@example.test',
-            'password' => 'secret123',
-            'device_name' => 'Test Device',
-        ]);
+    $response = $this->postJson('/api/login', [
+        'email' => 'staff@example.test',
+        'password' => 'secret123',
+        'device_name' => 'Test Device',
+    ]);
 
-        $response->assertCreated()->assertJsonStructure(['token']);
-    }
+    $response->assertCreated()->assertJsonStructure(['token']);
+});
 
-    public function test_a_client_user_cannot_issue_a_token(): void
-    {
-        $company = Company::factory()->create();
-        $client = Client::factory()->create(['company_id' => $company->id]);
+test('a client user cannot issue a token', function () {
 
-        User::factory()->client()->create([
-            'company_id' => $company->id,
-            'client_id' => $client->id,
-            'email' => 'client@example.test',
-            'password' => Hash::make('secret123'),
-        ]);
+    $company = Company::factory()->create();
+    $client = Client::factory()->create(['company_id' => $company->id]);
 
-        $this->postJson('/api/login', [
-            'email' => 'client@example.test',
-            'password' => 'secret123',
-            'device_name' => 'Test Device',
-        ])->assertUnprocessable();
-    }
+    User::factory()->client()->create([
+        'company_id' => $company->id,
+        'client_id' => $client->id,
+        'email' => 'client@example.test',
+        'password' => Hash::make('secret123'),
+    ]);
 
-    public function test_unauthenticated_api_requests_are_rejected(): void
-    {
-        $this->getJson('/api/clients')->assertUnauthorized();
-    }
+    $this->postJson('/api/login', [
+        'email' => 'client@example.test',
+        'password' => 'secret123',
+        'device_name' => 'Test Device',
+    ])->assertUnprocessable();
+});
 
-    public function test_a_token_can_access_protected_routes(): void
-    {
-        $company = Company::factory()->create();
-        $user = User::factory()->create([
-            'company_id' => $company->id,
-            'email' => 'staff@example.test',
-            'password' => Hash::make('secret123'),
-        ]);
+test('unauthenticated api requests are rejected', function () {
 
-        $token = $this->postJson('/api/login', [
-            'email' => 'staff@example.test',
-            'password' => 'secret123',
-            'device_name' => 'Test Device',
-        ])->json('token');
+    $this->getJson('/api/clients')->assertUnauthorized();
+});
 
-        $this->withHeader('Authorization', 'Bearer '.$token)
-            ->getJson('/api/clients')
-            ->assertOk();
-    }
+test('a token can access protected routes', function () {
 
-    public function test_logout_revokes_the_token(): void
-    {
-        $company = Company::factory()->create();
-        User::factory()->create([
-            'company_id' => $company->id,
-            'email' => 'staff@example.test',
-            'password' => Hash::make('secret123'),
-        ]);
+    $company = Company::factory()->create();
+    $user = User::factory()->create([
+        'company_id' => $company->id,
+        'email' => 'staff@example.test',
+        'password' => Hash::make('secret123'),
+    ]);
 
-        $token = $this->postJson('/api/login', [
-            'email' => 'staff@example.test',
-            'password' => 'secret123',
-            'device_name' => 'Test Device',
-        ])->json('token');
+    $token = $this->postJson('/api/login', [
+        'email' => 'staff@example.test',
+        'password' => 'secret123',
+        'device_name' => 'Test Device',
+    ])->json('token');
 
-        $this->withHeader('Authorization', 'Bearer '.$token)
-            ->postJson('/api/logout')
-            ->assertNoContent();
+    $this->withHeader('Authorization', 'Bearer '.$token)
+        ->getJson('/api/clients')
+        ->assertOk();
+});
 
-        $this->assertDatabaseCount('personal_access_tokens', 0);
+test('logout revokes the token', function () {
 
-        // Forget cached guards so the next request re-resolves the (now deleted) token.
-        $this->app['auth']->forgetGuards();
+    $company = Company::factory()->create();
+    User::factory()->create([
+        'company_id' => $company->id,
+        'email' => 'staff@example.test',
+        'password' => Hash::make('secret123'),
+    ]);
 
-        $this->withHeader('Authorization', 'Bearer '.$token)
-            ->getJson('/api/clients')
-            ->assertUnauthorized();
-    }
-}
+    $token = $this->postJson('/api/login', [
+        'email' => 'staff@example.test',
+        'password' => 'secret123',
+        'device_name' => 'Test Device',
+    ])->json('token');
+
+    $this->withHeader('Authorization', 'Bearer '.$token)
+        ->postJson('/api/logout')
+        ->assertNoContent();
+
+    $this->assertDatabaseCount('personal_access_tokens', 0);
+
+    // Forget cached guards so the next request re-resolves the (now deleted) token.
+    $this->app['auth']->forgetGuards();
+
+    $this->withHeader('Authorization', 'Bearer '.$token)
+        ->getJson('/api/clients')
+        ->assertUnauthorized();
+});

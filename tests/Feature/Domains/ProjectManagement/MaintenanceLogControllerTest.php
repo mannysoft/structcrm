@@ -8,81 +8,74 @@ use App\Domains\CompanyManagement\Models\Company;
 use App\Domains\ProjectManagement\Models\Equipment;
 use App\Domains\ProjectManagement\Models\MaintenanceLog;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class MaintenanceLogControllerTest extends TestCase
-{
-    use RefreshDatabase;
+test('a user can create a maintenance log', function () {
 
-    public function test_a_user_can_create_a_maintenance_log(): void
-    {
-        $company = Company::factory()->create();
-        $equipment = Equipment::factory()->create(['company_id' => $company->id]);
-        $user = User::factory()->create(['company_id' => $company->id]);
+    $company = Company::factory()->create();
+    $equipment = Equipment::factory()->create(['company_id' => $company->id]);
+    $user = User::factory()->create(['company_id' => $company->id]);
 
-        $this->actingAs($user)->postJson('/api/maintenance-logs', [
-            'equipment_id' => $equipment->id,
-            'service_date' => '2026-08-15',
-            'description' => 'Replaced hydraulic hose',
-            'cost' => 250.50,
-        ])->assertCreated();
+    $this->actingAs($user)->postJson('/api/maintenance-logs', [
+        'equipment_id' => $equipment->id,
+        'service_date' => '2026-08-15',
+        'description' => 'Replaced hydraulic hose',
+        'cost' => 250.50,
+    ])->assertCreated();
 
-        $this->assertDatabaseHas('maintenance_logs', [
-            'company_id' => $company->id,
-            'equipment_id' => $equipment->id,
-            'description' => 'Replaced hydraulic hose',
-            'cost_amount' => 25050,
-        ]);
-    }
+    $this->assertDatabaseHas('maintenance_logs', [
+        'company_id' => $company->id,
+        'equipment_id' => $equipment->id,
+        'description' => 'Replaced hydraulic hose',
+        'cost_amount' => 25050,
+    ]);
+});
 
-    public function test_a_user_can_list_their_maintenance_logs(): void
-    {
-        $company = Company::factory()->create();
-        $equipment = Equipment::factory()->create(['company_id' => $company->id]);
-        $user = User::factory()->create(['company_id' => $company->id]);
+test('a user can list their maintenance logs', function () {
 
-        MaintenanceLog::factory()->count(2)->create([
-            'company_id' => $company->id,
-            'equipment_id' => $equipment->id,
-        ]);
+    $company = Company::factory()->create();
+    $equipment = Equipment::factory()->create(['company_id' => $company->id]);
+    $user = User::factory()->create(['company_id' => $company->id]);
 
-        $this->actingAs($user)
-            ->getJson('/api/maintenance-logs')
-            ->assertOk()
-            ->assertJsonCount(2, 'data');
-    }
+    MaintenanceLog::factory()->count(2)->create([
+        'company_id' => $company->id,
+        'equipment_id' => $equipment->id,
+    ]);
 
-    public function test_a_user_can_delete_their_maintenance_log(): void
-    {
-        $company = Company::factory()->create();
-        $equipment = Equipment::factory()->create(['company_id' => $company->id]);
-        $user = User::factory()->create(['company_id' => $company->id]);
-        $log = MaintenanceLog::factory()->create([
-            'company_id' => $company->id,
-            'equipment_id' => $equipment->id,
-        ]);
+    $this->actingAs($user)
+        ->getJson('/api/maintenance-logs')
+        ->assertOk()
+        ->assertJsonCount(2, 'data');
+});
 
-        $this->actingAs($user)
-            ->deleteJson('/api/maintenance-logs/'.$log->uuid)
-            ->assertNoContent();
+test('a user can delete their maintenance log', function () {
 
-        $this->assertSoftDeleted('maintenance_logs', ['id' => $log->id]);
-    }
+    $company = Company::factory()->create();
+    $equipment = Equipment::factory()->create(['company_id' => $company->id]);
+    $user = User::factory()->create(['company_id' => $company->id]);
+    $log = MaintenanceLog::factory()->create([
+        'company_id' => $company->id,
+        'equipment_id' => $equipment->id,
+    ]);
 
-    public function test_a_user_cannot_view_another_tenants_maintenance_log(): void
-    {
-        $companyA = Company::factory()->create();
-        $companyB = Company::factory()->create();
-        $equipmentB = Equipment::factory()->create(['company_id' => $companyB->id]);
-        $userA = User::factory()->create(['company_id' => $companyA->id]);
-        $logB = MaintenanceLog::factory()->create([
-            'company_id' => $companyB->id,
-            'equipment_id' => $equipmentB->id,
-        ]);
+    $this->actingAs($user)
+        ->deleteJson('/api/maintenance-logs/'.$log->uuid)
+        ->assertNoContent();
 
-        $this->actingAs($userA)
-            ->getJson('/api/maintenance-logs/'.$logB->uuid)
-            ->assertNotFound();
-    }
-}
+    $this->assertSoftDeleted('maintenance_logs', ['id' => $log->id]);
+});
+
+test('a user cannot view another tenants maintenance log', function () {
+
+    $companyA = Company::factory()->create();
+    $companyB = Company::factory()->create();
+    $equipmentB = Equipment::factory()->create(['company_id' => $companyB->id]);
+    $userA = User::factory()->create(['company_id' => $companyA->id]);
+    $logB = MaintenanceLog::factory()->create([
+        'company_id' => $companyB->id,
+        'equipment_id' => $equipmentB->id,
+    ]);
+
+    $this->actingAs($userA)
+        ->getJson('/api/maintenance-logs/'.$logB->uuid)
+        ->assertNotFound();
+});

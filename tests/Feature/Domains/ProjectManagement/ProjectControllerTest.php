@@ -9,126 +9,120 @@ use App\Domains\ProjectManagement\Enums\ProjectStatus;
 use App\Domains\ProjectManagement\Models\Project;
 use App\Domains\Sales\Models\Client;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class ProjectControllerTest extends TestCase
+function createProject(Company $company, Client $client): Project
 {
-    use RefreshDatabase;
 
-    private function createProject(Company $company, Client $client): Project
-    {
-        return Project::factory()->create([
-            'company_id' => $company->id,
-            'client_id' => $client->id,
-        ]);
-    }
+    return Project::factory()->create([
+        'company_id' => $company->id,
+        'client_id' => $client->id,
+    ]);
+}
 
-    public function test_a_user_can_create_a_project_and_it_is_scoped_to_their_company(): void
-    {
-        $company = Company::factory()->create();
-        $client = Client::factory()->create(['company_id' => $company->id]);
-        $user = User::factory()->create(['company_id' => $company->id]);
+test('a user can create a project and it is scoped to their company', function () {
 
-        $this->actingAs($user)->postJson('/api/projects', [
-            'title' => 'Highrise Construction',
+    $company = Company::factory()->create();
+    $client = Client::factory()->create(['company_id' => $company->id]);
+    $user = User::factory()->create(['company_id' => $company->id]);
+
+    $this->actingAs($user)->postJson('/api/projects', [
+        'title' => 'Highrise Construction',
+        'client_id' => $client->id,
+        'status' => ProjectStatus::Active->value,
+        'budget' => 50000.50,
+    ])->assertCreated();
+
+    $this->assertDatabaseHas('projects', [
+        'company_id' => $company->id,
+        'title' => 'Highrise Construction',
+        'budget_amount' => 5000050,
+    ]);
+});
+
+test('a user can list their projects', function () {
+
+    $company = Company::factory()->create();
+    $client = Client::factory()->create(['company_id' => $company->id]);
+    $user = User::factory()->create(['company_id' => $company->id]);
+
+    Project::factory()->count(2)->create([
+        'company_id' => $company->id,
+        'client_id' => $client->id,
+    ]);
+
+    $this->actingAs($user)
+        ->getJson('/api/projects')
+        ->assertOk()
+        ->assertJsonCount(2, 'data');
+});
+
+test('a user can view their project', function () {
+
+    $company = Company::factory()->create();
+    $client = Client::factory()->create(['company_id' => $company->id]);
+    $user = User::factory()->create(['company_id' => $company->id]);
+    $project = createProject($company, $client);
+
+    $this->actingAs($user)
+        ->getJson('/api/projects/'.$project->uuid)
+        ->assertOk()
+        ->assertJsonPath('title', $project->title);
+});
+
+test('a user can update their project', function () {
+
+    $company = Company::factory()->create();
+    $client = Client::factory()->create(['company_id' => $company->id]);
+    $user = User::factory()->create(['company_id' => $company->id]);
+    $project = createProject($company, $client);
+
+    $this->actingAs($user)
+        ->putJson('/api/projects/'.$project->uuid, [
+            'title' => 'Updated Title',
             'client_id' => $client->id,
             'status' => ProjectStatus::Active->value,
-            'budget' => 50000.50,
-        ])->assertCreated();
+            'budget' => 10000,
+        ])
+        ->assertOk()
+        ->assertJsonPath('title', 'Updated Title');
+});
 
-        $this->assertDatabaseHas('projects', [
-            'company_id' => $company->id,
-            'title' => 'Highrise Construction',
-            'budget_amount' => 5000050,
-        ]);
-    }
+test('a user can delete their project', function () {
 
-    public function test_a_user_can_list_their_projects(): void
-    {
-        $company = Company::factory()->create();
-        $client = Client::factory()->create(['company_id' => $company->id]);
-        $user = User::factory()->create(['company_id' => $company->id]);
+    $company = Company::factory()->create();
+    $client = Client::factory()->create(['company_id' => $company->id]);
+    $user = User::factory()->create(['company_id' => $company->id]);
+    $project = createProject($company, $client);
 
-        Project::factory()->count(2)->create([
-            'company_id' => $company->id,
-            'client_id' => $client->id,
-        ]);
+    $this->actingAs($user)
+        ->deleteJson('/api/projects/'.$project->uuid)
+        ->assertNoContent();
 
-        $this->actingAs($user)
-            ->getJson('/api/projects')
-            ->assertOk()
-            ->assertJsonCount(2, 'data');
-    }
+    $this->assertSoftDeleted('projects', ['id' => $project->id]);
+});
 
-    public function test_a_user_can_view_their_project(): void
-    {
-        $company = Company::factory()->create();
-        $client = Client::factory()->create(['company_id' => $company->id]);
-        $user = User::factory()->create(['company_id' => $company->id]);
-        $project = $this->createProject($company, $client);
+test('a user cannot view another tenants project', function () {
 
-        $this->actingAs($user)
-            ->getJson('/api/projects/'.$project->uuid)
-            ->assertOk()
-            ->assertJsonPath('title', $project->title);
-    }
+    $companyA = Company::factory()->create();
+    $companyB = Company::factory()->create();
+    $clientB = Client::factory()->create(['company_id' => $companyB->id]);
+    $userA = User::factory()->create(['company_id' => $companyA->id]);
+    $projectB = createProject($companyB, $clientB);
 
-    public function test_a_user_can_update_their_project(): void
-    {
-        $company = Company::factory()->create();
-        $client = Client::factory()->create(['company_id' => $company->id]);
-        $user = User::factory()->create(['company_id' => $company->id]);
-        $project = $this->createProject($company, $client);
+    $this->actingAs($userA)
+        ->getJson('/api/projects/'.$projectB->uuid)
+        ->assertNotFound();
+});
 
-        $this->actingAs($user)
-            ->putJson('/api/projects/'.$project->uuid, [
-                'title' => 'Updated Title',
-                'client_id' => $client->id,
-                'status' => ProjectStatus::Active->value,
-                'budget' => 10000,
-            ])
-            ->assertOk()
-            ->assertJsonPath('title', 'Updated Title');
-    }
+test('a user cannot access projects belonging to another tenant', function () {
 
-    public function test_a_user_can_delete_their_project(): void
-    {
-        $company = Company::factory()->create();
-        $client = Client::factory()->create(['company_id' => $company->id]);
-        $user = User::factory()->create(['company_id' => $company->id]);
-        $project = $this->createProject($company, $client);
+    $companyA = Company::factory()->create();
+    $companyB = Company::factory()->create();
+    $clientB = Client::factory()->create(['company_id' => $companyB->id]);
+    $userA = User::factory()->create(['company_id' => $companyA->id]);
+    $projectB = createProject($companyB, $clientB);
 
-        $this->actingAs($user)
-            ->deleteJson('/api/projects/'.$project->uuid)
-            ->assertNoContent();
+    $this->actingAs($userA);
 
-        $this->assertSoftDeleted('projects', ['id' => $project->id]);
-    }
-
-    public function test_a_user_cannot_view_another_tenants_project(): void
-    {
-        $companyA = Company::factory()->create();
-        $companyB = Company::factory()->create();
-        $clientB = Client::factory()->create(['company_id' => $companyB->id]);
-        $userA = User::factory()->create(['company_id' => $companyA->id]);
-        $projectB = $this->createProject($companyB, $clientB);
-
-        $this->actingAs($userA)
-            ->getJson('/api/projects/'.$projectB->uuid)
-            ->assertNotFound();
-    }
-
-    public function test_a_user_cannot_access_projects_belonging_to_another_tenant(): void
-    {
-        $companyA = Company::factory()->create();
-        $companyB = Company::factory()->create();
-        $clientB = Client::factory()->create(['company_id' => $companyB->id]);
-        $userA = User::factory()->create(['company_id' => $companyA->id]);
-        $projectB = $this->createProject($companyB, $clientB);
-
-        $this->actingAs($userA);
-
-        $this->assertNull(Project::find($projectB->id));
-    }
-}
+    $this->assertNull(Project::find($projectB->id));
+});

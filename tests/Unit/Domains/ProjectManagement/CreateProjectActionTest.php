@@ -11,40 +11,33 @@ use App\Domains\ProjectManagement\DTOs\ProjectData;
 use App\Domains\ProjectManagement\Enums\ProjectStatus;
 use App\Domains\ProjectManagement\Events\ProjectCreated;
 use App\Domains\Sales\Models\Client;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
-use Tests\TestCase;
 
-class CreateProjectActionTest extends TestCase
-{
-    use RefreshDatabase;
+test('create project action creates project and dispatches event', function () {
 
-    public function test_create_project_action_creates_project_and_dispatches_event(): void
-    {
-        Event::fake([ProjectCreated::class]);
+    Event::fake([ProjectCreated::class]);
 
-        $company = Company::factory()->create();
-        $client = Client::factory()->create(['company_id' => $company->id]);
+    $company = Company::factory()->create();
+    $client = Client::factory()->create(['company_id' => $company->id]);
 
-        $action = app(CreateProjectAction::class);
+    $action = app(CreateProjectAction::class);
 
-        $dto = new ProjectData(
-            title: 'New Tower Build',
-            clientId: $client->id,
-            status: ProjectStatus::Draft,
-            budget: Money::fromDecimal(250000.00),
-        );
+    $dto = new ProjectData(
+        title: 'New Tower Build',
+        clientId: $client->id,
+        status: ProjectStatus::Draft,
+        budget: Money::fromDecimal(250000.00),
+    );
 
-        $project = $action->execute($dto, $company->id);
+    $project = $action->execute($dto, $company->id);
 
-        $this->assertSame('New Tower Build', $project->title);
-        $this->assertSame($client->id, $project->client_id);
-        $this->assertSame(ProjectStatus::Draft, $project->status);
-        $this->assertSame(25000000, $project->budget_amount);
-        $this->assertNotNull($project->project_number);
+    $this->assertSame('New Tower Build', $project->title);
+    $this->assertSame($client->id, $project->client_id);
+    $this->assertSame(ProjectStatus::Draft, $project->status);
+    $this->assertSame(25000000, $project->budget_amount);
+    $this->assertNotNull($project->project_number);
 
-        Event::assertDispatched(ProjectCreated::class, function (ProjectCreated $event) use ($project): bool {
-            return $event->project->id === $project->id;
-        });
-    }
-}
+    Event::assertDispatched(ProjectCreated::class, function (ProjectCreated $event) use ($project): bool {
+        return $event->project->id === $project->id;
+    });
+});

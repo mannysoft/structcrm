@@ -7,78 +7,71 @@ namespace Tests\Feature\Domains\Sales;
 use App\Domains\CompanyManagement\Models\Company;
 use App\Domains\Sales\Models\Supplier;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class SupplierControllerTest extends TestCase
-{
-    use RefreshDatabase;
+test('a user can create a supplier', function () {
 
-    public function test_a_user_can_create_a_supplier(): void
-    {
-        $company = Company::factory()->create();
-        $user = User::factory()->create(['company_id' => $company->id]);
+    $company = Company::factory()->create();
+    $user = User::factory()->create(['company_id' => $company->id]);
 
-        $this->actingAs($user)->postJson('/api/suppliers', [
-            'name' => 'Acme Materials',
-            'email' => 'sales@acme.test',
-        ])->assertCreated();
+    $this->actingAs($user)->postJson('/api/suppliers', [
+        'name' => 'Acme Materials',
+        'email' => 'sales@acme.test',
+    ])->assertCreated();
 
-        $this->assertDatabaseHas('suppliers', [
-            'company_id' => $company->id,
-            'name' => 'Acme Materials',
-        ]);
-    }
+    $this->assertDatabaseHas('suppliers', [
+        'company_id' => $company->id,
+        'name' => 'Acme Materials',
+    ]);
+});
 
-    public function test_a_user_can_list_their_suppliers(): void
-    {
-        $company = Company::factory()->create();
-        $user = User::factory()->create(['company_id' => $company->id]);
+test('a user can list their suppliers', function () {
 
-        Supplier::factory()->count(2)->create(['company_id' => $company->id]);
+    $company = Company::factory()->create();
+    $user = User::factory()->create(['company_id' => $company->id]);
 
-        $this->actingAs($user)
-            ->getJson('/api/suppliers')
-            ->assertOk()
-            ->assertJsonCount(2, 'data');
-    }
+    Supplier::factory()->count(2)->create(['company_id' => $company->id]);
 
-    public function test_a_user_can_update_their_supplier(): void
-    {
-        $company = Company::factory()->create();
-        $user = User::factory()->create(['company_id' => $company->id]);
-        $supplier = Supplier::factory()->create(['company_id' => $company->id]);
+    $this->actingAs($user)
+        ->getJson('/api/suppliers')
+        ->assertOk()
+        ->assertJsonCount(2, 'data');
+});
 
-        $this->actingAs($user)
-            ->putJson('/api/suppliers/'.$supplier->uuid, [
-                'name' => 'Updated Supplier',
-            ])
-            ->assertOk()
-            ->assertJsonPath('name', 'Updated Supplier');
-    }
+test('a user can update their supplier', function () {
 
-    public function test_a_user_can_delete_their_supplier(): void
-    {
-        $company = Company::factory()->create();
-        $user = User::factory()->create(['company_id' => $company->id]);
-        $supplier = Supplier::factory()->create(['company_id' => $company->id]);
+    $company = Company::factory()->create();
+    $user = User::factory()->create(['company_id' => $company->id]);
+    $supplier = Supplier::factory()->create(['company_id' => $company->id]);
 
-        $this->actingAs($user)
-            ->deleteJson('/api/suppliers/'.$supplier->uuid)
-            ->assertNoContent();
+    $this->actingAs($user)
+        ->putJson('/api/suppliers/'.$supplier->uuid, [
+            'name' => 'Updated Supplier',
+        ])
+        ->assertOk()
+        ->assertJsonPath('name', 'Updated Supplier');
+});
 
-        $this->assertSoftDeleted('suppliers', ['id' => $supplier->id]);
-    }
+test('a user can delete their supplier', function () {
 
-    public function test_a_user_cannot_view_another_tenants_supplier(): void
-    {
-        $companyA = Company::factory()->create();
-        $companyB = Company::factory()->create();
-        $user = User::factory()->create(['company_id' => $companyA->id]);
-        $supplierB = Supplier::factory()->create(['company_id' => $companyB->id]);
+    $company = Company::factory()->create();
+    $user = User::factory()->create(['company_id' => $company->id]);
+    $supplier = Supplier::factory()->create(['company_id' => $company->id]);
 
-        $this->actingAs($user)
-            ->getJson('/api/suppliers/'.$supplierB->uuid)
-            ->assertNotFound();
-    }
-}
+    $this->actingAs($user)
+        ->deleteJson('/api/suppliers/'.$supplier->uuid)
+        ->assertNoContent();
+
+    $this->assertSoftDeleted('suppliers', ['id' => $supplier->id]);
+});
+
+test('a user cannot view another tenants supplier', function () {
+
+    $companyA = Company::factory()->create();
+    $companyB = Company::factory()->create();
+    $user = User::factory()->create(['company_id' => $companyA->id]);
+    $supplierB = Supplier::factory()->create(['company_id' => $companyB->id]);
+
+    $this->actingAs($user)
+        ->getJson('/api/suppliers/'.$supplierB->uuid)
+        ->assertNotFound();
+});

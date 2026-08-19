@@ -8,34 +8,27 @@ use App\Domains\CompanyManagement\Actions\CreateCompanyAndUserAction;
 use App\Domains\CompanyManagement\DTOs\RegisterTenantData;
 use App\Domains\CompanyManagement\Models\Company;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
-use Tests\TestCase;
 
-class CreateCompanyAndUserActionTest extends TestCase
-{
-    use RefreshDatabase;
+test('create company and user action provisions new tenant', function () {
 
-    public function test_create_company_and_user_action_provisions_new_tenant(): void
-    {
-        $action = app(CreateCompanyAndUserAction::class);
+    $action = app(CreateCompanyAndUserAction::class);
 
-        $dto = new RegisterTenantData(
-            companyName: 'Stark Industries',
-            userName: 'Tony Stark',
-            email: 'tony@stark.com',
-            password: 'password123',
-        );
+    $dto = new RegisterTenantData(
+        companyName: 'Stark Industries',
+        userName: 'Tony Stark',
+        email: 'tony@stark.com',
+        password: 'password123',
+    );
 
-        $user = $action->execute($dto);
+    $user = $action->execute($dto);
 
-        $this->assertInstanceOf(User::class, $user);
-        $this->assertSame('Tony Stark', $user->name);
-        $this->assertSame('tony@stark.com', $user->email);
-        $this->assertTrue(Hash::check('password123', $user->password));
+    $this->assertInstanceOf(User::class, $user);
+    $this->assertSame('Tony Stark', $user->name);
+    $this->assertSame('tony@stark.com', $user->email);
+    $this->assertTrue(Hash::check('password123', $user->password));
 
-        $company = Company::find($user->company_id);
-        $this->assertNotNull($company);
-        $this->assertSame('Stark Industries', $company->name);
-    }
-}
+    $company = Company::find($user->company_id);
+    $this->assertNotNull($company);
+    $this->assertSame('Stark Industries', $company->name);
+});

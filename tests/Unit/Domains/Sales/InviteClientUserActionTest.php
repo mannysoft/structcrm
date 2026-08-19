@@ -9,48 +9,41 @@ use App\Domains\Sales\Actions\InviteClientUserAction;
 use App\Domains\Sales\Models\Client;
 use App\Domains\Sales\Notifications\ClientInvitation;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
-use Tests\TestCase;
 
-class InviteClientUserActionTest extends TestCase
-{
-    use RefreshDatabase;
+test('it creates a client user and queues an invitation', function () {
 
-    public function test_it_creates_a_client_user_and_queues_an_invitation(): void
-    {
-        Notification::fake();
+    Notification::fake();
 
-        $company = Company::factory()->create();
-        $client = Client::factory()->create(['company_id' => $company->id]);
+    $company = Company::factory()->create();
+    $client = Client::factory()->create(['company_id' => $company->id]);
 
-        $user = app(InviteClientUserAction::class)->execute($client, 'jane@example.test');
+    $user = app(InviteClientUserAction::class)->execute($client, 'jane@example.test');
 
-        $this->assertTrue($user->isClient());
-        $this->assertSame($client->id, $user->client_id);
-        $this->assertSame($company->id, $user->company_id);
-        $this->assertNull($user->email_verified_at);
+    $this->assertTrue($user->isClient());
+    $this->assertSame($client->id, $user->client_id);
+    $this->assertSame($company->id, $user->company_id);
+    $this->assertNull($user->email_verified_at);
 
-        Notification::assertSentTo($user, ClientInvitation::class);
-    }
+    Notification::assertSentTo($user, ClientInvitation::class);
+});
 
-    public function test_it_promotes_an_existing_user_to_client(): void
-    {
-        Notification::fake();
+test('it promotes an existing user to client', function () {
 
-        $company = Company::factory()->create();
-        $client = Client::factory()->create(['company_id' => $company->id]);
+    Notification::fake();
 
-        $existing = User::factory()->create([
-            'company_id' => $company->id,
-            'email' => 'jane@example.test',
-            'type' => User::TYPE_STAFF,
-        ]);
+    $company = Company::factory()->create();
+    $client = Client::factory()->create(['company_id' => $company->id]);
 
-        $user = app(InviteClientUserAction::class)->execute($client, 'jane@example.test');
+    $existing = User::factory()->create([
+        'company_id' => $company->id,
+        'email' => 'jane@example.test',
+        'type' => User::TYPE_STAFF,
+    ]);
 
-        $this->assertSame($existing->id, $user->id);
-        $this->assertTrue($user->isClient());
-        $this->assertSame($client->id, $user->client_id);
-    }
-}
+    $user = app(InviteClientUserAction::class)->execute($client, 'jane@example.test');
+
+    $this->assertSame($existing->id, $user->id);
+    $this->assertTrue($user->isClient());
+    $this->assertSame($client->id, $user->client_id);
+});

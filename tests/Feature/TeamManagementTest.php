@@ -6,52 +6,45 @@ namespace Tests\Feature;
 
 use App\Domains\CompanyManagement\Models\Company;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\URL;
-use Tests\TestCase;
 
-class TeamManagementTest extends TestCase
-{
-    use RefreshDatabase;
+test('team page requires authentication', function () {
 
-    public function test_team_page_requires_authentication(): void
-    {
-        $this->get('/team')->assertRedirect('/login');
-    }
+    $this->get('/team')->assertRedirect('/login');
+});
 
-    public function test_team_page_requires_manage_users_permission(): void
-    {
-        $company = Company::factory()->create();
-        $staff = User::factory()->role('staff')->create(['company_id' => $company->id]);
+test('team page requires manage users permission', function () {
 
-        $this->actingAs($staff)->get('/team')->assertForbidden();
-    }
+    $company = Company::factory()->create();
+    $staff = User::factory()->role('staff')->create(['company_id' => $company->id]);
 
-    public function test_owner_can_view_the_team_page(): void
-    {
-        $company = Company::factory()->create();
-        $owner = User::factory()->create(['company_id' => $company->id]);
-        User::factory()->role('staff')->create(['company_id' => $company->id, 'name' => 'Jane Doe']);
+    $this->actingAs($staff)->get('/team')->assertForbidden();
+});
 
-        $this->actingAs($owner)
-            ->get('/team')
-            ->assertOk()
-            ->assertSee('Jane Doe');
-    }
+test('owner can view the team page', function () {
 
-    public function test_staff_set_password_link_requires_a_valid_signature(): void
-    {
-        $company = Company::factory()->create();
-        $user = User::factory()->role('staff')->create(['company_id' => $company->id]);
+    $company = Company::factory()->create();
+    $owner = User::factory()->create(['company_id' => $company->id]);
+    User::factory()->role('staff')->create(['company_id' => $company->id, 'name' => 'Jane Doe']);
 
-        $this->get('/staff/set-password/'.$user->id)->assertForbidden();
+    $this->actingAs($owner)
+        ->get('/team')
+        ->assertOk()
+        ->assertSee('Jane Doe');
+});
 
-        $signed = URL::temporarySignedRoute(
-            'staff.set-password',
-            now()->addMinutes(5),
-            ['user' => $user->id],
-        );
+test('staff set password link requires a valid signature', function () {
 
-        $this->get($signed)->assertOk();
-    }
-}
+    $company = Company::factory()->create();
+    $user = User::factory()->role('staff')->create(['company_id' => $company->id]);
+
+    $this->get('/staff/set-password/'.$user->id)->assertForbidden();
+
+    $signed = URL::temporarySignedRoute(
+        'staff.set-password',
+        now()->addMinutes(5),
+        ['user' => $user->id],
+    );
+
+    $this->get($signed)->assertOk();
+});
