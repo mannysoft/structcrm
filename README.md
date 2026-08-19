@@ -66,6 +66,17 @@ php artisan test --filter=TestName   # run a single test
 vendor/bin/pint --dirty              # format code
 ```
 
+### Browser tests (Dusk)
+
+Browser tests use [Laravel Dusk](https://laravel.com/docs/dusk) with Pest and drive a real Chrome browser.
+
+```bash
+php artisan dusk                      # run browser tests (starts a server on :8000)
+php artisan dusk --filter=AuthenticationTest
+```
+
+Dusk runs against `.env.dusk.local` (SQLite at `database/dusk.sqlite`, base URL `http://localhost:8000`). Requires Chrome; `php artisan dusk:chrome-driver` reinstalls the matching driver if Chrome updates.
+
 ## Project structure
 
 - `app/Domains/{CompanyManagement,ProjectManagement,Sales}` — domain modules (models, DTOs, actions, policies, requests, resources, controllers).
