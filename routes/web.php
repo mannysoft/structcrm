@@ -20,6 +20,7 @@ Route::middleware('auth')->group(function () {
     Volt::route('projects/{project}/edit', 'projects.edit')->name('projects.edit');
     Volt::route('companies', 'companies.index')->name('companies.index');
     Volt::route('companies/settings', 'companies.settings')->name('companies.settings');
+    Volt::route('team', 'team.index')->name('team.index');
     Volt::route('leads', 'leads.index')->name('leads.index');
     Volt::route('leads/create', 'leads.create')->name('leads.create');
     Volt::route('leads/{lead}/edit', 'leads.edit')->name('leads.edit');
@@ -74,9 +75,12 @@ Volt::route('portal/set-password/{user}', 'portal.set-password')
     ->middleware('signed')
     ->name('portal.set-password');
 
+Volt::route('staff/set-password/{user}', 'pages.auth.set-password')
+    ->middleware('signed')
+    ->name('staff.set-password');
+
 Route::middleware('auth:client')->group(function () {
     Volt::route('portal', 'portal.index')->name('portal.index');
     Route::post('portal/logout', [ClientAuthenticatedSessionController::class, 'destroy'])
         ->name('portal.logout');
 });
-

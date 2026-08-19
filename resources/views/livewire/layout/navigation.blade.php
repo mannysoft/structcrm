@@ -78,6 +78,11 @@ $logout = function (Logout $logout) {
                     <x-nav-link :href="route('companies.index')" :active="request()->routeIs('companies.*')" wire:navigate>
                         {{ __('Company') }}
                     </x-nav-link>
+                    @can('manage_users')
+                        <x-nav-link :href="route('team.index')" :active="request()->routeIs('team.*')" wire:navigate>
+                            {{ __('Team') }}
+                        </x-nav-link>
+                    @endcan
                 </div>
             </div>
 
@@ -180,6 +185,11 @@ $logout = function (Logout $logout) {
             <x-responsive-nav-link :href="route('companies.index')" :active="request()->routeIs('companies.*')" wire:navigate>
                 {{ __('Company') }}
             </x-responsive-nav-link>
+            @can('manage_users')
+                <x-responsive-nav-link :href="route('team.index')" :active="request()->routeIs('team.*')" wire:navigate>
+                    {{ __('Team') }}
+                </x-responsive-nav-link>
+            @endcan
         </div>
 
         <!-- Responsive Settings Options -->

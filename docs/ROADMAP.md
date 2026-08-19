@@ -79,9 +79,9 @@ API routes currently exist for all modules but are **not behind auth** (see comm
 
 ```bash
 vendor/bin/pint --dirty --format agent   # format changed PHP files
-php artisan test --compact               # full test suite (currently 175 tests, 432 assertions)
+php artisan test --compact               # full test suite (currently 186 tests, 455 assertions)
 php artisan migrate --no-interaction     # apply new migrations to the dev DB
 ```
 
 ## Current test baseline
-- 175 tests, 432 assertions — all passing as of 2026-08-19.
+- 186 tests, 455 assertions — all passing as of 2026-08-19.
