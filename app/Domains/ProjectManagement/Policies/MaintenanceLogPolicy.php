@@ -21,16 +21,16 @@ class MaintenanceLogPolicy
 
     public function create(User $user): bool
     {
-        return $user->hasCapability('manage_maintenance_logs');
+        return $user->hasPermissionTo('manage_maintenance_logs');
     }
 
     public function update(User $user, MaintenanceLog $log): bool
     {
-        return $user->company_id === $log->company_id && $user->hasCapability('manage_maintenance_logs');
+        return $user->company_id === $log->company_id && $user->hasPermissionTo('manage_maintenance_logs');
     }
 
     public function delete(User $user, MaintenanceLog $log): bool
     {
-        return $user->company_id === $log->company_id && $user->hasCapability('manage_maintenance_logs');
+        return $user->company_id === $log->company_id && $user->hasPermissionTo('manage_maintenance_logs');
     }
 }

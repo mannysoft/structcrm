@@ -21,16 +21,16 @@ class LeadPolicy
 
     public function create(User $user): bool
     {
-        return $user->hasCapability('manage_leads');
+        return $user->hasPermissionTo('manage_leads');
     }
 
     public function update(User $user, Lead $lead): bool
     {
-        return $user->company_id === $lead->company_id && $user->hasCapability('manage_leads');
+        return $user->company_id === $lead->company_id && $user->hasPermissionTo('manage_leads');
     }
 
     public function delete(User $user, Lead $lead): bool
     {
-        return $user->company_id === $lead->company_id && $user->hasCapability('manage_leads');
+        return $user->company_id === $lead->company_id && $user->hasPermissionTo('manage_leads');
     }
 }

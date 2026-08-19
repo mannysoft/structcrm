@@ -21,16 +21,16 @@ class ProjectPhotoPolicy
 
     public function create(User $user): bool
     {
-        return $user->hasCapability('manage_photos');
+        return $user->hasPermissionTo('manage_photos');
     }
 
     public function update(User $user, ProjectPhoto $photo): bool
     {
-        return $user->company_id === $photo->company_id && $user->hasCapability('manage_photos');
+        return $user->company_id === $photo->company_id && $user->hasPermissionTo('manage_photos');
     }
 
     public function delete(User $user, ProjectPhoto $photo): bool
     {
-        return $user->company_id === $photo->company_id && $user->hasCapability('manage_photos');
+        return $user->company_id === $photo->company_id && $user->hasPermissionTo('manage_photos');
     }
 }

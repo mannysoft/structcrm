@@ -26,11 +26,11 @@ class CompanyPolicy
 
     public function update(User $user, Company $company): bool
     {
-        return $user->company_id === $company->id && $user->hasCapability('manage_company');
+        return $user->company_id === $company->id && $user->hasPermissionTo('manage_company');
     }
 
     public function delete(User $user, Company $company): bool
     {
-        return $user->company_id === $company->id && $user->hasCapability('manage_company');
+        return $user->company_id === $company->id && $user->hasPermissionTo('manage_company');
     }
 }

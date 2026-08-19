@@ -21,16 +21,16 @@ class ExpensePolicy
 
     public function create(User $user): bool
     {
-        return $user->hasCapability('manage_expenses');
+        return $user->hasPermissionTo('manage_expenses');
     }
 
     public function update(User $user, Expense $expense): bool
     {
-        return $user->company_id === $expense->company_id && $user->hasCapability('manage_expenses');
+        return $user->company_id === $expense->company_id && $user->hasPermissionTo('manage_expenses');
     }
 
     public function delete(User $user, Expense $expense): bool
     {
-        return $user->company_id === $expense->company_id && $user->hasCapability('manage_expenses');
+        return $user->company_id === $expense->company_id && $user->hasPermissionTo('manage_expenses');
     }
 }

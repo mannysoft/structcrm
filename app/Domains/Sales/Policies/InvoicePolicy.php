@@ -21,16 +21,16 @@ class InvoicePolicy
 
     public function create(User $user): bool
     {
-        return $user->hasCapability('manage_invoices');
+        return $user->hasPermissionTo('manage_invoices');
     }
 
     public function update(User $user, Invoice $invoice): bool
     {
-        return $user->company_id === $invoice->company_id && $user->hasCapability('manage_invoices');
+        return $user->company_id === $invoice->company_id && $user->hasPermissionTo('manage_invoices');
     }
 
     public function delete(User $user, Invoice $invoice): bool
     {
-        return $user->company_id === $invoice->company_id && $user->hasCapability('manage_invoices');
+        return $user->company_id === $invoice->company_id && $user->hasPermissionTo('manage_invoices');
     }
 }

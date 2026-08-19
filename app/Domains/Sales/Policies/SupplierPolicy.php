@@ -21,16 +21,16 @@ class SupplierPolicy
 
     public function create(User $user): bool
     {
-        return $user->hasCapability('manage_suppliers');
+        return $user->hasPermissionTo('manage_suppliers');
     }
 
     public function update(User $user, Supplier $supplier): bool
     {
-        return $user->company_id === $supplier->company_id && $user->hasCapability('manage_suppliers');
+        return $user->company_id === $supplier->company_id && $user->hasPermissionTo('manage_suppliers');
     }
 
     public function delete(User $user, Supplier $supplier): bool
     {
-        return $user->company_id === $supplier->company_id && $user->hasCapability('manage_suppliers');
+        return $user->company_id === $supplier->company_id && $user->hasPermissionTo('manage_suppliers');
     }
 }

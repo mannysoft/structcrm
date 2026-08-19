@@ -21,16 +21,16 @@ class ProjectPolicy
 
     public function create(User $user): bool
     {
-        return $user->hasCapability('manage_projects');
+        return $user->hasPermissionTo('manage_projects');
     }
 
     public function update(User $user, Project $project): bool
     {
-        return $user->company_id === $project->company_id && $user->hasCapability('manage_projects');
+        return $user->company_id === $project->company_id && $user->hasPermissionTo('manage_projects');
     }
 
     public function delete(User $user, Project $project): bool
     {
-        return $user->company_id === $project->company_id && $user->hasCapability('manage_projects');
+        return $user->company_id === $project->company_id && $user->hasPermissionTo('manage_projects');
     }
 }

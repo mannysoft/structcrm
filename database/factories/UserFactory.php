@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Domains\CompanyManagement\Enums\Role;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
@@ -32,21 +31,25 @@ class UserFactory extends Factory
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
             'type' => User::TYPE_STAFF,
-            // Default to the highest-privilege role so existing tests that
-            // don't specify a role retain full access. Restrictive tests use
-            // the role() state below.
-            'role' => Role::Owner,
         ];
     }
 
     /**
-     * Set the user's staff role.
+     * Give the created user full access by default so existing tests that
+     * don't specify a role retain all permissions. Restrictive tests use the
+     * role() state below.
      */
-    public function role(Role $role): static
+    public function configure(): static
     {
-        return $this->state(fn (array $attributes) => [
-            'role' => $role,
-        ]);
+        return $this->afterCreating(fn (User $user) => $user->assignRole('owner'));
+    }
+
+    /**
+     * Assign the user a specific staff role.
+     */
+    public function role(string $role): static
+    {
+        return $this->afterCreating(fn (User $user) => $user->syncRoles($role));
     }
 
     /**
@@ -54,10 +57,11 @@ class UserFactory extends Factory
      */
     public function client(): static
     {
-        return $this->state(fn (array $attributes) => [
-            'type' => User::TYPE_CLIENT,
-            'role' => null,
-        ]);
+        return $this
+            ->afterCreating(fn (User $user) => $user->syncRoles([]))
+            ->state(fn (array $attributes) => [
+                'type' => User::TYPE_CLIENT,
+            ]);
     }
 
     /**

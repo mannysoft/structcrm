@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature;
 
-use App\Domains\CompanyManagement\Enums\Role;
 use App\Domains\CompanyManagement\Models\Company;
 use App\Domains\ProjectManagement\Models\Project;
 use App\Domains\Sales\Models\Client;
@@ -20,7 +19,7 @@ class RoleAuthorizationTest extends TestCase
     {
         $company = Company::factory()->create();
         $client = Client::factory()->create(['company_id' => $company->id]);
-        $staff = User::factory()->role(Role::Staff)->create(['company_id' => $company->id]);
+        $staff = User::factory()->role('staff')->create(['company_id' => $company->id]);
 
         $this->actingAs($staff)
             ->postJson('/api/projects', $this->projectPayload($client->id))
@@ -31,7 +30,7 @@ class RoleAuthorizationTest extends TestCase
     {
         $company = Company::factory()->create();
         $client = Client::factory()->create(['company_id' => $company->id]);
-        $pm = User::factory()->role(Role::ProjectManager)->create(['company_id' => $company->id]);
+        $pm = User::factory()->role('project_manager')->create(['company_id' => $company->id]);
 
         $this->actingAs($pm)
             ->postJson('/api/projects', $this->projectPayload($client->id))
@@ -43,7 +42,7 @@ class RoleAuthorizationTest extends TestCase
         $company = Company::factory()->create();
         $client = Client::factory()->create(['company_id' => $company->id]);
         $project = Project::factory()->create(['company_id' => $company->id, 'client_id' => $client->id]);
-        $accountant = User::factory()->role(Role::Accountant)->create(['company_id' => $company->id]);
+        $accountant = User::factory()->role('accountant')->create(['company_id' => $company->id]);
 
         $this->actingAs($accountant)
             ->postJson('/api/projects', $this->projectPayload($client->id))
@@ -67,7 +66,7 @@ class RoleAuthorizationTest extends TestCase
         $company = Company::factory()->create();
         $client = Client::factory()->create(['company_id' => $company->id]);
         $project = Project::factory()->create(['company_id' => $company->id, 'client_id' => $client->id]);
-        $foreman = User::factory()->role(Role::Foreman)->create(['company_id' => $company->id]);
+        $foreman = User::factory()->role('foreman')->create(['company_id' => $company->id]);
 
         $this->actingAs($foreman)
             ->postJson('/api/projects', $this->projectPayload($client->id))

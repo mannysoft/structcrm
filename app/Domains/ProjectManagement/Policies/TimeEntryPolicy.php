@@ -21,16 +21,16 @@ class TimeEntryPolicy
 
     public function create(User $user): bool
     {
-        return $user->hasCapability('manage_time_entries');
+        return $user->hasPermissionTo('manage_time_entries');
     }
 
     public function update(User $user, TimeEntry $entry): bool
     {
-        return $user->company_id === $entry->company_id && $user->hasCapability('manage_time_entries');
+        return $user->company_id === $entry->company_id && $user->hasPermissionTo('manage_time_entries');
     }
 
     public function delete(User $user, TimeEntry $entry): bool
     {
-        return $user->company_id === $entry->company_id && $user->hasCapability('manage_time_entries');
+        return $user->company_id === $entry->company_id && $user->hasPermissionTo('manage_time_entries');
     }
 }

@@ -21,16 +21,16 @@ class ChangeOrderPolicy
 
     public function create(User $user): bool
     {
-        return $user->hasCapability('manage_change_orders');
+        return $user->hasPermissionTo('manage_change_orders');
     }
 
     public function update(User $user, ChangeOrder $changeOrder): bool
     {
-        return $user->company_id === $changeOrder->company_id && $user->hasCapability('manage_change_orders');
+        return $user->company_id === $changeOrder->company_id && $user->hasPermissionTo('manage_change_orders');
     }
 
     public function delete(User $user, ChangeOrder $changeOrder): bool
     {
-        return $user->company_id === $changeOrder->company_id && $user->hasCapability('manage_change_orders');
+        return $user->company_id === $changeOrder->company_id && $user->hasPermissionTo('manage_change_orders');
     }
 }
