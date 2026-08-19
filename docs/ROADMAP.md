@@ -33,14 +33,13 @@ Implementation (single `users` table approach):
   `client_id`; unauthenticated portal hits redirect to `portal.login`.
 - Change-order approve/reject and invoice "mark as paid" actions are available in the portal.
 
-### 2. Public REST API hardening (Phase 6)
-API routes currently exist for all modules but are **not behind auth** (see comment in
-`routes/api.php`).
-- Install Sanctum (`composer require laravel/sanctum`) and add token issuance endpoints.
-- Wrap the API group in `auth:sanctum` middleware.
-- Add rate limiting (throttle middleware) on API routes.
-- Add API versioning (`/api/v1/...`) if desired.
-- Consider API resource pagination (`paginate()` instead of `get()`) and OpenAPI docs.
+### 2. Public REST API hardening (Phase 6) ✅ done
+- Installed Sanctum and added `HasApiTokens` to `User`.
+- Token issuance (`POST /api/login`) and revocation (`POST /api/logout`) in `ApiTokenController`.
+- All module API routes are wrapped in `auth:sanctum` + `throttle:api` (60/min limiter in
+  `AppServiceProvider`); login is rate-limited at `throttle:6,1`.
+
+Deferred (optional): `/api/v1` versioning prefix and resource pagination + OpenAPI docs.
 
 ### 3. AI features (Phase 6 roadmap)
 - **Daily log summarization**: AI-generated weekly digest per project from `daily_logs`.
@@ -79,9 +78,9 @@ API routes currently exist for all modules but are **not behind auth** (see comm
 
 ```bash
 vendor/bin/pint --dirty --format agent   # format changed PHP files
-php artisan test --compact               # full test suite (currently 186 tests, 455 assertions)
+php artisan test --compact               # full test suite (currently 191 tests, 464 assertions)
 php artisan migrate --no-interaction     # apply new migrations to the dev DB
 ```
 
 ## Current test baseline
-- 186 tests, 455 assertions — all passing as of 2026-08-19.
+- 191 tests, 464 assertions — all passing as of 2026-08-19.
