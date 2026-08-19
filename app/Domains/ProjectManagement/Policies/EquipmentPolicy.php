@@ -21,16 +21,16 @@ class EquipmentPolicy
 
     public function create(User $user): bool
     {
-        return $user->company_id !== null;
+        return $user->hasCapability('manage_equipment');
     }
 
     public function update(User $user, Equipment $equipment): bool
     {
-        return $user->company_id === $equipment->company_id;
+        return $user->company_id === $equipment->company_id && $user->hasCapability('manage_equipment');
     }
 
     public function delete(User $user, Equipment $equipment): bool
     {
-        return $user->company_id === $equipment->company_id;
+        return $user->company_id === $equipment->company_id && $user->hasCapability('manage_equipment');
     }
 }

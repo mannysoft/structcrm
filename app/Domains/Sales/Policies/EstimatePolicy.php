@@ -21,16 +21,16 @@ class EstimatePolicy
 
     public function create(User $user): bool
     {
-        return $user->company_id !== null;
+        return $user->hasCapability('manage_estimates');
     }
 
     public function update(User $user, Estimate $estimate): bool
     {
-        return $user->company_id === $estimate->company_id;
+        return $user->company_id === $estimate->company_id && $user->hasCapability('manage_estimates');
     }
 
     public function delete(User $user, Estimate $estimate): bool
     {
-        return $user->company_id === $estimate->company_id;
+        return $user->company_id === $estimate->company_id && $user->hasCapability('manage_estimates');
     }
 }

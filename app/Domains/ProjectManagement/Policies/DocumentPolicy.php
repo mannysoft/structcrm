@@ -21,16 +21,16 @@ class DocumentPolicy
 
     public function create(User $user): bool
     {
-        return $user->company_id !== null;
+        return $user->hasCapability('manage_documents');
     }
 
     public function update(User $user, Document $document): bool
     {
-        return $user->company_id === $document->company_id;
+        return $user->company_id === $document->company_id && $user->hasCapability('manage_documents');
     }
 
     public function delete(User $user, Document $document): bool
     {
-        return $user->company_id === $document->company_id;
+        return $user->company_id === $document->company_id && $user->hasCapability('manage_documents');
     }
 }

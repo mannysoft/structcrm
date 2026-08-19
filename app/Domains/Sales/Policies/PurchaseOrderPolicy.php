@@ -21,16 +21,16 @@ class PurchaseOrderPolicy
 
     public function create(User $user): bool
     {
-        return $user->company_id !== null;
+        return $user->hasCapability('manage_purchase_orders');
     }
 
     public function update(User $user, PurchaseOrder $purchaseOrder): bool
     {
-        return $user->company_id === $purchaseOrder->company_id;
+        return $user->company_id === $purchaseOrder->company_id && $user->hasCapability('manage_purchase_orders');
     }
 
     public function delete(User $user, PurchaseOrder $purchaseOrder): bool
     {
-        return $user->company_id === $purchaseOrder->company_id;
+        return $user->company_id === $purchaseOrder->company_id && $user->hasCapability('manage_purchase_orders');
     }
 }

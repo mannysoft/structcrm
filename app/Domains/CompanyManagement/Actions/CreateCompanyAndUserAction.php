@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Domains\CompanyManagement\Actions;
 
 use App\Domains\CompanyManagement\DTOs\RegisterTenantData;
+use App\Domains\CompanyManagement\Enums\Role;
 use App\Domains\CompanyManagement\Models\Company;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -24,6 +25,7 @@ final class CreateCompanyAndUserAction
                 'name' => $data->userName,
                 'email' => $data->email,
                 'password' => Hash::make($data->password),
+                'role' => Role::Owner,
             ]);
 
             return $user;

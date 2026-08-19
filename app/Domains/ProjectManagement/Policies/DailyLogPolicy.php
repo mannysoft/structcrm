@@ -21,16 +21,16 @@ class DailyLogPolicy
 
     public function create(User $user): bool
     {
-        return $user->company_id !== null;
+        return $user->hasCapability('manage_daily_logs');
     }
 
     public function update(User $user, DailyLog $dailyLog): bool
     {
-        return $user->company_id === $dailyLog->company_id;
+        return $user->company_id === $dailyLog->company_id && $user->hasCapability('manage_daily_logs');
     }
 
     public function delete(User $user, DailyLog $dailyLog): bool
     {
-        return $user->company_id === $dailyLog->company_id;
+        return $user->company_id === $dailyLog->company_id && $user->hasCapability('manage_daily_logs');
     }
 }

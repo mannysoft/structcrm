@@ -21,16 +21,16 @@ class ClientPolicy
 
     public function create(User $user): bool
     {
-        return $user->company_id !== null;
+        return $user->hasCapability('manage_clients');
     }
 
     public function update(User $user, Client $client): bool
     {
-        return $user->company_id === $client->company_id;
+        return $user->company_id === $client->company_id && $user->hasCapability('manage_clients');
     }
 
     public function delete(User $user, Client $client): bool
     {
-        return $user->company_id === $client->company_id;
+        return $user->company_id === $client->company_id && $user->hasCapability('manage_clients');
     }
 }

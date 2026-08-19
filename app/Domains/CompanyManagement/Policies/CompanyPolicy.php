@@ -26,12 +26,11 @@ class CompanyPolicy
 
     public function update(User $user, Company $company): bool
     {
-        // Add more granular role checks here in the future
-        return $user->company_id === $company->id;
+        return $user->company_id === $company->id && $user->hasCapability('manage_company');
     }
 
     public function delete(User $user, Company $company): bool
     {
-        return $user->company_id === $company->id;
+        return $user->company_id === $company->id && $user->hasCapability('manage_company');
     }
 }

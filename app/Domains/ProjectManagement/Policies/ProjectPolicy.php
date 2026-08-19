@@ -21,17 +21,16 @@ class ProjectPolicy
 
     public function create(User $user): bool
     {
-        // Add more granular role checks here in the future
-        return $user->company_id !== null;
+        return $user->hasCapability('manage_projects');
     }
 
     public function update(User $user, Project $project): bool
     {
-        return $user->company_id === $project->company_id;
+        return $user->company_id === $project->company_id && $user->hasCapability('manage_projects');
     }
 
     public function delete(User $user, Project $project): bool
     {
-        return $user->company_id === $project->company_id;
+        return $user->company_id === $project->company_id && $user->hasCapability('manage_projects');
     }
 }

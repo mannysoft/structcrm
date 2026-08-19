@@ -21,16 +21,16 @@ class TaskPolicy
 
     public function create(User $user): bool
     {
-        return $user->company_id !== null;
+        return $user->hasCapability('manage_tasks');
     }
 
     public function update(User $user, Task $task): bool
     {
-        return $user->company_id === $task->company_id;
+        return $user->company_id === $task->company_id && $user->hasCapability('manage_tasks');
     }
 
     public function delete(User $user, Task $task): bool
     {
-        return $user->company_id === $task->company_id;
+        return $user->company_id === $task->company_id && $user->hasCapability('manage_tasks');
     }
 }

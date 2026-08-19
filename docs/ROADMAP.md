@@ -1,6 +1,6 @@
 # ConstructFlow — Build Roadmap & Remaining Work
 
-Last updated: 2026-08-18
+Last updated: 2026-08-19
 
 ## Status at a glance
 
@@ -18,17 +18,20 @@ PRD: `docs/PRD.md`
 
 ## Remaining work
 
-### 1. Client Portal — external client access (Phase 5 follow-up)
-The current portal (`/portal`, `resources/views/livewire/portal/index.blade.php`) is a read-only
-tenant view for authenticated company users. True external clients cannot log in yet.
+### 1. Client Portal — external client access (Phase 5 follow-up) ✅ done
+External clients can now log in to the portal (`/portal`) and are scoped to their own records.
 
-To finish it:
-- Add a `client_users` table (`client_id`, `email`, `password`, `invited_at`, `email_verified_at`, `company_id`).
-- Add an invitation flow (company admin invites a client email → queued mail with magic link).
-- Add a `client` auth guard (or reuse `users` with a `role` of `client` scoped to a `client_id`).
-- Gate the portal on the client guard and scope all queries to the authenticated client's
-  `client_id` rather than the user's `company_id`.
-- Change-order approval + invoice payment actions inside the portal (currently read-only).
+Implementation (single `users` table approach):
+- Reuses the existing `users` table — a `type` column (`staff` | `client`) plus a nullable
+  `client_id` discriminate client portal users (no separate `client_users` table).
+- A dedicated `client` auth guard (session driver, same `users` provider) keeps staff and client
+  sessions separate. Staff login is constrained to `type = staff` and portal login to `type = client`.
+- Invitation flow: admin invites a client email from the Clients edit page →
+  `InviteClientUserAction` creates/updates the client user and queues a `ClientInvitation`
+  mail with a signed, 7-day "set password" link (`portal.set-password`).
+- Portal routes are gated on `auth:client` and scope all queries to the authenticated user's
+  `client_id`; unauthenticated portal hits redirect to `portal.login`.
+- Change-order approve/reject and invoice "mark as paid" actions are available in the portal.
 
 ### 2. Public REST API hardening (Phase 6)
 API routes currently exist for all modules but are **not behind auth** (see comment in
@@ -65,14 +68,16 @@ API routes currently exist for all modules but are **not behind auth** (see comm
   nav links, and PHPUnit controller + action tests **including a cross-tenant isolation test**.
 - Observers generate sequential numbers via `#[ObservedBy]` (see `ProjectObserver`, `InvoiceObserver`).
 - Enums use **TitleCase keys** (`case Draft = 'draft';`).
+- Client portal users share the `users` table — discriminated by `type` (`staff` | `client`) and
+  a nullable `client_id`, authenticated via a separate `client` guard (see `config/auth.php`).
 
 ## Verification commands
 
 ```bash
 vendor/bin/pint --dirty --format agent   # format changed PHP files
-php artisan test --compact               # full test suite (currently 154 tests, 377 assertions)
+php artisan test --compact               # full test suite (currently 165 tests, 404 assertions)
 php artisan migrate --no-interaction     # apply new migrations to the dev DB
 ```
 
 ## Current test baseline
-- 154 tests, 377 assertions — all passing as of 2026-08-18.
+- 165 tests, 404 assertions — all passing as of 2026-08-19.
