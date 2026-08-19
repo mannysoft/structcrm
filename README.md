@@ -68,14 +68,26 @@ vendor/bin/pint --dirty              # format code
 
 ### Browser tests (Dusk)
 
-Browser tests use [Laravel Dusk](https://laravel.com/docs/dusk) with Pest and drive a real Chrome browser.
+Browser tests use [Laravel Dusk](https://laravel.com/docs/dusk) with Pest and drive a real Chrome browser against a running app server.
+
+Dusk does not start the app server itself, so prepare a dedicated SQLite database and start the server before running the tests:
 
 ```bash
-php artisan dusk                      # run browser tests (starts a server on :8000)
+# 1. Prepare the Dusk database
+touch database/dusk.sqlite
+DB_CONNECTION=sqlite DB_DATABASE=database/dusk.sqlite php artisan migrate:fresh --force
+DB_CONNECTION=sqlite DB_DATABASE=database/dusk.sqlite php artisan db:seed --class=RolePermissionSeeder --force
+
+# 2. Start the server (must point at the same database)
+APP_URL=http://127.0.0.1:8000 DB_CONNECTION=sqlite DB_DATABASE=database/dusk.sqlite \
+  php artisan serve --host=127.0.0.1 --port=8000 --no-reload
+
+# 3. Run the tests (in another terminal)
+php artisan dusk                      # run all browser tests
 php artisan dusk --filter=AuthenticationTest
 ```
 
-Dusk runs against `.env.dusk.local` (SQLite at `database/dusk.sqlite`, base URL `http://localhost:8000`). Requires Chrome; `php artisan dusk:chrome-driver` reinstalls the matching driver if Chrome updates.
+Dusk runs against `.env.dusk.local` (SQLite at `database/dusk.sqlite`, base URL `http://127.0.0.1:8000`). Requires Chrome; `php artisan dusk:chrome-driver --detect` installs the matching driver if Chrome updates. The `--no-reload` flag keeps the server from restarting when the `dusk` command temporarily swaps the `.env` file.
 
 ## Project structure
 
