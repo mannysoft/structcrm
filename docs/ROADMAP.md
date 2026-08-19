@@ -70,14 +70,17 @@ API routes currently exist for all modules but are **not behind auth** (see comm
 - Enums use **TitleCase keys** (`case Draft = 'draft';`).
 - Client portal users share the `users` table — discriminated by `type` (`staff` | `client`) and
   a nullable `client_id`, authenticated via a separate `client` guard (see `config/auth.php`).
+- Staff roles are a `Role` enum (`app/Domains/CompanyManagement/Enums/Role.php`) with a
+  capability map; `User::hasCapability()` drives policy gates (`manage_projects`, `manage_invoices`,
+  etc.). The founding registration user is `Owner`; `UserFactory` defaults to `Owner` for tests.
 
 ## Verification commands
 
 ```bash
 vendor/bin/pint --dirty --format agent   # format changed PHP files
-php artisan test --compact               # full test suite (currently 165 tests, 404 assertions)
+php artisan test --compact               # full test suite (currently 176 tests, 436 assertions)
 php artisan migrate --no-interaction     # apply new migrations to the dev DB
 ```
 
 ## Current test baseline
-- 165 tests, 404 assertions — all passing as of 2026-08-19.
+- 176 tests, 436 assertions — all passing as of 2026-08-19.
