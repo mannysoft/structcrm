@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\DuskTestCase;
 
 /*
@@ -9,11 +8,17 @@ use Tests\DuskTestCase;
 |--------------------------------------------------------------------------
 |
 | Browser tests use Laravel Dusk's TestCase (which drives a real Chrome
-| browser) and migrate a fresh database before the suite runs.
+| browser). ChromeDriver is started once before the suite; the database is
+| prepared separately (`php artisan migrate:fresh --seed` under the dusk env).
 |
 */
 
-uses(
-    DuskTestCase::class,
-    DatabaseMigrations::class,
-)->in('Browser');
+uses(DuskTestCase::class)->in('Browser');
+
+beforeAll(function () {
+    DuskTestCase::prepare();
+});
+
+afterAll(function () {
+    DuskTestCase::stopChromeDriver();
+});

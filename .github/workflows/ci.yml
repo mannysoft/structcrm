@@ -118,17 +118,48 @@ jobs:
         run: |
           cp .env.example .env
           php artisan key:generate
-          cat > .env.dusk.local <<'EOF'
-          APP_NAME=ConstructFlow
+          APP_KEY=$(grep '^APP_KEY=' .env | cut -d= -f2-)
+          cat > .env.dusk.local <<EOF
+          APP_NAME=StructCRM
           APP_ENV=local
-          APP_URL=http://localhost:8000
+          APP_KEY=${APP_KEY}
+          APP_DEBUG=true
+          APP_URL=http://127.0.0.1:8000
+
+          LOG_CHANNEL=stack
+          LOG_LEVEL=debug
+
           DB_CONNECTION=sqlite
           DB_DATABASE=database/dusk.sqlite
+
           SESSION_DRIVER=file
-          CACHE_STORE=array
+          SESSION_LIFETIME=120
+          SESSION_ENCRYPT=false
+
+          BROADCAST_CONNECTION=log
+          FILESYSTEM_DISK=local
           QUEUE_CONNECTION=sync
+
+          CACHE_STORE=array
+
           MAIL_MAILER=array
           EOF
 
+      - name: Prepare Dusk database
+        run: |
+          touch database/dusk.sqlite
+          DB_CONNECTION=sqlite DB_DATABASE=database/dusk.sqlite php artisan migrate:fresh --force --no-interaction
+          DB_CONNECTION=sqlite DB_DATABASE=database/dusk.sqlite php artisan db:seed --class=RolePermissionSeeder --force --no-interaction
+
+      - name: Start app server
+        run: |
+          APP_URL=http://127.0.0.1:8000 DB_CONNECTION=sqlite DB_DATABASE=database/dusk.sqlite php artisan serve --host=127.0.0.1 --port=8000 --no-reload > storage/logs/dusk-server.log 2>&1 &
+          echo $! > dusk-server.pid
+
       - name: Run Dusk tests
         run: php artisan dusk
+
+      - name: Stop app server
+        if: always()
+        run: |
+          if [ -f dusk-server.pid ]; then kill "$(cat dusk-server.pid)" 2>/dev/null || true; fi
