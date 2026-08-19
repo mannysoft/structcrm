@@ -17,26 +17,33 @@ use App\Domains\Sales\Controllers\InvoiceController;
 use App\Domains\Sales\Controllers\LeadController;
 use App\Domains\Sales\Controllers\PurchaseOrderController;
 use App\Domains\Sales\Controllers\SupplierController;
+use App\Http\Controllers\Auth\ApiTokenController;
 use Illuminate\Support\Facades\Route;
 
-// Note: these routes are intentionally not wrapped in auth middleware yet.
-// Add Sanctum/session authentication once Breeze is scaffolded.
-Route::name('api.')->group(function () {
-    Route::apiResource('companies', CompanyController::class);
-    Route::apiResource('clients', ClientController::class);
-    Route::apiResource('projects', ProjectController::class);
-    Route::apiResource('tasks', TaskController::class);
-    Route::apiResource('daily-logs', DailyLogController::class);
-    Route::apiResource('project-photos', ProjectPhotoController::class);
-    Route::apiResource('documents', DocumentController::class);
-    Route::apiResource('time-entries', TimeEntryController::class);
-    Route::apiResource('equipment', EquipmentController::class);
-    Route::apiResource('maintenance-logs', MaintenanceLogController::class);
-    Route::apiResource('suppliers', SupplierController::class);
-    Route::apiResource('expenses', ExpenseController::class);
-    Route::apiResource('change-orders', ChangeOrderController::class);
-    Route::apiResource('purchase-orders', PurchaseOrderController::class);
-    Route::apiResource('invoices', InvoiceController::class);
-    Route::apiResource('estimates', EstimateController::class);
-    Route::apiResource('leads', LeadController::class);
+Route::post('login', [ApiTokenController::class, 'store'])
+    ->middleware('throttle:6,1')
+    ->name('api.login');
+
+Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
+    Route::post('logout', [ApiTokenController::class, 'destroy'])->name('api.logout');
+
+    Route::name('api.')->group(function () {
+        Route::apiResource('companies', CompanyController::class);
+        Route::apiResource('clients', ClientController::class);
+        Route::apiResource('projects', ProjectController::class);
+        Route::apiResource('tasks', TaskController::class);
+        Route::apiResource('daily-logs', DailyLogController::class);
+        Route::apiResource('project-photos', ProjectPhotoController::class);
+        Route::apiResource('documents', DocumentController::class);
+        Route::apiResource('time-entries', TimeEntryController::class);
+        Route::apiResource('equipment', EquipmentController::class);
+        Route::apiResource('maintenance-logs', MaintenanceLogController::class);
+        Route::apiResource('suppliers', SupplierController::class);
+        Route::apiResource('expenses', ExpenseController::class);
+        Route::apiResource('change-orders', ChangeOrderController::class);
+        Route::apiResource('purchase-orders', PurchaseOrderController::class);
+        Route::apiResource('invoices', InvoiceController::class);
+        Route::apiResource('estimates', EstimateController::class);
+        Route::apiResource('leads', LeadController::class);
+    });
 });
