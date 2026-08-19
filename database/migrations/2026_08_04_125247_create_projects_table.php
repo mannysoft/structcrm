@@ -20,7 +20,7 @@ return new class extends Migration
             $table->date('end_date')->nullable();
             $table->timestamps();
             $table->softDeletes();
-            
+
             $table->index(['company_id', 'status']);
         });
     }

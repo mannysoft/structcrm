@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class TimeEntry extends Model
 {
     /** @use HasFactory<TimeEntryFactory> */
-    use HasFactory, HasUuids, SoftDeletes, BelongsToTenant;
+    use BelongsToTenant, HasFactory, HasUuids, SoftDeletes;
 
     protected $fillable = [
         'company_id',

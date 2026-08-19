@@ -25,7 +25,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Estimate extends Model
 {
     /** @use HasFactory<EstimateFactory> */
-    use HasFactory, HasUuids, SoftDeletes, BelongsToTenant;
+    use BelongsToTenant, HasFactory, HasUuids, SoftDeletes;
 
     protected $fillable = [
         'company_id',
@@ -69,7 +69,7 @@ class Estimate extends Model
 
     public Money $estimateAmount {
         get => new Money($this->amount, $this->currency);
-        set (Money $money) {
+        set(Money $money) {
             $this->amount = $money->amountInCents;
             $this->currency = $money->currency;
         }

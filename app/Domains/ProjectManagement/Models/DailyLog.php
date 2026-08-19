@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class DailyLog extends Model
 {
     /** @use HasFactory<DailyLogFactory> */
-    use HasFactory, HasUuids, SoftDeletes, BelongsToTenant;
+    use BelongsToTenant, HasFactory, HasUuids, SoftDeletes;
 
     protected $fillable = [
         'company_id',

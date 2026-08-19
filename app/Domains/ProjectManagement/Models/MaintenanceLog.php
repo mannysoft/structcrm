@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class MaintenanceLog extends Model
 {
     /** @use HasFactory<MaintenanceLogFactory> */
-    use HasFactory, HasUuids, SoftDeletes, BelongsToTenant;
+    use BelongsToTenant, HasFactory, HasUuids, SoftDeletes;
 
     protected $fillable = [
         'company_id',
@@ -38,7 +38,7 @@ class MaintenanceLog extends Model
     // PHP 8.4 Property Hooks for Value Object hydration
     public Money $cost {
         get => new Money($this->cost_amount, $this->cost_currency);
-        set (Money $money) {
+        set(Money $money) {
             $this->cost_amount = $money->amountInCents;
             $this->cost_currency = $money->currency;
         }

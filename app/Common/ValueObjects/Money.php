@@ -21,7 +21,7 @@ final readonly class Money
     {
         return new self((int) round($amount * 100), $currency);
     }
-    
+
     public function toDecimal(): float
     {
         return $this->amountInCents / 100;

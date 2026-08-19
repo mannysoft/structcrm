@@ -10,12 +10,10 @@ trait BelongsToTenant
 {
     /**
      * Boot the BelongsToTenant trait for a model.
-     *
-     * @return void
      */
     protected static function bootBelongsToTenant(): void
     {
-        static::addGlobalScope(new TenantScope());
+        static::addGlobalScope(new TenantScope);
 
         static::creating(function ($model) {
             if (auth()->check() && ! $model->company_id) {

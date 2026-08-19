@@ -5,5 +5,5 @@ paths:
 
 # Tests
 
-## Tests are PHPUnit classes — Pest is not installed
-This app runs PHPUnit 12 only; pestphp/pest is not a Composer dependency. Write tests as PHPUnit classes (namespaced under Tests\, with test_* methods). Convert any Pest-style tests (test()/expect()/uses()) to PHPUnit or the whole suite errors out.
+## Tests use Pest — not PHPUnit classes
+This app runs Pest (on top of PHPUnit). Write tests in Pest's functional style — `test()` / `it()` closures with `expect()` assertions. The base `Tests\TestCase` and `RefreshDatabase` are applied to every test via `tests/Pest.php`; do not define `class X extends TestCase` in test files. Convert any PHPUnit-style classes to Pest.

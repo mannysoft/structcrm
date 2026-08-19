@@ -23,7 +23,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class ChangeOrder extends Model
 {
     /** @use HasFactory<ChangeOrderFactory> */
-    use HasFactory, HasUuids, SoftDeletes, BelongsToTenant;
+    use BelongsToTenant, HasFactory, HasUuids, SoftDeletes;
 
     protected $fillable = [
         'company_id',

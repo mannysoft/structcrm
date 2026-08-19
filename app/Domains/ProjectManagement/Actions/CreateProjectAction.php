@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Domains\ProjectManagement\Actions;
 
 use App\Domains\ProjectManagement\DTOs\ProjectData;
-use App\Domains\ProjectManagement\Models\Project;
 use App\Domains\ProjectManagement\Events\ProjectCreated;
+use App\Domains\ProjectManagement\Models\Project;
 use Illuminate\Support\Facades\DB;
 
 final class CreateProjectAction

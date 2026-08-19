@@ -49,8 +49,8 @@ Deferred (optional): `/api/v1` versioning prefix and resource pagination + OpenA
 ## Conventions a future session MUST follow
 (These are verified, load-bearing patterns already recorded under `.ai/rules`.)
 
-- Tests are **PHPUnit classes**, not Pest (`pestphp/pest` is not installed). Use
-  `php artisan make:test --phpunit`.
+- Tests use **Pest** (`pestphp/pest`) in the functional style — `test('...', fn () => ...)` with
+  `$this` bound to `Tests\TestCase` (see `tests/Pest.php`). Use `php artisan make:test`.
 - Domain models with an integer `id` PK **and** a `uuid` column must override
   `public function uniqueIds(): array { return ['uuid']; }` (plain `HasUuids` would UUID the `id`).
 - Class-based full-page Volt components use
@@ -64,7 +64,7 @@ Deferred (optional): `/api/v1` versioning prefix and resource pagination + OpenA
 - Every module ships: migration, model, DTO, actions, policy, Store/Update requests, resource,
   controller, factory, seeder, Volt `index`/`create`/`edit` views, web + API routes
   (API routes live under `Route::name('api.')->group(...)` to avoid web route-name collisions),
-  nav links, and PHPUnit controller + action tests **including a cross-tenant isolation test**.
+  nav links, and Pest controller + action tests **including a cross-tenant isolation test**.
 - Observers generate sequential numbers via `#[ObservedBy]` (see `ProjectObserver`, `InvoiceObserver`).
 - Enums use **TitleCase keys** (`case Draft = 'draft';`).
 - Client portal users share the `users` table — discriminated by `type` (`staff` | `client`) and

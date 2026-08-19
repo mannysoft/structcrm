@@ -20,7 +20,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class ProjectPhoto extends Model
 {
     /** @use HasFactory<ProjectPhotoFactory> */
-    use HasFactory, HasUuids, SoftDeletes, BelongsToTenant;
+    use BelongsToTenant, HasFactory, HasUuids, SoftDeletes;
 
     protected $fillable = [
         'company_id',

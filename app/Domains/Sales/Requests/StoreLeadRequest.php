@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Domains\Sales\Requests;
 
+use App\Domains\Sales\DTOs\LeadData;
+use App\Domains\Sales\Enums\LeadStatus;
+use App\Domains\Sales\Models\Lead;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use App\Domains\Sales\Enums\LeadStatus;
-use App\Domains\Sales\DTOs\LeadData;
-use App\Domains\Sales\Models\Lead;
 
 class StoreLeadRequest extends FormRequest
 {
