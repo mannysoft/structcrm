@@ -1,5 +1,10 @@
 <?php
 
+uses(
+    Tests\DuskTestCase::class,
+    // Illuminate\Foundation\Testing\DatabaseMigrations::class,
+)->in('Browser');
+
 use App\Domains\CompanyManagement\Models\Company;
 use App\Domains\ProjectManagement\Models\Project;
 use App\Domains\Sales\Models\Client;
