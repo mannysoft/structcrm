@@ -3,34 +3,34 @@
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
 use Livewire\Volt\Component;
-use App\Domains\Sales\Models\ClientUser;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 new #[Layout('layouts.guest')] class extends Component {
-    public string $clientUuid = '';
+    public int $userId = 0;
 
     #[Validate('required|string|min:8|confirmed')]
     public string $password = '';
 
     public string $password_confirmation = '';
 
-    public function mount(ClientUser $clientUser): void
+    public function mount(User $user): void
     {
-        $this->clientUuid = $clientUser->uuid;
+        $this->userId = $user->id;
     }
 
     public function setPassword(): void
     {
         $this->validate();
 
-        $clientUser = ClientUser::where('uuid', $this->clientUuid)->firstOrFail();
+        $user = User::findOrFail($this->userId);
 
-        $clientUser->forceFill([
+        $user->forceFill([
             'password' => $this->password,
-            'email_verified_at' => $clientUser->email_verified_at ?? now(),
+            'email_verified_at' => $user->email_verified_at ?? now(),
         ])->save();
 
-        Auth::guard('client')->login($clientUser);
+        Auth::guard('client')->login($user);
 
         session()->regenerate();
 

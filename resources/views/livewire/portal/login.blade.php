@@ -3,6 +3,7 @@
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
 use Livewire\Volt\Component;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 new #[Layout('layouts.guest')] class extends Component {
@@ -23,7 +24,13 @@ new #[Layout('layouts.guest')] class extends Component {
     {
         $this->validate();
 
-        if (! Auth::guard('client')->attempt($this->only(['email', 'password']))) {
+        $attempted = Auth::guard('client')->attempt([
+            'email' => $this->email,
+            'password' => $this->password,
+            'type' => User::TYPE_CLIENT,
+        ]);
+
+        if (! $attempted) {
             $this->addError('email', 'These credentials do not match our records.');
 
             return;

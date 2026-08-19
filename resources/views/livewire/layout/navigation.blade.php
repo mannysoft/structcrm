@@ -51,9 +51,6 @@ $logout = function (Logout $logout) {
                     <x-nav-link :href="route('maintenance_logs.index')" :active="request()->routeIs('maintenance_logs.*')" wire:navigate>
                         {{ __('Maintenance') }}
                     </x-nav-link>
-                    <x-nav-link :href="route('portal.index')" :active="request()->routeIs('portal.*')" wire:navigate>
-                        {{ __('Portal') }}
-                    </x-nav-link>
                     <x-nav-link :href="route('clients.index')" :active="request()->routeIs('clients.*')" wire:navigate>
                         {{ __('Clients') }}
                     </x-nav-link>
@@ -155,9 +152,6 @@ $logout = function (Logout $logout) {
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('maintenance_logs.index')" :active="request()->routeIs('maintenance_logs.*')" wire:navigate>
                 {{ __('Maintenance') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('portal.index')" :active="request()->routeIs('portal.*')" wire:navigate>
-                {{ __('Portal') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('clients.index')" :active="request()->routeIs('clients.*')" wire:navigate>
                 {{ __('Clients') }}

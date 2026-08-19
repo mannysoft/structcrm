@@ -70,7 +70,7 @@ Route::middleware('guest')->group(function () {
     Volt::route('portal/login', 'portal.login')->name('portal.login');
 });
 
-Volt::route('portal/set-password/{clientUser}', 'portal.set-password')
+Volt::route('portal/set-password/{user}', 'portal.set-password')
     ->middleware('signed')
     ->name('portal.set-password');
 

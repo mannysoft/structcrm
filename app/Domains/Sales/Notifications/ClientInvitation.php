@@ -27,7 +27,7 @@ class ClientInvitation extends Notification implements ShouldQueue
         $url = URL::temporarySignedRoute(
             'portal.set-password',
             now()->addDays(7),
-            ['clientUser' => $notifiable->uuid],
+            ['user' => $notifiable->getKey()],
         );
 
         return (new MailMessage)
