@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\ClientAuthenticatedSessionController;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
@@ -43,7 +44,6 @@ Route::middleware('auth')->group(function () {
     Volt::route('equipment/{equipment}/edit', 'equipment.edit')->name('equipment.edit');
     Volt::route('maintenance-logs', 'maintenance_logs.index')->name('maintenance_logs.index');
     Volt::route('maintenance-logs/create', 'maintenance_logs.create')->name('maintenance_logs.create');
-    Volt::route('portal', 'portal.index')->name('portal.index');
     Volt::route('suppliers', 'suppliers.index')->name('suppliers.index');
     Volt::route('suppliers/create', 'suppliers.create')->name('suppliers.create');
     Volt::route('suppliers/{supplier}/edit', 'suppliers.edit')->name('suppliers.edit');
@@ -65,3 +65,18 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+// Client Portal — external client access (client guard)
+Route::middleware('guest')->group(function () {
+    Volt::route('portal/login', 'portal.login')->name('portal.login');
+});
+
+Volt::route('portal/set-password/{clientUser}', 'portal.set-password')
+    ->middleware('signed')
+    ->name('portal.set-password');
+
+Route::middleware('auth:client')->group(function () {
+    Volt::route('portal', 'portal.index')->name('portal.index');
+    Route::post('portal/logout', [ClientAuthenticatedSessionController::class, 'destroy'])
+        ->name('portal.logout');
+});
+
