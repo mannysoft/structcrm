@@ -27,6 +27,12 @@ new #[Layout('layouts.app')] class extends Component {
     #[Validate('required|numeric|min:0')]
     public string $budget = '';
     
+    #[Validate('nullable|date')]
+    public string $start_date = '';
+
+    #[Validate('nullable|date|after_or_equal:start_date')]
+    public string $end_date = '';
+
     #[Validate('nullable|integer|exists:users,id')]
     public string $manager_id = '';
 
@@ -38,7 +44,14 @@ new #[Layout('layouts.app')] class extends Component {
             'clients' => Client::where('company_id', $companyId)->latest()->get(),
             'managers' => User::where('company_id', $companyId)->get(),
         ];
-    }title: $this->title,
+    }
+
+    public function save(CreateProjectAction $action): void
+    {
+        $this->validate();
+
+        $dto = new ProjectData(
+            title: $this->title,
             clientId: (int) $this->client_id,
             status: ProjectStatus::from($this->status),
             budget: Money::fromDecimal((float) $this->budget),
@@ -52,20 +65,7 @@ new #[Layout('layouts.app')] class extends Component {
 
         session()->flash('status', 'Project successfully created.');
 
-        $this->redirect(route('projects.index')from($this->status),
-            budget: Money::fromDecimal((float) $this->budget),
-            startDate: $this->start_date ? CarbonImmutable::parse($this->start_date) : null,
-            endDate: $this->end_date ? CarbonImmutable::parse($this->end_date) : null,
-        );
-        
-        // Mocking company ID for UI demonstration until Auth is fully scaffolded
-        $companyId = auth()->check() ? auth()->user()->company_id : 1; 
-
-        $action->execute($dto, $companyId);
-
-        session()->flash('status', 'Project successfully created.');
-
-        $this->redirect('/projects', navigate: true);
+        $this->redirect(route('projects.index'), navigate: true);
     }
 }; ?>
 
