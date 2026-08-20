@@ -1,6 +1,7 @@
 <?php
 
 use App\Domains\CompanyManagement\Controllers\CompanyController;
+use App\Domains\Finance\Controllers\CostCodeController;
 use App\Domains\ProjectManagement\Controllers\DailyLogController;
 use App\Domains\ProjectManagement\Controllers\DocumentController;
 use App\Domains\ProjectManagement\Controllers\EquipmentController;
@@ -32,6 +33,7 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
         Route::apiResource('clients', ClientController::class);
         Route::apiResource('projects', ProjectController::class);
         Route::apiResource('tasks', TaskController::class);
+        Route::apiResource('cost-codes', CostCodeController::class);
         Route::apiResource('daily-logs', DailyLogController::class);
         Route::apiResource('project-photos', ProjectPhotoController::class);
         Route::apiResource('documents', DocumentController::class);

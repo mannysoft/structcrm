@@ -79,6 +79,9 @@ $logout = function (Logout $logout) {
             <x-nav-link :href="route('suppliers.index')" :active="request()->routeIs('suppliers.*')" wire:navigate>
                 {{ __('Suppliers') }}
             </x-nav-link>
+            <x-nav-link :href="route('cost_codes.index')" :active="request()->routeIs('cost_codes.*')" wire:navigate>
+                {{ __('Cost Codes') }}
+            </x-nav-link>
             <x-nav-link :href="route('expenses.index')" :active="request()->routeIs('expenses.*')" wire:navigate>
                 {{ __('Expenses') }}
             </x-nav-link>

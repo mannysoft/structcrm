@@ -9,6 +9,7 @@ use App\Common\ValueObjects\Money;
 use App\Domains\CompanyManagement\Models\Company;
 use App\Domains\ProjectManagement\Enums\ProjectStatus;
 use App\Domains\ProjectManagement\Observers\ProjectObserver;
+use App\Domains\Sales\Models\ChangeOrder;
 use App\Domains\Sales\Models\Client;
 use App\Models\User;
 use Database\Factories\ProjectFactory;
@@ -124,5 +125,15 @@ class Project extends Model
     public function documents(): HasMany
     {
         return $this->hasMany(Document::class);
+    }
+
+    /**
+     * Get the change orders raised against the project.
+     *
+     * @return HasMany<ChangeOrder, $this>
+     */
+    public function changeOrders(): HasMany
+    {
+        return $this->hasMany(ChangeOrder::class);
     }
 }

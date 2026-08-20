@@ -24,6 +24,7 @@ class RolePermissionSeeder extends Seeder
         'manage_cost_codes',
         'manage_boq',
         'manage_budgets',
+        'manage_progress_reports',
         'manage_tasks',
         'manage_estimates',
         'manage_change_orders',
