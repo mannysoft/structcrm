@@ -63,65 +63,67 @@ new #[Layout('layouts.app')] class extends Component {
 }; ?>
 
 <div>
-    <form wire:submit="save" class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
+    <x-page-header title="Add Invoice" description="Bill a project for completed work." />
+
+    <form wire:submit="save" class="mt-6 bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
         <div class="px-4 py-6 sm:p-8">
             <div class="grid max-w-3xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                 <div class="sm:col-span-3">
-                    <label for="project_id" class="block text-sm font-medium leading-6 text-gray-900">Project</label>
+                    <x-input-label for="project_id" value="Project" />
                     <div class="mt-2">
-                        <select id="project_id" wire:model="project_id" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-select id="project_id" wire:model="project_id">
                             <option value="">Select a project</option>
                             @foreach ($projects as $project)
                                 <option value="{{ $project->id }}">{{ $project->title }}</option>
                             @endforeach
-                        </select>
+                        </x-select>
                     </div>
-                    @error('project_id') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('project_id')" />
                 </div>
                 <div class="sm:col-span-3">
-                    <label for="status" class="block text-sm font-medium leading-6 text-gray-900">Status</label>
+                    <x-input-label for="status" value="Status" />
                     <div class="mt-2">
-                        <select id="status" wire:model="status" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-select id="status" wire:model="status">
                             <option value="draft">Draft</option>
                             <option value="sent">Sent</option>
                             <option value="partial">Partial</option>
                             <option value="paid">Paid</option>
                             <option value="overdue">Overdue</option>
-                        </select>
+                        </x-select>
                     </div>
-                    @error('status') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('status')" />
                 </div>
                 <div class="sm:col-span-3">
-                    <label for="issue_date" class="block text-sm font-medium leading-6 text-gray-900">Issue Date</label>
+                    <x-input-label for="issue_date" value="Issue Date" />
                     <div class="mt-2">
-                        <input type="date" wire:model="issue_date" id="issue_date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-text-input type="date" wire:model="issue_date" id="issue_date" />
                     </div>
-                    @error('issue_date') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('issue_date')" />
                 </div>
                 <div class="sm:col-span-3">
-                    <label for="due_date" class="block text-sm font-medium leading-6 text-gray-900">Due Date</label>
+                    <x-input-label for="due_date" value="Due Date" />
                     <div class="mt-2">
-                        <input type="date" wire:model="due_date" id="due_date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-text-input type="date" wire:model="due_date" id="due_date" />
                     </div>
-                    @error('due_date') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('due_date')" />
                 </div>
 
                 <div class="col-span-full" x-data="{ items: @entangle('items') }">
                     <div class="flex items-center justify-between">
                         <h3 class="text-sm font-medium leading-6 text-gray-900">Line Items</h3>
-                        <button type="button" @click="items.push({ description: '', quantity: 1, unit_price: '0.00' })" class="text-sm font-semibold text-indigo-600 hover:text-indigo-500">Add item</button>
+                        <button type="button" @click="items.push({ description: '', quantity: 1, unit_price: '0.00' })" class="text-sm font-semibold text-brand-600 hover:text-brand-500">Add item</button>
                     </div>
                     <div class="mt-4 space-y-4">
                         <template x-for="(item, index) in items" :key="index">
                             <div class="grid grid-cols-12 gap-3">
                                 <div class="col-span-6">
-                                    <input type="text" x-model="item.description" placeholder="Description" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                    <x-text-input x-model="item.description" placeholder="Description" />
                                 </div>
                                 <div class="col-span-2">
-                                    <input type="number" x-model="item.quantity" min="1" placeholder="Qty" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                    <x-text-input type="number" x-model="item.quantity" min="1" placeholder="Qty" />
                                 </div>
                                 <div class="col-span-3">
-                                    <input type="number" step="0.01" x-model="item.unit_price" placeholder="Unit price" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                    <x-text-input type="number" step="0.01" x-model="item.unit_price" placeholder="Unit price" />
                                 </div>
                                 <div class="col-span-1 flex items-center">
                                     <button type="button" @click="items.splice(index, 1)" class="text-sm text-red-600 hover:text-red-900">Remove</button>
@@ -129,14 +131,14 @@ new #[Layout('layouts.app')] class extends Component {
                             </div>
                         </template>
                     </div>
-                    @error('items') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
-                    @error('items.*.description') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('items')" />
+                    <x-input-error :messages="$errors->get('items.*.description')" />
                 </div>
             </div>
         </div>
-        <div class="flex items-center justify-end px-4 py-4 border-t border-gray-900/10 gap-x-6 sm:px-8 bg-gray-50 rounded-b-xl">
-            <a href="{{ route('invoices.index') }}" wire:navigate class="text-sm font-semibold leading-6 text-gray-900">Cancel</a>
-            <button type="submit" class="px-3 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Save</button>
+        <div class="flex items-center justify-end gap-x-3 border-t border-gray-200 bg-gray-50 px-4 py-4 rounded-b-xl sm:px-8">
+            <a href="{{ route('invoices.index') }}" wire:navigate class="text-sm font-semibold text-gray-900">Cancel</a>
+            <x-button type="submit">Save</x-button>
         </div>
     </form>
 </div>
