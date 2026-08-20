@@ -1,4 +1,4 @@
-@props(['variant' => 'primary', 'size' => 'md', 'type' => 'submit'])
+@props(['variant' => 'primary', 'size' => 'md', 'type' => 'submit', 'href' => null])
 
 @php
     $variants = [
@@ -20,12 +20,20 @@
     if ($variant !== 'link') {
         $classes .= ' ' . $sizes[$size];
     }
+
+    $classes = 'inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-50 ' . $classes;
 @endphp
 
-<button
-    type="{{ $type }}"
-    wire:loading.attr="disabled"
-    {{ $attributes->merge(['class' => 'inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition focus-visible:outline-2 focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-50 ' . $classes]) }}
->
-    {{ $slot }}
-</button>
+@if ($href)
+    <a href="{{ $href }}" wire:navigate {{ $attributes->merge(['class' => $classes]) }}>
+        {{ $slot }}
+    </a>
+@else
+    <button
+        type="{{ $type }}"
+        wire:loading.attr="disabled"
+        {{ $attributes->merge(['class' => $classes]) }}
+    >
+        {{ $slot }}
+    </button>
+@endif
