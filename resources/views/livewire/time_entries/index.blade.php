@@ -30,69 +30,59 @@ new #[Layout('layouts.app')] class extends Component {
 }; ?>
 
 <div>
-    <div class="sm:flex sm:items-center">
-        <div class="sm:flex-auto">
-            <h1 class="text-2xl font-semibold leading-6 text-gray-900">Time Tracking</h1>
-            <p class="mt-2 text-sm text-gray-700">Clock-ins and worked hours across your projects.</p>
-        </div>
-        <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-            <a href="{{ route('time_entries.create') }}" wire:navigate class="block px-3 py-2 text-sm font-semibold text-center text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                Clock in
-            </a>
-        </div>
-    </div>
+    <x-page-header title="Time Tracking" description="Clock-ins and worked hours across your projects.">
+        <x-slot name="actions">
+            <x-button :href="route('time_entries.create')">Clock in</x-button>
+        </x-slot>
+    </x-page-header>
 
-    <div class="mt-8 flow-root">
-        <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                <div class="overflow-hidden bg-white shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
-                    <table class="min-w-full divide-y divide-gray-300">
+    <x-table>
                         <thead class="bg-gray-50">
                             <tr>
-                                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Project</th>
-                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Clock In</th>
-                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Clock Out</th>
-                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Duration</th>
-                                <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                                <x-table.th>Project</x-table.th>
+                                <x-table.th>Clock In</x-table.th>
+                                <x-table.th>Clock Out</x-table.th>
+                                <x-table.th>Duration</x-table.th>
+                                <x-table.th>
                                     <span class="sr-only">Actions</span>
-                                </th>
+                                </x-table.th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
                             @forelse ($entries as $entry)
                                 <tr>
-                                    <td class="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-6">{{ $entry->project?->title ?? 'N/A' }}</td>
-                                    <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $entry->clock_in_at?->format('M j, Y g:i A') }}</td>
-                                    <td class="px-3 py-4 text-sm whitespace-nowrap">
+                                    <x-table.td class="font-medium text-gray-900">{{ $entry->project?->title ?? 'N/A' }}</x-table.td>
+                                    <x-table.td>{{ $entry->clock_in_at?->format('M j, Y g:i A') }}</x-table.td>
+                                    <x-table.td>
                                         @if ($entry->isRunning())
-                                            <span class="inline-flex items-center px-2 py-1 text-xs font-medium text-green-700 bg-green-100 rounded-full">Running</span>
+                                            <x-badge tone="green">Running</x-badge>
                                         @else
                                             <span class="text-gray-500">{{ $entry->clock_out_at?->format('M j, Y g:i A') }}</span>
                                         @endif
-                                    </td>
-                                    <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
+                                    </x-table.td>
+                                    <x-table.td>
                                         @if ($entry->durationMinutes() !== null)
                                             {{ intdiv($entry->durationMinutes(), 60) }}h {{ $entry->durationMinutes() % 60 }}m
                                         @else
                                             —
                                         @endif
-                                    </td>
-                                    <td class="relative py-4 pl-3 pr-4 text-sm font-medium text-right whitespace-nowrap sm:pr-6">
-                                        <a href="{{ route('time_entries.edit', $entry) }}" wire:navigate class="text-indigo-600 hover:text-indigo-900">Edit</a>
-                                        <button wire:click="delete('{{ $entry->uuid }}')" wire:confirm="Are you sure you want to delete this time entry?" class="ml-4 text-red-600 hover:text-red-900">Delete</button>
-                                    </td>
+                                    </x-table.td>
+                                    <x-table.td class="text-right font-medium">
+                                        <a href="{{ route('time_entries.edit', $entry) }}" wire:navigate class="text-brand-600 hover:text-brand-700">Edit</a>
+                                        <x-confirm-delete :uuid="$entry->uuid" class="ml-4">Delete</x-confirm-delete>
+                                    </x-table.td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="px-3 py-8 text-sm text-center text-gray-500">
-                                        No time entries yet. Clock in to get started.
+                                    <td colspan="5">
+                                        <x-empty-state title="No time entries yet." description="Clock in to get started.">
+                                            <x-slot name="action">
+                                                <x-button :href="route('time_entries.create')">Clock in</x-button>
+                                            </x-slot>
+                                        </x-empty-state>
                                     </td>
                                 </tr>
                             @endforelse
                         </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+    </x-table>
 </div>
