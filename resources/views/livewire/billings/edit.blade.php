@@ -345,32 +345,32 @@ new #[Layout('layouts.app')] class extends Component {
             <form wire:submit="addPayment" class="mt-6">
                 <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-6">
                     <div class="sm:col-span-2">
-                        <label for="payment_date" class="block text-sm font-medium leading-6 text-gray-900">Date</label>
+                        <x-input-label for="payment_date" value="Date" />
                         <div class="mt-2">
-                            <input type="date" wire:model="payment_date" id="payment_date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            <x-text-input type="date" wire:model="payment_date" id="payment_date" />
                         </div>
                     </div>
                     <div class="sm:col-span-2">
-                        <label for="payment_amount" class="block text-sm font-medium leading-6 text-gray-900">Amount</label>
+                        <x-input-label for="payment_amount" value="Amount" />
                         <div class="mt-2">
-                            <input type="number" step="0.01" wire:model="payment_amount" id="payment_amount" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            <x-text-input type="number" step="0.01" wire:model="payment_amount" id="payment_amount" />
                         </div>
-                        @error('payment_amount') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                        <x-input-error :messages="$errors->get('payment_amount')" />
                     </div>
                     <div class="sm:col-span-2">
-                        <label for="payment_method" class="block text-sm font-medium leading-6 text-gray-900">Method</label>
+                        <x-input-label for="payment_method" value="Method" />
                         <div class="mt-2">
-                            <input type="text" wire:model="payment_method" id="payment_method" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            <x-text-input wire:model="payment_method" id="payment_method" type="text" />
                         </div>
                     </div>
                     <div class="sm:col-span-3">
-                        <label for="payment_reference" class="block text-sm font-medium leading-6 text-gray-900">Reference</label>
+                        <x-input-label for="payment_reference" value="Reference" />
                         <div class="mt-2">
-                            <input type="text" wire:model="payment_reference" id="payment_reference" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            <x-text-input wire:model="payment_reference" id="payment_reference" type="text" />
                         </div>
                     </div>
                     <div class="sm:col-span-3 flex items-end">
-                        <button type="submit" class="px-3 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-500">Record payment</button>
+                        <x-button type="submit">Record payment</x-button>
                     </div>
                 </div>
             </form>
