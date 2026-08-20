@@ -36,6 +36,9 @@ Route::middleware('auth')->group(function () {
     Volt::route('contracts', 'contracts.index')->name('contracts.index');
     Volt::route('contracts/create', 'contracts.create')->name('contracts.create');
     Volt::route('contracts/{contract}/edit', 'contracts.edit')->name('contracts.edit');
+    Volt::route('boq-items', 'boq_items.index')->name('boq_items.index');
+    Volt::route('boq-items/create', 'boq_items.create')->name('boq_items.create');
+    Volt::route('boq-items/{boqItem}/edit', 'boq_items.edit')->name('boq_items.edit');
     Volt::route('daily-logs', 'daily_logs.index')->name('daily_logs.index');
     Volt::route('daily-logs/create', 'daily_logs.create')->name('daily_logs.create');
     Volt::route('daily-logs/{dailyLog}/edit', 'daily_logs.edit')->name('daily_logs.edit');
