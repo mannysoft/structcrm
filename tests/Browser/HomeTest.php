@@ -5,7 +5,7 @@ use Laravel\Dusk\Browser;
 it('shows the welcome page', function () {
     $this->browse(function (Browser $browser) {
         $browser->visit('/')
-            ->assertSee('Laravel');
+            ->assertSee('Struct CRM');
     });
 });
 
