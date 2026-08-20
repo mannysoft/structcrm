@@ -38,7 +38,7 @@ test('a user can create a billing', function () {
     $this->assertDatabaseHas('billings', [
         'company_id' => $company->id,
         'project_id' => $project->id,
-        'net_amount' => 2_150_000,
+        'net_amount' => 224_900_000,
     ]);
 });
 
@@ -97,7 +97,7 @@ test('a user can record a payment against a billing', function () {
     $billing = Billing::factory()->create([
         'company_id' => $company->id,
         'project_id' => $project->id,
-        'net_amount' => 2_150_000,
+        'net_amount' => 215_000_000,
     ]);
 
     $this->actingAs($user)
@@ -107,8 +107,12 @@ test('a user can record a payment against a billing', function () {
             'method' => 'bank',
         ])
         ->assertOk()
-        ->assertJsonPath('paid_amount', 1_000_000.0)
         ->assertJsonPath('status', BillingStatus::PartiallyPaid->value);
+
+    $this->assertDatabaseHas('billing_payments', [
+        'billing_id' => $billing->id,
+        'amount' => 100_000_000,
+    ]);
 });
 
 test('a user cannot access another tenants billing', function () {

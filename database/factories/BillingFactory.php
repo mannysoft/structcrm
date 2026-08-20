@@ -32,7 +32,7 @@ class BillingFactory extends Factory
             'net_amount' => $gross - $retention,
             'currency' => 'PHP',
             'status' => fake()->randomElement(BillingStatus::cases()),
-            'due_date' => fake()->optional()->dateTimeBetween('now', '+1 month')->format('Y-m-d'),
+            'due_date' => now()->addDays(30)->format('Y-m-d'),
         ];
     }
 }
