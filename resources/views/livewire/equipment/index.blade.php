@@ -30,61 +30,51 @@ new #[Layout('layouts.app')] class extends Component {
 }; ?>
 
 <div>
-    <div class="sm:flex sm:items-center">
-        <div class="sm:flex-auto">
-            <h1 class="text-2xl font-semibold leading-6 text-gray-900">Fleet &amp; Equipment</h1>
-            <p class="mt-2 text-sm text-gray-700">Machinery, tools and vehicles with maintenance schedules.</p>
-        </div>
-        <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-            <a href="{{ route('equipment.create') }}" wire:navigate class="block px-3 py-2 text-sm font-semibold text-center text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                Add equipment
-            </a>
-        </div>
-    </div>
+    <x-page-header title="Fleet & Equipment" description="Machinery, tools and vehicles with maintenance schedules.">
+        <x-slot name="actions">
+            <x-button :href="route('equipment.create')">Add equipment</x-button>
+        </x-slot>
+    </x-page-header>
 
-    <div class="mt-8 flow-root">
-        <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                <div class="overflow-hidden bg-white shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
-                    <table class="min-w-full divide-y divide-gray-300">
+    <x-table>
                         <thead class="bg-gray-50">
                             <tr>
-                                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Name</th>
-                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Type</th>
-                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status</th>
-                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Service Due</th>
-                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Logs</th>
-                                <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
+                                <x-table.th>Name</x-table.th>
+                                <x-table.th>Type</x-table.th>
+                                <x-table.th>Status</x-table.th>
+                                <x-table.th>Service Due</x-table.th>
+                                <x-table.th>Logs</x-table.th>
+                                <x-table.th>
                                     <span class="sr-only">Actions</span>
-                                </th>
+                                </x-table.th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
                             @forelse ($equipment as $item)
                                 <tr>
-                                    <td class="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-6">{{ $item->name }}</td>
-                                    <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $item->type->value }}</td>
-                                    <td class="px-3 py-4 text-sm whitespace-nowrap">
-                                        <span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full {{ $item->status === \App\Domains\ProjectManagement\Enums\EquipmentStatus::Maintenance ? 'bg-amber-100 text-amber-800' : 'bg-green-100 text-green-700' }}">{{ $item->status->value }}</span>
-                                    </td>
-                                    <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $item->service_due_at?->format('M j, Y') ?? '—' }}</td>
-                                    <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $item->maintenance_logs_count }}</td>
-                                    <td class="relative py-4 pl-3 pr-4 text-sm font-medium text-right whitespace-nowrap sm:pr-6">
-                                        <a href="{{ route('equipment.edit', $item) }}" wire:navigate class="text-indigo-600 hover:text-indigo-900">Edit</a>
-                                        <button wire:click="delete('{{ $item->uuid }}')" wire:confirm="Are you sure you want to delete this equipment?" class="ml-4 text-red-600 hover:text-red-900">Delete</button>
-                                    </td>
+                                    <x-table.td class="font-medium text-gray-900">{{ $item->name }}</x-table.td>
+                                    <x-table.td>{{ $item->type->value }}</x-table.td>
+                                    <x-table.td>
+                                        <x-badge :tone="$item->status === \App\Domains\ProjectManagement\Enums\EquipmentStatus::Maintenance ? 'amber' : 'green'">{{ $item->status->value }}</x-badge>
+                                    </x-table.td>
+                                    <x-table.td>{{ $item->service_due_at?->format('M j, Y') ?? '—' }}</x-table.td>
+                                    <x-table.td>{{ $item->maintenance_logs_count }}</x-table.td>
+                                    <x-table.td class="text-right font-medium">
+                                        <a href="{{ route('equipment.edit', $item) }}" wire:navigate class="text-brand-600 hover:text-brand-700">Edit</a>
+                                        <x-confirm-delete :uuid="$item->uuid" class="ml-4">Delete</x-confirm-delete>
+                                    </x-table.td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="px-3 py-8 text-sm text-center text-gray-500">
-                                        No equipment yet. Add your first fleet item.
+                                    <td colspan="6">
+                                        <x-empty-state title="No equipment yet." description="Add your first fleet item.">
+                                            <x-slot name="action">
+                                                <x-button :href="route('equipment.create')">Add equipment</x-button>
+                                            </x-slot>
+                                        </x-empty-state>
                                     </td>
                                 </tr>
                             @endforelse
                         </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+    </x-table>
 </div>
