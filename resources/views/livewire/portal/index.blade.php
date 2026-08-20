@@ -140,7 +140,7 @@ new #[Layout('layouts.app')] class extends Component {
                                 <tr>
                                     <td class="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-6">{{ $project->title }}</td>
                                     <td class="px-3 py-4 text-sm whitespace-nowrap">
-                                        <span class="inline-flex items-center px-2 py-1 text-xs font-medium text-indigo-700 bg-indigo-100 rounded-full">{{ $project->status->value }}</span>
+                                        <span class="inline-flex items-center px-2 py-1 text-xs font-medium text-brand-700 bg-brand-100 rounded-full">{{ $project->status->value }}</span>
                                     </td>
                                     <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
                                         {{ $project->start_date?->format('M j, Y') ?? '—' }} → {{ $project->end_date?->format('M j, Y') ?? '—' }}
@@ -205,7 +205,7 @@ new #[Layout('layouts.app')] class extends Component {
                                 <p class="mt-1 text-sm font-medium text-gray-900">${{ number_format($invoice->total / 100, 2) }} <span class="font-normal text-gray-500">due {{ $invoice->due_date?->format('M j, Y') ?? 'N/A' }}</span></p>
                             </div>
                             <div class="ml-4">
-                                <button wire:click="markInvoicePaid('{{ $invoice->uuid }}')" wire:confirm="Mark this invoice as paid?" class="px-3 py-1.5 text-sm font-semibold text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-500">Mark as paid</button>
+                                <button wire:click="markInvoicePaid('{{ $invoice->uuid }}')" wire:confirm="Mark this invoice as paid?" class="px-3 py-1.5 text-sm font-semibold text-white bg-brand-600 rounded-md shadow-sm hover:bg-brand-500">Mark as paid</button>
                             </div>
                         </div>
                     </li>
