@@ -20,10 +20,16 @@ class RolePermissionSeeder extends Seeder
         'manage_company',
         'manage_users',
         'manage_projects',
+        'manage_contracts',
+        'manage_cost_codes',
+        'manage_boq',
+        'manage_budgets',
         'manage_tasks',
         'manage_estimates',
         'manage_change_orders',
         'manage_invoices',
+        'manage_billings',
+        'manage_payments',
         'manage_expenses',
         'manage_purchase_orders',
         'manage_suppliers',
@@ -48,14 +54,23 @@ class RolePermissionSeeder extends Seeder
         $this->role('owner', self::PERMISSIONS);
         $this->role('administrator', self::PERMISSIONS);
         $this->role('project_manager', [
-            'manage_projects', 'manage_tasks', 'manage_estimates', 'manage_change_orders',
-            'manage_invoices', 'manage_clients', 'manage_leads', 'manage_documents',
-            'manage_photos', 'manage_daily_logs', 'manage_time_entries',
+            'manage_projects', 'manage_contracts', 'manage_boq', 'manage_budgets',
+            'manage_progress_reports', 'manage_billings', 'manage_tasks', 'manage_estimates',
+            'manage_change_orders', 'manage_invoices', 'manage_clients', 'manage_leads',
+            'manage_documents', 'manage_photos', 'manage_daily_logs', 'manage_time_entries',
         ]);
         $this->role('engineer', ['manage_documents', 'manage_photos', 'manage_daily_logs']);
         $this->role('foreman', ['manage_photos', 'manage_daily_logs', 'manage_time_entries']);
         $this->role('staff', ['manage_time_entries']);
-        $this->role('accountant', ['manage_invoices', 'manage_expenses', 'manage_purchase_orders', 'manage_suppliers']);
+        $this->role('accountant', [
+            'manage_invoices', 'manage_billings', 'manage_payments',
+            'manage_expenses', 'manage_purchase_orders', 'manage_suppliers',
+        ]);
+        $this->role('quantity_surveyor', [
+            'manage_projects', 'manage_contracts', 'manage_cost_codes', 'manage_boq',
+            'manage_budgets', 'manage_progress_reports', 'manage_billings',
+            'manage_change_orders', 'manage_clients', 'manage_documents',
+        ]);
     }
 
     /**

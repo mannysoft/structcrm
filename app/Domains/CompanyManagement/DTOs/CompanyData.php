@@ -15,7 +15,7 @@ final readonly class CompanyData
         public ?string $address = null,
         public ?string $taxNumber = null,
         public ?string $timezone = null,
-        public Currency $currency = Currency::USD,
+        public Currency $currency = Currency::PHP,
         public ?string $logoPath = null,
     ) {}
 }

@@ -23,8 +23,8 @@ class CompanyFactory extends Factory
             'phone' => fake()->phoneNumber(),
             'address' => fake()->address(),
             'tax_number' => fake()->bothify('??#########'),
-            'timezone' => 'America/New_York',
-            'currency' => fake()->randomElement(Currency::cases()),
+            'timezone' => 'Asia/Manila',
+            'currency' => Currency::PHP,
         ];
     }
 }

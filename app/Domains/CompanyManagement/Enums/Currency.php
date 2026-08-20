@@ -12,4 +12,5 @@ enum Currency: string
     case CAD = 'CAD';
     case AUD = 'AUD';
     case NZD = 'NZD';
+    case PHP = 'PHP';
 }
