@@ -69,80 +69,82 @@ new #[Layout('layouts.app')] class extends Component {
 }; ?>
 
 <div>
-    <form wire:submit="save" class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
+    <x-page-header title="Add BOQ Item" description="Add a line item to the bill of quantities." />
+
+    <form wire:submit="save" class="mt-6 bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
         <div class="px-4 py-6 sm:p-8">
             <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
 
                 <div class="sm:col-span-3">
-                    <label for="project_id" class="block text-sm font-medium leading-6 text-gray-900">Project</label>
+                    <x-input-label for="project_id" value="Project" />
                     <div class="mt-2">
-                        <select id="project_id" wire:model="project_id" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-select id="project_id" wire:model="project_id">
                             <option value="">Select a project</option>
                             @foreach ($projects as $project)
                                 <option value="{{ $project->id }}">{{ $project->title }}</option>
                             @endforeach
-                        </select>
+                        </x-select>
                     </div>
-                    @error('project_id') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('project_id')" />
                 </div>
 
                 <div class="sm:col-span-3">
-                    <label for="cost_code_id" class="block text-sm font-medium leading-6 text-gray-900">Cost Code</label>
+                    <x-input-label for="cost_code_id" value="Cost Code" />
                     <div class="mt-2">
-                        <select id="cost_code_id" wire:model="cost_code_id" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-select id="cost_code_id" wire:model="cost_code_id">
                             <option value="">No cost code</option>
                             @foreach ($costCodes as $costCode)
                                 <option value="{{ $costCode->id }}">{{ $costCode->code }} — {{ $costCode->name }}</option>
                             @endforeach
-                        </select>
+                        </x-select>
                     </div>
-                    @error('cost_code_id') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('cost_code_id')" />
                 </div>
 
                 <div class="sm:col-span-3">
-                    <label for="item_code" class="block text-sm font-medium leading-6 text-gray-900">Item Code</label>
+                    <x-input-label for="item_code" value="Item Code" />
                     <div class="mt-2">
-                        <input type="text" wire:model="item_code" id="item_code" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-text-input wire:model="item_code" id="item_code" type="text" />
                     </div>
-                    @error('item_code') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('item_code')" />
                 </div>
 
                 <div class="col-span-full">
-                    <label for="description" class="block text-sm font-medium leading-6 text-gray-900">Description</label>
+                    <x-input-label for="description" value="Description" />
                     <div class="mt-2">
-                        <input type="text" wire:model="description" id="description" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-text-input wire:model="description" id="description" type="text" />
                     </div>
-                    @error('description') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('description')" />
                 </div>
 
                 <div class="sm:col-span-2">
-                    <label for="quantity" class="block text-sm font-medium leading-6 text-gray-900">Quantity</label>
+                    <x-input-label for="quantity" value="Quantity" />
                     <div class="mt-2">
-                        <input type="number" step="0.01" min="0" wire:model="quantity" id="quantity" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-text-input type="number" step="0.01" min="0" wire:model="quantity" id="quantity" />
                     </div>
-                    @error('quantity') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('quantity')" />
                 </div>
 
                 <div class="sm:col-span-2">
-                    <label for="unit" class="block text-sm font-medium leading-6 text-gray-900">Unit</label>
+                    <x-input-label for="unit" value="Unit" />
                     <div class="mt-2">
-                        <input type="text" wire:model="unit" id="unit" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-text-input wire:model="unit" id="unit" type="text" />
                     </div>
-                    @error('unit') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('unit')" />
                 </div>
 
                 <div class="sm:col-span-2">
-                    <label for="unit_price" class="block text-sm font-medium leading-6 text-gray-900">Unit Price</label>
+                    <x-input-label for="unit_price" value="Unit Price" />
                     <div class="mt-2">
-                        <input type="number" step="0.01" min="0" wire:model="unit_price" id="unit_price" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-text-input type="number" step="0.01" min="0" wire:model="unit_price" id="unit_price" />
                     </div>
-                    @error('unit_price') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('unit_price')" />
                 </div>
             </div>
         </div>
-        <div class="flex items-center justify-end px-4 py-4 border-t border-gray-900/10 gap-x-6 sm:px-8 bg-gray-50 rounded-b-xl">
-            <a href="{{ route('boq_items.index') }}" wire:navigate class="text-sm font-semibold leading-6 text-gray-900">Cancel</a>
-            <button type="submit" class="px-3 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Save</button>
+        <div class="flex items-center justify-end gap-x-3 border-t border-gray-200 bg-gray-50 px-4 py-4 rounded-b-xl sm:px-8">
+            <a href="{{ route('boq_items.index') }}" wire:navigate class="text-sm font-semibold text-gray-900">Cancel</a>
+            <x-button type="submit">Save</x-button>
         </div>
     </form>
 </div>

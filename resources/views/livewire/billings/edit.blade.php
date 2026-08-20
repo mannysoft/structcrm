@@ -181,56 +181,58 @@ new #[Layout('layouts.app')] class extends Component {
 }; ?>
 
 <div>
-    <form wire:submit="save" class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
+    <x-page-header title="Edit Billing" description="Update this progress billing." />
+
+    <form wire:submit="save" class="mt-6 bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
         <div class="px-4 py-6 sm:p-8">
             <div class="grid max-w-3xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
 
                 <div class="sm:col-span-3">
-                    <label for="project_id" class="block text-sm font-medium leading-6 text-gray-900">Project</label>
+                    <x-input-label for="project_id" value="Project" />
                     <div class="mt-2">
-                        <select id="project_id" wire:model="project_id" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-select id="project_id" wire:model="project_id">
                             <option value="">Select a project</option>
                             @foreach ($projects as $project)
                                 <option value="{{ $project->id }}">{{ $project->title }}</option>
                             @endforeach
-                        </select>
+                        </x-select>
                     </div>
-                    @error('project_id') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('project_id')" />
                 </div>
 
                 <div class="sm:col-span-3">
-                    <label for="progress_report_id" class="block text-sm font-medium leading-6 text-gray-900">Progress Report (optional)</label>
+                    <x-input-label for="progress_report_id" value="Progress Report (optional)" />
                     <div class="mt-2">
-                        <select id="progress_report_id" wire:model="progress_report_id" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-select id="progress_report_id" wire:model="progress_report_id">
                             <option value="">No report</option>
                             @foreach ($progressReports as $report)
                                 <option value="{{ $report->id }}">{{ $report->report_number }} — {{ $report->report_date?->format('M j, Y') }}</option>
                             @endforeach
-                        </select>
+                        </x-select>
                     </div>
-                    @error('progress_report_id') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('progress_report_id')" />
                 </div>
 
                 <div class="sm:col-span-3">
-                    <label for="period_start" class="block text-sm font-medium leading-6 text-gray-900">Period Start</label>
+                    <x-input-label for="period_start" value="Period Start" />
                     <div class="mt-2">
-                        <input type="date" wire:model="period_start" id="period_start" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-text-input type="date" wire:model="period_start" id="period_start" />
                     </div>
-                    @error('period_start') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('period_start')" />
                 </div>
 
                 <div class="sm:col-span-3">
-                    <label for="period_end" class="block text-sm font-medium leading-6 text-gray-900">Period End</label>
+                    <x-input-label for="period_end" value="Period End" />
                     <div class="mt-2">
-                        <input type="date" wire:model="period_end" id="period_end" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-text-input type="date" wire:model="period_end" id="period_end" />
                     </div>
-                    @error('period_end') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('period_end')" />
                 </div>
 
                 <div class="sm:col-span-3">
-                    <label for="status" class="block text-sm font-medium leading-6 text-gray-900">Status</label>
+                    <x-input-label for="status" value="Status" />
                     <div class="mt-2">
-                        <select id="status" wire:model="status" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-select id="status" wire:model="status">
                             <option value="draft">Draft</option>
                             <option value="submitted">Submitted</option>
                             <option value="under_review">Under Review</option>
@@ -239,59 +241,59 @@ new #[Layout('layouts.app')] class extends Component {
                             <option value="due">Due</option>
                             <option value="partially_paid">Partially Paid</option>
                             <option value="paid">Paid</option>
-                        </select>
+                        </x-select>
                     </div>
-                    @error('status') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('status')" />
                 </div>
 
                 <div class="sm:col-span-3">
-                    <label for="retention_rate" class="block text-sm font-medium leading-6 text-gray-900">Retention Rate (%)</label>
+                    <x-input-label for="retention_rate" value="Retention Rate (%)" />
                     <div class="mt-2">
-                        <input type="number" step="0.01" min="0" max="100" wire:model="retention_rate" id="retention_rate" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-text-input type="number" step="0.01" min="0" max="100" wire:model="retention_rate" id="retention_rate" />
                     </div>
-                    @error('retention_rate') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('retention_rate')" />
                 </div>
 
                 <div class="sm:col-span-3">
-                    <label for="other_deductions" class="block text-sm font-medium leading-6 text-gray-900">Other Deductions</label>
+                    <x-input-label for="other_deductions" value="Other Deductions" />
                     <div class="mt-2">
-                        <input type="number" step="0.01" min="0" wire:model="other_deductions" id="other_deductions" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-text-input type="number" step="0.01" min="0" wire:model="other_deductions" id="other_deductions" />
                     </div>
-                    @error('other_deductions') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('other_deductions')" />
                 </div>
 
                 <div class="sm:col-span-3">
-                    <label for="due_date" class="block text-sm font-medium leading-6 text-gray-900">Due Date</label>
+                    <x-input-label for="due_date" value="Due Date" />
                     <div class="mt-2">
-                        <input type="date" wire:model="due_date" id="due_date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-text-input type="date" wire:model="due_date" id="due_date" />
                     </div>
-                    @error('due_date') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('due_date')" />
                 </div>
 
                 <div class="col-span-full">
-                    <label for="notes" class="block text-sm font-medium leading-6 text-gray-900">Notes</label>
+                    <x-input-label for="notes" value="Notes" />
                     <div class="mt-2">
-                        <textarea id="notes" wire:model="notes" rows="2" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                        <x-textarea id="notes" wire:model="notes" rows="2"></x-textarea>
                     </div>
-                    @error('notes') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('notes')" />
                 </div>
 
                 <div class="col-span-full" x-data="{ items: @entangle('items') }">
                     <div class="flex items-center justify-between">
                         <h3 class="text-sm font-medium leading-6 text-gray-900">Billing Items</h3>
-                        <button type="button" @click="items.push({ description: '', quantity: 1, unit_price: '0.00' })" class="text-sm font-semibold text-indigo-600 hover:text-indigo-500">Add item</button>
+                        <button type="button" @click="items.push({ description: '', quantity: 1, unit_price: '0.00' })" class="text-sm font-semibold text-brand-600 hover:text-brand-500">Add item</button>
                     </div>
                     <div class="mt-4 space-y-4">
                         <template x-for="(item, index) in items" :key="index">
                             <div class="grid grid-cols-12 gap-3">
                                 <div class="col-span-6">
-                                    <input type="text" x-model="item.description" placeholder="Description" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                    <x-text-input x-model="item.description" placeholder="Description" />
                                 </div>
                                 <div class="col-span-2">
-                                    <input type="number" step="0.01" x-model="item.quantity" min="0" placeholder="Qty" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                    <x-text-input type="number" step="0.01" x-model="item.quantity" min="0" placeholder="Qty" />
                                 </div>
                                 <div class="col-span-3">
-                                    <input type="number" step="0.01" x-model="item.unit_price" placeholder="Unit price" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                    <x-text-input type="number" step="0.01" x-model="item.unit_price" placeholder="Unit price" />
                                 </div>
                                 <div class="col-span-1 flex items-center">
                                     <button type="button" @click="items.splice(index, 1)" class="text-sm text-red-600 hover:text-red-900">Remove</button>
@@ -299,14 +301,14 @@ new #[Layout('layouts.app')] class extends Component {
                             </div>
                         </template>
                     </div>
-                    @error('items') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
-                    @error('items.*.description') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('items')" />
+                    <x-input-error :messages="$errors->get('items.*.description')" />
                 </div>
             </div>
         </div>
-        <div class="flex items-center justify-end px-4 py-4 border-t border-gray-900/10 gap-x-6 sm:px-8 bg-gray-50 rounded-b-xl">
-            <a href="{{ route('billings.index') }}" wire:navigate class="text-sm font-semibold leading-6 text-gray-900">Cancel</a>
-            <button type="submit" class="px-3 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Save</button>
+        <div class="flex items-center justify-end gap-x-3 border-t border-gray-200 bg-gray-50 px-4 py-4 rounded-b-xl sm:px-8">
+            <a href="{{ route('billings.index') }}" wire:navigate class="text-sm font-semibold text-gray-900">Cancel</a>
+            <x-button type="submit">Save</x-button>
         </div>
     </form>
 
