@@ -47,47 +47,49 @@ new #[Layout('layouts.app')] class extends Component {
 }; ?>
 
 <div>
-    <form wire:submit="save" class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
+    <x-page-header title="Log Service" description="Record a maintenance service." />
+
+    <form wire:submit="save" class="mt-6 bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
         <div class="px-4 py-6 sm:p-8">
             <div class="grid max-w-3xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                 <div class="sm:col-span-3">
-                    <label for="equipment_id" class="block text-sm font-medium leading-6 text-gray-900">Equipment</label>
+                    <x-input-label for="equipment_id" value="Equipment" />
                     <div class="mt-2">
-                        <select id="equipment_id" wire:model="equipment_id" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-select id="equipment_id" wire:model="equipment_id">
                             <option value="">Select equipment</option>
                             @foreach ($equipment as $item)
                                 <option value="{{ $item->id }}">{{ $item->name }}</option>
                             @endforeach
-                        </select>
+                        </x-select>
                     </div>
-                    @error('equipment_id') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('equipment_id')" />
                 </div>
                 <div class="sm:col-span-3">
-                    <label for="service_date" class="block text-sm font-medium leading-6 text-gray-900">Service Date</label>
+                    <x-input-label for="service_date" value="Service Date" />
                     <div class="mt-2">
-                        <input type="date" wire:model="service_date" id="service_date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-text-input type="date" wire:model="service_date" id="service_date" />
                     </div>
-                    @error('service_date') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('service_date')" />
                 </div>
                 <div class="col-span-full">
-                    <label for="description" class="block text-sm font-medium leading-6 text-gray-900">Description</label>
+                    <x-input-label for="description" value="Description" />
                     <div class="mt-2">
-                        <input type="text" wire:model="description" id="description" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-text-input type="text" wire:model="description" id="description" />
                     </div>
-                    @error('description') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('description')" />
                 </div>
                 <div class="sm:col-span-3">
-                    <label for="cost" class="block text-sm font-medium leading-6 text-gray-900">Cost (USD)</label>
+                    <x-input-label for="cost" value="Cost (USD)" />
                     <div class="mt-2">
-                        <input type="number" step="0.01" wire:model="cost" id="cost" min="0" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-text-input type="number" step="0.01" min="0" wire:model="cost" id="cost" />
                     </div>
-                    @error('cost') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('cost')" />
                 </div>
             </div>
         </div>
-        <div class="flex items-center justify-end px-4 py-4 border-t border-gray-900/10 gap-x-6 sm:px-8 bg-gray-50 rounded-b-xl">
-            <a href="{{ route('maintenance_logs.index') }}" wire:navigate class="text-sm font-semibold leading-6 text-gray-900">Cancel</a>
-            <button type="submit" class="px-3 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Save</button>
+        <div class="flex items-center justify-end gap-x-3 border-t border-gray-200 bg-gray-50 px-4 py-4 rounded-b-xl sm:px-8">
+            <a href="{{ route('maintenance_logs.index') }}" wire:navigate class="text-sm font-semibold text-gray-900">Cancel</a>
+            <x-button type="submit">Save</x-button>
         </div>
     </form>
 </div>

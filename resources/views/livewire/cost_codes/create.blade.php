@@ -48,58 +48,56 @@ new #[Layout('layouts.app')] class extends Component {
 }; ?>
 
 <div>
-    <form wire:submit="save" class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
+    <x-page-header title="New Cost Code" description="Categorize BOQ and budget items." />
+
+    <form wire:submit="save" class="mt-6 bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
         <div class="px-4 py-6 sm:p-8">
             <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-
                 <div class="sm:col-span-3">
-                    <label for="code" class="block text-sm font-medium leading-6 text-gray-900">Code</label>
+                    <x-input-label for="code" value="Code" />
                     <div class="mt-2">
-                        <input type="text" wire:model="code" id="code" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-text-input type="text" wire:model="code" id="code" />
                     </div>
-                    @error('code') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('code')" />
                 </div>
-
                 <div class="sm:col-span-3">
-                    <label for="name" class="block text-sm font-medium leading-6 text-gray-900">Name</label>
+                    <x-input-label for="name" value="Name" />
                     <div class="mt-2">
-                        <input type="text" wire:model="name" id="name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-text-input type="text" wire:model="name" id="name" />
                     </div>
-                    @error('name') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('name')" />
                 </div>
-
                 <div class="sm:col-span-3">
-                    <label for="type" class="block text-sm font-medium leading-6 text-gray-900">Type</label>
+                    <x-input-label for="type" value="Type" />
                     <div class="mt-2">
-                        <select id="type" wire:model="type" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-select id="type" wire:model="type">
                             <option value="material">Material</option>
                             <option value="labor">Labor</option>
                             <option value="equipment">Equipment</option>
                             <option value="subcontract">Subcontract</option>
                             <option value="overhead">Overhead</option>
                             <option value="other">Other</option>
-                        </select>
+                        </x-select>
                     </div>
-                    @error('type') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('type')" />
                 </div>
-
                 <div class="sm:col-span-3">
-                    <label for="parent_id" class="block text-sm font-medium leading-6 text-gray-900">Parent</label>
+                    <x-input-label for="parent_id" value="Parent" />
                     <div class="mt-2">
-                        <select id="parent_id" wire:model="parent_id" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-select id="parent_id" wire:model="parent_id">
                             <option value="">No parent</option>
                             @foreach ($costCodes as $costCode)
                                 <option value="{{ $costCode->id }}">{{ $costCode->code }} — {{ $costCode->name }}</option>
                             @endforeach
-                        </select>
+                        </x-select>
                     </div>
-                    @error('parent_id') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('parent_id')" />
                 </div>
             </div>
         </div>
-        <div class="flex items-center justify-end px-4 py-4 border-t border-gray-900/10 gap-x-6 sm:px-8 bg-gray-50 rounded-b-xl">
-            <a href="{{ route('cost_codes.index') }}" wire:navigate class="text-sm font-semibold leading-6 text-gray-900">Cancel</a>
-            <button type="submit" class="px-3 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Save</button>
+        <div class="flex items-center justify-end gap-x-3 border-t border-gray-200 bg-gray-50 px-4 py-4 rounded-b-xl sm:px-8">
+            <a href="{{ route('cost_codes.index') }}" wire:navigate class="text-sm font-semibold text-gray-900">Cancel</a>
+            <x-button type="submit">Save</x-button>
         </div>
     </form>
 </div>
