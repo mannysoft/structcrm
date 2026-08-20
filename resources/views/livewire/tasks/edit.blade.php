@@ -87,90 +87,92 @@ new #[Layout('layouts.app')] class extends Component {
 }; ?>
 
 <div>
-    <form wire:submit="save" class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
+    <x-page-header title="Edit Task" description="Update this task." />
+
+    <form wire:submit="save" class="mt-6 bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
         <div class="px-4 py-6 sm:p-8">
             <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
 
                 <div class="sm:col-span-4">
-                    <label for="title" class="block text-sm font-medium leading-6 text-gray-900">Title</label>
+                    <x-input-label for="title" value="Title" />
                     <div class="mt-2">
-                        <input type="text" wire:model="title" id="title" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-text-input type="text" wire:model="title" id="title" />
                     </div>
-                    @error('title') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('title')" />
                 </div>
 
                 <div class="sm:col-span-3">
-                    <label for="project_id" class="block text-sm font-medium leading-6 text-gray-900">Project</label>
+                    <x-input-label for="project_id" value="Project" />
                     <div class="mt-2">
-                        <select id="project_id" wire:model="project_id" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-select id="project_id" wire:model="project_id">
                             <option value="">Select a project</option>
                             @foreach ($projects as $project)
                                 <option value="{{ $project->id }}">{{ $project->title }}</option>
                             @endforeach
-                        </select>
+                        </x-select>
                     </div>
-                    @error('project_id') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('project_id')" />
                 </div>
 
                 <div class="sm:col-span-3">
-                    <label for="assigned_user_id" class="block text-sm font-medium leading-6 text-gray-900">Assignee</label>
+                    <x-input-label for="assigned_user_id" value="Assignee" />
                     <div class="mt-2">
-                        <select id="assigned_user_id" wire:model="assigned_user_id" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-select id="assigned_user_id" wire:model="assigned_user_id">
                             <option value="">Unassigned</option>
                             @foreach ($users as $user)
                                 <option value="{{ $user->id }}">{{ $user->name }}</option>
                             @endforeach
-                        </select>
+                        </x-select>
                     </div>
-                    @error('assigned_user_id') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('assigned_user_id')" />
                 </div>
 
                 <div class="col-span-full">
-                    <label for="description" class="block text-sm font-medium leading-6 text-gray-900">Description</label>
+                    <x-input-label for="description" value="Description" />
                     <div class="mt-2">
-                        <textarea id="description" wire:model="description" rows="3" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                        <x-textarea id="description" wire:model="description" rows="3"></x-textarea>
                     </div>
-                    @error('description') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('description')" />
                 </div>
 
                 <div class="sm:col-span-3">
-                    <label for="status" class="block text-sm font-medium leading-6 text-gray-900">Status</label>
+                    <x-input-label for="status" value="Status" />
                     <div class="mt-2">
-                        <select id="status" wire:model="status" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-select id="status" wire:model="status">
                             <option value="to_do">To Do</option>
                             <option value="in_progress">In Progress</option>
                             <option value="in_review">In Review</option>
                             <option value="done">Done</option>
-                        </select>
+                        </x-select>
                     </div>
-                    @error('status') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('status')" />
                 </div>
 
                 <div class="sm:col-span-3">
-                    <label for="priority" class="block text-sm font-medium leading-6 text-gray-900">Priority</label>
+                    <x-input-label for="priority" value="Priority" />
                     <div class="mt-2">
-                        <select id="priority" wire:model="priority" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-select id="priority" wire:model="priority">
                             <option value="low">Low</option>
                             <option value="medium">Medium</option>
                             <option value="high">High</option>
                             <option value="urgent">Urgent</option>
-                        </select>
+                        </x-select>
                     </div>
-                    @error('priority') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('priority')" />
                 </div>
 
                 <div class="sm:col-span-3">
-                    <label for="due_date" class="block text-sm font-medium leading-6 text-gray-900">Due Date</label>
+                    <x-input-label for="due_date" value="Due Date" />
                     <div class="mt-2">
-                        <input type="date" wire:model="due_date" id="due_date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-text-input type="date" wire:model="due_date" id="due_date" />
                     </div>
-                    @error('due_date') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('due_date')" />
                 </div>
             </div>
         </div>
-        <div class="flex items-center justify-end px-4 py-4 border-t border-gray-900/10 gap-x-6 sm:px-8 bg-gray-50 rounded-b-xl">
-            <a href="{{ route('tasks.index') }}" wire:navigate class="text-sm font-semibold leading-6 text-gray-900">Cancel</a>
-            <button type="submit" class="px-3 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Save</button>
+        <div class="flex items-center justify-end gap-x-3 border-t border-gray-200 bg-gray-50 px-4 py-4 rounded-b-xl sm:px-8">
+            <a href="{{ route('tasks.index') }}" wire:navigate class="text-sm font-semibold text-gray-900">Cancel</a>
+            <x-button type="submit">Save</x-button>
         </div>
     </form>
 </div>

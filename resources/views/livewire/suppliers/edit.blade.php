@@ -60,49 +60,51 @@ new #[Layout('layouts.app')] class extends Component {
 }; ?>
 
 <div>
-    <form wire:submit="save" class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
+    <x-page-header title="Edit Supplier" description="Update supplier details." />
+
+    <form wire:submit="save" class="mt-6 bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
         <div class="px-4 py-6 sm:p-8">
             <div class="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                 <div class="sm:col-span-4">
-                    <label for="name" class="block text-sm font-medium leading-6 text-gray-900">Name</label>
+                    <x-input-label for="name" value="Name" />
                     <div class="mt-2">
-                        <input type="text" wire:model="name" id="name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-text-input type="text" wire:model="name" id="name" />
                     </div>
-                    @error('name') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('name')" />
                 </div>
                 <div class="sm:col-span-3">
-                    <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email</label>
+                    <x-input-label for="email" value="Email" />
                     <div class="mt-2">
-                        <input type="email" wire:model="email" id="email" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-text-input type="email" wire:model="email" id="email" />
                     </div>
-                    @error('email') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('email')" />
                 </div>
                 <div class="sm:col-span-3">
-                    <label for="phone" class="block text-sm font-medium leading-6 text-gray-900">Phone</label>
+                    <x-input-label for="phone" value="Phone" />
                     <div class="mt-2">
-                        <input type="text" wire:model="phone" id="phone" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-text-input type="text" wire:model="phone" id="phone" />
                     </div>
-                    @error('phone') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('phone')" />
                 </div>
                 <div class="col-span-full">
-                    <label for="address" class="block text-sm font-medium leading-6 text-gray-900">Address</label>
+                    <x-input-label for="address" value="Address" />
                     <div class="mt-2">
-                        <textarea id="address" wire:model="address" rows="2" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                        <x-textarea id="address" wire:model="address" rows="2"></x-textarea>
                     </div>
-                    @error('address') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('address')" />
                 </div>
                 <div class="col-span-full">
-                    <label for="notes" class="block text-sm font-medium leading-6 text-gray-900">Notes</label>
+                    <x-input-label for="notes" value="Notes" />
                     <div class="mt-2">
-                        <textarea id="notes" wire:model="notes" rows="3" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                        <x-textarea id="notes" wire:model="notes" rows="3"></x-textarea>
                     </div>
-                    @error('notes') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('notes')" />
                 </div>
             </div>
         </div>
-        <div class="flex items-center justify-end px-4 py-4 border-t border-gray-900/10 gap-x-6 sm:px-8 bg-gray-50 rounded-b-xl">
-            <a href="{{ route('suppliers.index') }}" wire:navigate class="text-sm font-semibold leading-6 text-gray-900">Cancel</a>
-            <button type="submit" class="px-3 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Save</button>
+        <div class="flex items-center justify-end gap-x-3 border-t border-gray-200 bg-gray-50 px-4 py-4 rounded-b-xl sm:px-8">
+            <a href="{{ route('suppliers.index') }}" wire:navigate class="text-sm font-semibold text-gray-900">Cancel</a>
+            <x-button type="submit">Save</x-button>
         </div>
     </form>
 </div>

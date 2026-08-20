@@ -66,82 +66,84 @@ new #[Layout('layouts.app')] class extends Component {
 }; ?>
 
 <div>
-    <form wire:submit="save" class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
+    <x-page-header title="Add Daily Log" description="Record a field report for your crew." />
+
+    <form wire:submit="save" class="mt-6 bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
         <div class="px-4 py-6 sm:p-8">
             <div class="grid max-w-3xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                 <div class="sm:col-span-3">
-                    <label for="project_id" class="block text-sm font-medium leading-6 text-gray-900">Project</label>
+                    <x-input-label for="project_id" value="Project" />
                     <div class="mt-2">
-                        <select id="project_id" wire:model="project_id" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-select id="project_id" wire:model="project_id">
                             <option value="">Select a project</option>
                             @foreach ($projects as $project)
                                 <option value="{{ $project->id }}">{{ $project->title }}</option>
                             @endforeach
-                        </select>
+                        </x-select>
                     </div>
-                    @error('project_id') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('project_id')" />
                 </div>
                 <div class="sm:col-span-3">
-                    <label for="log_date" class="block text-sm font-medium leading-6 text-gray-900">Date</label>
+                    <x-input-label for="log_date" value="Date" />
                     <div class="mt-2">
-                        <input type="date" wire:model="log_date" id="log_date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-text-input type="date" wire:model="log_date" id="log_date" />
                     </div>
-                    @error('log_date') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('log_date')" />
                 </div>
                 <div class="sm:col-span-3">
-                    <label for="weather" class="block text-sm font-medium leading-6 text-gray-900">Weather</label>
+                    <x-input-label for="weather" value="Weather" />
                     <div class="mt-2">
-                        <input type="text" wire:model="weather" id="weather" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-text-input type="text" wire:model="weather" id="weather" />
                     </div>
-                    @error('weather') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('weather')" />
                 </div>
                 <div class="sm:col-span-3">
-                    <label for="crew_count" class="block text-sm font-medium leading-6 text-gray-900">Crew Count</label>
+                    <x-input-label for="crew_count" value="Crew Count" />
                     <div class="mt-2">
-                        <input type="number" wire:model="crew_count" id="crew_count" min="0" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-text-input type="number" wire:model="crew_count" id="crew_count" min="0" />
                     </div>
-                    @error('crew_count') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('crew_count')" />
                 </div>
                 <div class="sm:col-span-3">
-                    <label for="labor_hours" class="block text-sm font-medium leading-6 text-gray-900">Labor Hours</label>
+                    <x-input-label for="labor_hours" value="Labor Hours" />
                     <div class="mt-2">
-                        <input type="number" step="0.01" wire:model="labor_hours" id="labor_hours" min="0" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-text-input type="number" step="0.01" wire:model="labor_hours" id="labor_hours" min="0" />
                     </div>
-                    @error('labor_hours') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('labor_hours')" />
                 </div>
                 <div class="col-span-full">
-                    <label for="work_performed" class="block text-sm font-medium leading-6 text-gray-900">Work Performed</label>
+                    <x-input-label for="work_performed" value="Work Performed" />
                     <div class="mt-2">
-                        <textarea id="work_performed" wire:model="work_performed" rows="3" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                        <x-textarea id="work_performed" wire:model="work_performed" rows="3"></x-textarea>
                     </div>
-                    @error('work_performed') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('work_performed')" />
                 </div>
                 <div class="col-span-full">
-                    <label for="equipment_usage" class="block text-sm font-medium leading-6 text-gray-900">Equipment Usage</label>
+                    <x-input-label for="equipment_usage" value="Equipment Usage" />
                     <div class="mt-2">
-                        <textarea id="equipment_usage" wire:model="equipment_usage" rows="2" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                        <x-textarea id="equipment_usage" wire:model="equipment_usage" rows="2"></x-textarea>
                     </div>
-                    @error('equipment_usage') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('equipment_usage')" />
                 </div>
                 <div class="col-span-full">
-                    <label for="issues" class="block text-sm font-medium leading-6 text-gray-900">Issues</label>
+                    <x-input-label for="issues" value="Issues" />
                     <div class="mt-2">
-                        <textarea id="issues" wire:model="issues" rows="2" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                        <x-textarea id="issues" wire:model="issues" rows="2"></x-textarea>
                     </div>
-                    @error('issues') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('issues')" />
                 </div>
                 <div class="col-span-full">
-                    <label for="safety_incidents" class="block text-sm font-medium leading-6 text-gray-900">Safety Incidents</label>
+                    <x-input-label for="safety_incidents" value="Safety Incidents" />
                     <div class="mt-2">
-                        <textarea id="safety_incidents" wire:model="safety_incidents" rows="2" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                        <x-textarea id="safety_incidents" wire:model="safety_incidents" rows="2"></x-textarea>
                     </div>
-                    @error('safety_incidents') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('safety_incidents')" />
                 </div>
             </div>
         </div>
-        <div class="flex items-center justify-end px-4 py-4 border-t border-gray-900/10 gap-x-6 sm:px-8 bg-gray-50 rounded-b-xl">
-            <a href="{{ route('daily_logs.index') }}" wire:navigate class="text-sm font-semibold leading-6 text-gray-900">Cancel</a>
-            <button type="submit" class="px-3 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Save</button>
+        <div class="flex items-center justify-end gap-x-3 border-t border-gray-200 bg-gray-50 px-4 py-4 rounded-b-xl sm:px-8">
+            <a href="{{ route('daily_logs.index') }}" wire:navigate class="text-sm font-semibold text-gray-900">Cancel</a>
+            <x-button type="submit">Save</x-button>
         </div>
     </form>
 </div>

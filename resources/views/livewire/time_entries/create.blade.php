@@ -42,40 +42,42 @@ new #[Layout('layouts.app')] class extends Component {
 }; ?>
 
 <div>
-    <form wire:submit="save" class="bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl md:col-span-2">
+    <x-page-header title="Clock In" description="Record a new time entry." />
+
+    <form wire:submit="save" class="mt-6 bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
         <div class="px-4 py-6 sm:p-8">
             <div class="grid max-w-3xl grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                 <div class="sm:col-span-3">
-                    <label for="project_id" class="block text-sm font-medium leading-6 text-gray-900">Project</label>
+                    <x-input-label for="project_id" value="Project" />
                     <div class="mt-2">
-                        <select id="project_id" wire:model="project_id" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-select id="project_id" wire:model="project_id">
                             <option value="">Select a project</option>
                             @foreach ($projects as $project)
                                 <option value="{{ $project->id }}">{{ $project->title }}</option>
                             @endforeach
-                        </select>
+                        </x-select>
                     </div>
-                    @error('project_id') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('project_id')" />
                 </div>
                 <div class="sm:col-span-3">
-                    <label for="clock_in_at" class="block text-sm font-medium leading-6 text-gray-900">Clock In</label>
+                    <x-input-label for="clock_in_at" value="Clock In" />
                     <div class="mt-2">
-                        <input type="datetime-local" wire:model="clock_in_at" id="clock_in_at" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-text-input type="datetime-local" wire:model="clock_in_at" id="clock_in_at" />
                     </div>
-                    @error('clock_in_at') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('clock_in_at')" />
                 </div>
                 <div class="col-span-full">
-                    <label for="notes" class="block text-sm font-medium leading-6 text-gray-900">Notes</label>
+                    <x-input-label for="notes" value="Notes" />
                     <div class="mt-2">
-                        <textarea id="notes" wire:model="notes" rows="3" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                        <x-textarea id="notes" wire:model="notes" rows="3"></x-textarea>
                     </div>
-                    @error('notes') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('notes')" />
                 </div>
             </div>
         </div>
-        <div class="flex items-center justify-end px-4 py-4 border-t border-gray-900/10 gap-x-6 sm:px-8 bg-gray-50 rounded-b-xl">
-            <a href="{{ route('time_entries.index') }}" wire:navigate class="text-sm font-semibold leading-6 text-gray-900">Cancel</a>
-            <button type="submit" class="px-3 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Clock in</button>
+        <div class="flex items-center justify-end gap-x-3 border-t border-gray-200 bg-gray-50 px-4 py-4 rounded-b-xl sm:px-8">
+            <a href="{{ route('time_entries.index') }}" wire:navigate class="text-sm font-semibold text-gray-900">Cancel</a>
+            <x-button type="submit">Clock in</x-button>
         </div>
     </form>
 </div>
