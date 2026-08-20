@@ -8,7 +8,7 @@ class UpdateChangeOrderRequest extends StoreChangeOrderRequest
 {
     public function authorize(): bool
     {
-        $changeOrder = $this->route('changeOrder');
+        $changeOrder = $this->route('change_order');
 
         return $this->user()?->can('update', $changeOrder) ?? false;
     }

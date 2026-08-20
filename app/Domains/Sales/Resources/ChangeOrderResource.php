@@ -17,8 +17,15 @@ class ChangeOrderResource extends JsonResource
             'project_id' => $this->project_id,
             'description' => $this->description,
             'amount' => $this->amount / 100,
+            'currency' => $this->amount_currency,
             'status' => $this->status->value,
             'approved_at' => $this->approved_at?->toIso8601String(),
+            'items' => $this->whenLoaded('items', fn () => $this->items->map(fn ($item) => [
+                'id' => $item->id,
+                'category' => $item->category->value,
+                'description' => $item->description,
+                'amount' => $item->amount / 100,
+            ])),
             'created_at' => $this->created_at?->toIso8601String(),
         ];
     }

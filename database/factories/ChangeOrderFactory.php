@@ -20,6 +20,7 @@ class ChangeOrderFactory extends Factory
         return [
             'description' => $this->faker->sentence(),
             'amount' => $this->faker->numberBetween(-50000, 500000),
+            'amount_currency' => 'PHP',
             'status' => $this->faker->randomElement(ChangeOrderStatus::cases()),
         ];
     }

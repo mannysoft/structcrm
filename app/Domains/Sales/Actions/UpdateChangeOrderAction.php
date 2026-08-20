@@ -17,10 +17,21 @@ final class UpdateChangeOrderAction
                 'project_id' => $data->projectId,
                 'description' => $data->description,
                 'amount' => $data->amountInCents,
+                'amount_currency' => $data->amountCurrency,
                 'status' => $data->status,
             ]);
 
-            return $changeOrder;
+            $changeOrder->items()->delete();
+
+            foreach ($data->items as $item) {
+                $changeOrder->items()->create([
+                    'category' => $item['category'],
+                    'description' => $item['description'],
+                    'amount' => $item['amount'],
+                ]);
+            }
+
+            return $changeOrder->load('items');
         });
     }
 }

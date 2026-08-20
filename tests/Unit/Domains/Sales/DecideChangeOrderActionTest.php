@@ -51,3 +51,17 @@ test('it rejects a change order', function () {
     $this->assertSame(ChangeOrderStatus::Rejected, $changeOrder->status);
     $this->assertNull($changeOrder->approved_at);
 });
+
+test('approving a change order revises the project budget', function () {
+
+    $changeOrder = makeChangeOrder(ChangeOrderStatus::Pending);
+
+    app(DecideChangeOrderAction::class)->execute($changeOrder, ChangeOrderStatus::Approved);
+
+    $this->assertDatabaseHas('budgets', [
+        'company_id' => $changeOrder->company_id,
+        'project_id' => $changeOrder->project_id,
+        'type' => 'revised',
+        'is_current' => true,
+    ]);
+});

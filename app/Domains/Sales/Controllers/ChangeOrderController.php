@@ -26,7 +26,7 @@ final class ChangeOrderController extends Controller
 
     public function index(Request $request): JsonResponse
     {
-        $changeOrders = ChangeOrder::with('project')
+        $changeOrders = ChangeOrder::with(['project', 'items'])
             ->where('company_id', $request->user()->company_id)
             ->latest()
             ->get();

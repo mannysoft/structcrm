@@ -56,3 +56,33 @@ test('it sets approved at when created approved', function () {
 
     $this->assertNotNull($changeOrder->approved_at);
 });
+
+test('it creates a change order with cost breakdown items', function () {
+
+    $company = Company::factory()->create();
+    $client = Client::factory()->create(['company_id' => $company->id]);
+    $project = Project::factory()->create([
+        'company_id' => $company->id,
+        'client_id' => $client->id,
+    ]);
+
+    $changeOrder = app(CreateChangeOrderAction::class)->execute(new ChangeOrderData(
+        projectId: $project->id,
+        description: 'Additional wall',
+        amountInCents: 18_000_000,
+        amountCurrency: 'PHP',
+        items: [
+            ['category' => 'material', 'description' => 'Materials', 'amount' => 8_000_000],
+            ['category' => 'labor', 'description' => 'Labor', 'amount' => 4_500_000],
+        ],
+    ), $company->id);
+
+    $this->assertCount(2, $changeOrder->items);
+    $this->assertSame('PHP', $changeOrder->amount_currency);
+
+    $this->assertDatabaseHas('change_order_items', [
+        'change_order_id' => $changeOrder->id,
+        'description' => 'Materials',
+        'amount' => 8_000_000,
+    ]);
+});

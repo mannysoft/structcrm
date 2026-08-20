@@ -13,13 +13,24 @@ final class CreateChangeOrderAction
     public function execute(ChangeOrderData $data, int $companyId): ChangeOrder
     {
         return DB::transaction(function () use ($data, $companyId) {
-            return ChangeOrder::create([
+            $changeOrder = ChangeOrder::create([
                 'company_id' => $companyId,
                 'project_id' => $data->projectId,
                 'description' => $data->description,
                 'amount' => $data->amountInCents,
+                'amount_currency' => $data->amountCurrency,
                 'status' => $data->status,
             ]);
+
+            foreach ($data->items as $item) {
+                $changeOrder->items()->create([
+                    'category' => $item['category'],
+                    'description' => $item['description'],
+                    'amount' => $item['amount'],
+                ]);
+            }
+
+            return $changeOrder->load('items');
         });
     }
 }

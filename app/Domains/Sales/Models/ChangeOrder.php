@@ -6,6 +6,7 @@ namespace App\Domains\Sales\Models;
 
 use App\Common\Traits\BelongsToTenant;
 use App\Domains\CompanyManagement\Models\Company;
+use App\Domains\ProjectManagement\Models\Document;
 use App\Domains\ProjectManagement\Models\Project;
 use App\Domains\Sales\Enums\ChangeOrderStatus;
 use App\Domains\Sales\Observers\ChangeOrderObserver;
@@ -16,6 +17,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[ObservedBy([ChangeOrderObserver::class])]
@@ -31,6 +33,7 @@ class ChangeOrder extends Model
         'co_number',
         'description',
         'amount',
+        'amount_currency',
         'status',
         'approved_at',
     ];
@@ -77,5 +80,25 @@ class ChangeOrder extends Model
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
+    }
+
+    /**
+     * Get the line items for the change order.
+     *
+     * @return HasMany<ChangeOrderItem, $this>
+     */
+    public function items(): HasMany
+    {
+        return $this->hasMany(ChangeOrderItem::class);
+    }
+
+    /**
+     * Get the documents attached to the change order.
+     *
+     * @return HasMany<Document, $this>
+     */
+    public function documents(): HasMany
+    {
+        return $this->hasMany(Document::class, 'change_order_id');
     }
 }
