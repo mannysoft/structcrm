@@ -48,6 +48,9 @@ Route::middleware('auth')->group(function () {
     Volt::route('progress-reports', 'progress_reports.index')->name('progress_reports.index');
     Volt::route('progress-reports/create', 'progress_reports.create')->name('progress_reports.create');
     Volt::route('progress-reports/{progressReport}/edit', 'progress_reports.edit')->name('progress_reports.edit');
+    Volt::route('billings', 'billings.index')->name('billings.index');
+    Volt::route('billings/create', 'billings.create')->name('billings.create');
+    Volt::route('billings/{billing}/edit', 'billings.edit')->name('billings.edit');
     Volt::route('daily-logs', 'daily_logs.index')->name('daily_logs.index');
     Volt::route('daily-logs/create', 'daily_logs.create')->name('daily_logs.create');
     Volt::route('daily-logs/{dailyLog}/edit', 'daily_logs.edit')->name('daily_logs.edit');

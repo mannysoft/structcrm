@@ -1,6 +1,7 @@
 <?php
 
 use App\Domains\CompanyManagement\Controllers\CompanyController;
+use App\Domains\Finance\Controllers\BillingController;
 use App\Domains\Finance\Controllers\BoqItemController;
 use App\Domains\Finance\Controllers\BudgetController;
 use App\Domains\Finance\Controllers\ContractController;
@@ -42,6 +43,8 @@ Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
         Route::apiResource('boq-items', BoqItemController::class);
         Route::apiResource('budgets', BudgetController::class);
         Route::apiResource('progress-reports', ProgressReportController::class);
+        Route::apiResource('billings', BillingController::class);
+        Route::post('billings/{billing}/payments', [BillingController::class, 'storePayment'])->name('api.billings.payments.store');
         Route::apiResource('daily-logs', DailyLogController::class);
         Route::apiResource('project-photos', ProjectPhotoController::class);
         Route::apiResource('documents', DocumentController::class);
