@@ -87,12 +87,7 @@ new #[Layout('layouts.app')] class extends Component {
 }; ?>
 
 <div>
-    <div class="sm:flex sm:items-center">
-        <div class="sm:flex-auto">
-            <h1 class="text-2xl font-semibold leading-6 text-gray-900">Team</h1>
-            <p class="mt-2 text-sm text-gray-700">Invite team members and manage their roles.</p>
-        </div>
-    </div>
+    <x-page-header title="Team" description="Invite team members and manage their roles." />
 
     <div class="mt-8 bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl">
         <div class="px-4 py-6 sm:p-8">
@@ -101,76 +96,68 @@ new #[Layout('layouts.app')] class extends Component {
 
             <form wire:submit="invite" class="mt-4 grid max-w-2xl grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-3">
                 <div class="sm:col-span-2">
-                    <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email</label>
+                    <x-input-label for="email" value="Email" />
                     <div class="mt-2">
-                        <input type="email" wire:model="email" id="email" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-text-input type="email" wire:model="email" id="email" />
                     </div>
-                    @error('email') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('email')" />
                 </div>
 
                 <div>
-                    <label for="role" class="block text-sm font-medium leading-6 text-gray-900">Role</label>
+                    <x-input-label for="role" value="Role" />
                     <div class="mt-2">
-                        <select wire:model="role" id="role" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <x-select wire:model="role" id="role">
                             @foreach ($roles as $roleName)
                                 <option value="{{ $roleName }}">{{ ucwords(str_replace('_', ' ', $roleName)) }}</option>
                             @endforeach
-                        </select>
+                        </x-select>
                     </div>
-                    @error('role') <span class="text-xs text-red-600">{{ $message }}</span> @enderror
+                    <x-input-error :messages="$errors->get('role')" />
                 </div>
 
                 <div class="sm:col-span-3">
-                    <button type="submit" class="px-3 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Send invitation</button>
+                    <x-button type="submit">Send invitation</x-button>
                 </div>
             </form>
         </div>
     </div>
 
-    <div class="mt-8 flow-root">
-        <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-                <div class="overflow-hidden bg-white shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
-                    <table class="min-w-full divide-y divide-gray-300">
+    <x-table>
                         <thead class="bg-gray-50">
                             <tr>
-                                <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Name</th>
-                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Email</th>
-                                <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Role</th>
+                                <x-table.th>Name</x-table.th>
+                                <x-table.th>Email</x-table.th>
+                                <x-table.th>Role</x-table.th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
                             @forelse ($users as $teamMember)
                                 <tr>
-                                    <td class="py-4 pl-4 pr-3 text-sm font-medium text-gray-900 whitespace-nowrap sm:pl-6">
+                                    <x-table.td class="font-medium text-gray-900">
                                         {{ $teamMember->name }}
                                         @if ($teamMember->is(auth()->user()))
-                                            <span class="ml-2 text-xs font-medium text-indigo-700">(you)</span>
+                                            <span class="ml-2 text-xs font-medium text-brand-700">(you)</span>
                                         @endif
-                                    </td>
-                                    <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $teamMember->email }}</td>
-                                    <td class="px-3 py-4 text-sm text-gray-500 whitespace-nowrap">
+                                    </x-table.td>
+                                    <x-table.td>{{ $teamMember->email }}</x-table.td>
+                                    <x-table.td>
                                         <select
                                             wire:change="updateRole('{{ $teamMember->id }}', $event.target.value)"
                                             @if ($teamMember->is(auth()->user()) || ($teamMember->hasRole('owner') && ! auth()->user()->hasRole('owner'))) disabled @endif
-                                            class="block rounded-md border-0 py-1.5 pl-2 pr-8 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                            class="block rounded-lg border-0 py-1.5 pl-2 pr-8 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-brand-600 sm:text-sm sm:leading-6">
                                             @foreach ($allRoles as $roleName)
                                                 <option value="{{ $roleName }}" @if ($teamMember->getRoleNames()->first() === $roleName) selected @endif>{{ ucwords(str_replace('_', ' ', $roleName)) }}</option>
                                             @endforeach
                                         </select>
-                                    </td>
+                                    </x-table.td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="3" class="px-3 py-8 text-sm text-center text-gray-500">
-                                        No team members yet. Invite your first team member above.
+                                    <td colspan="3">
+                                        <x-empty-state title="No team members yet." description="Invite your first team member above." />
                                     </td>
                                 </tr>
                             @endforelse
                         </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+    </x-table>
 </div>

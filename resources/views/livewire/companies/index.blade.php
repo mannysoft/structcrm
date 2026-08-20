@@ -13,19 +13,13 @@ new #[Layout('layouts.app')] class extends Component {
 }; ?>
 
 <div>
-    <div class="sm:flex sm:items-center">
-        <div class="sm:flex-auto">
-            <h1 class="text-2xl font-semibold leading-6 text-gray-900">Company</h1>
-            <p class="mt-2 text-sm text-gray-700">Your company profile and billing settings.</p>
-        </div>
-        <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-            <a href="/companies/settings" wire:navigate class="block px-3 py-2 text-sm font-semibold text-center text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                Edit settings
-            </a>
-        </div>
-    </div>
+    <x-page-header title="Company" description="Your company profile and billing settings.">
+        <x-slot name="actions">
+            <x-button :href="route('companies.settings')">Edit settings</x-button>
+        </x-slot>
+    </x-page-header>
 
-    <div class="mt-8 overflow-hidden bg-white shadow ring-1 ring-black ring-opacity-5 sm:rounded-lg">
+    <div class="mt-6 overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
         @if ($company)
             <div class="px-4 py-6 sm:p-8">
                 <dl class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
