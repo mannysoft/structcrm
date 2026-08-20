@@ -42,6 +42,9 @@ Route::middleware('auth')->group(function () {
     Volt::route('boq-items/import', 'boq_items.import')->name('boq_items.import');
     Volt::route('boq-items/{boqItem}/edit', 'boq_items.edit')->name('boq_items.edit');
     Route::get('boq-items/template', [BoqImportController::class, 'template'])->name('boq_items.template');
+    Volt::route('budgets', 'budgets.index')->name('budgets.index');
+    Volt::route('budgets/create', 'budgets.create')->name('budgets.create');
+    Volt::route('budgets/{budget}/edit', 'budgets.edit')->name('budgets.edit');
     Volt::route('daily-logs', 'daily_logs.index')->name('daily_logs.index');
     Volt::route('daily-logs/create', 'daily_logs.create')->name('daily_logs.create');
     Volt::route('daily-logs/{dailyLog}/edit', 'daily_logs.edit')->name('daily_logs.edit');
