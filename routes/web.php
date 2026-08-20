@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\ClientAuthenticatedSessionController;
+use App\Domains\Finance\Controllers\BoqImportController;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
@@ -38,7 +39,9 @@ Route::middleware('auth')->group(function () {
     Volt::route('contracts/{contract}/edit', 'contracts.edit')->name('contracts.edit');
     Volt::route('boq-items', 'boq_items.index')->name('boq_items.index');
     Volt::route('boq-items/create', 'boq_items.create')->name('boq_items.create');
+    Volt::route('boq-items/import', 'boq_items.import')->name('boq_items.import');
     Volt::route('boq-items/{boqItem}/edit', 'boq_items.edit')->name('boq_items.edit');
+    Route::get('boq-items/template', [BoqImportController::class, 'template'])->name('boq_items.template');
     Volt::route('daily-logs', 'daily_logs.index')->name('daily_logs.index');
     Volt::route('daily-logs/create', 'daily_logs.create')->name('daily_logs.create');
     Volt::route('daily-logs/{dailyLog}/edit', 'daily_logs.edit')->name('daily_logs.edit');
