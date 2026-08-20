@@ -1,15 +1,33 @@
 <?php
 
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Url;
 use Livewire\Volt\Component;
+use Livewire\WithPagination;
 use App\Domains\ProjectManagement\Actions\DeleteEquipmentAction;
 use App\Domains\ProjectManagement\Models\Equipment;
 
 new #[Layout('layouts.app')] class extends Component {
+    use WithPagination;
+
+    #[Url]
+    public string $search = '';
+
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
+    }
+
     public function with(): array
     {
         return [
-            'equipment' => Equipment::withCount('maintenanceLogs')->latest()->get(),
+            'equipment' => Equipment::query()
+                ->withCount('maintenanceLogs')
+                ->when($this->search !== '', fn ($query) => $query->where(fn ($query) => $query
+                    ->where('name', 'like', '%'.$this->search.'%')
+                    ->orWhere('notes', 'like', '%'.$this->search.'%')))
+                ->latest()
+                ->paginate(15),
         ];
     }
 
@@ -35,6 +53,12 @@ new #[Layout('layouts.app')] class extends Component {
             <x-button :href="route('equipment.create')">Add equipment</x-button>
         </x-slot>
     </x-page-header>
+
+    <div class="mt-6 flex items-center gap-4">
+        <div class="w-full sm:max-w-xs">
+            <x-search-input placeholder="Search equipment…" />
+        </div>
+    </div>
 
     <x-table>
                         <thead class="bg-gray-50">
@@ -77,4 +101,8 @@ new #[Layout('layouts.app')] class extends Component {
                             @endforelse
                         </tbody>
     </x-table>
+
+    <div class="mt-6">
+        {{ $equipment->links() }}
+    </div>
 </div>

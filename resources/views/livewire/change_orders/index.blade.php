@@ -1,15 +1,33 @@
 <?php
 
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Url;
 use Livewire\Volt\Component;
+use Livewire\WithPagination;
 use App\Domains\Sales\Actions\DeleteChangeOrderAction;
 use App\Domains\Sales\Models\ChangeOrder;
 
 new #[Layout('layouts.app')] class extends Component {
+    use WithPagination;
+
+    #[Url]
+    public string $search = '';
+
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
+    }
+
     public function with(): array
     {
         return [
-            'changeOrders' => ChangeOrder::with('project')->latest()->get(),
+            'changeOrders' => ChangeOrder::query()
+                ->with('project')
+                ->when($this->search !== '', fn ($query) => $query->where(fn ($query) => $query
+                    ->where('co_number', 'like', '%'.$this->search.'%')
+                    ->orWhere('description', 'like', '%'.$this->search.'%')))
+                ->latest()
+                ->paginate(15),
         ];
     }
 
@@ -35,6 +53,12 @@ new #[Layout('layouts.app')] class extends Component {
             <x-button :href="route('change_orders.create')">Add change order</x-button>
         </x-slot>
     </x-page-header>
+
+    <div class="mt-6 flex items-center gap-4">
+        <div class="w-full sm:max-w-xs">
+            <x-search-input placeholder="Search change orders…" />
+        </div>
+    </div>
 
     <x-table>
                         <thead class="bg-gray-50">
@@ -75,4 +99,8 @@ new #[Layout('layouts.app')] class extends Component {
                             @endforelse
                         </tbody>
     </x-table>
+
+    <div class="mt-6">
+        {{ $changeOrders->links() }}
+    </div>
 </div>

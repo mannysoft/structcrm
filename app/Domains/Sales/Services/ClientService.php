@@ -7,6 +7,7 @@ namespace App\Domains\Sales\Services;
 use App\Domains\Sales\DTOs\ClientData;
 use App\Domains\Sales\Models\Client;
 use App\Domains\Sales\Repositories\ClientRepository;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
 class ClientService
@@ -21,6 +22,14 @@ class ClientService
     public function list(int $companyId): Collection
     {
         return $this->clients->allForCompany($companyId);
+    }
+
+    /**
+     * @return LengthAwarePaginator<int, Client>
+     */
+    public function paginate(int $companyId, string $search = '', int $perPage = 15): LengthAwarePaginator
+    {
+        return $this->clients->paginateForCompany($companyId, $search, $perPage);
     }
 
     public function find(string $uuid, int $companyId): ?Client

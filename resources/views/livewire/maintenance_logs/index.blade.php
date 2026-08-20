@@ -1,15 +1,33 @@
 <?php
 
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Url;
 use Livewire\Volt\Component;
+use Livewire\WithPagination;
 use App\Domains\ProjectManagement\Actions\DeleteMaintenanceLogAction;
 use App\Domains\ProjectManagement\Models\MaintenanceLog;
 
 new #[Layout('layouts.app')] class extends Component {
+    use WithPagination;
+
+    #[Url]
+    public string $search = '';
+
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
+    }
+
     public function with(): array
     {
         return [
-            'logs' => MaintenanceLog::with('equipment')->latest('service_date')->get(),
+            'logs' => MaintenanceLog::query()
+                ->with('equipment')
+                ->when($this->search !== '', fn ($query) => $query->where(fn ($query) => $query
+                    ->where('description', 'like', '%'.$this->search.'%')
+                    ->orWhereHas('equipment', fn ($q) => $q->where('name', 'like', '%'.$this->search.'%'))))
+                ->latest('service_date')
+                ->paginate(15),
         ];
     }
 
@@ -35,6 +53,12 @@ new #[Layout('layouts.app')] class extends Component {
             <x-button :href="route('maintenance_logs.create')">Log service</x-button>
         </x-slot>
     </x-page-header>
+
+    <div class="mt-6 flex items-center gap-4">
+        <div class="w-full sm:max-w-xs">
+            <x-search-input placeholder="Search maintenance logs…" />
+        </div>
+    </div>
 
     <x-table>
                         <thead class="bg-gray-50">
@@ -72,4 +96,8 @@ new #[Layout('layouts.app')] class extends Component {
                             @endforelse
                         </tbody>
     </x-table>
+
+    <div class="mt-6">
+        {{ $logs->links() }}
+    </div>
 </div>

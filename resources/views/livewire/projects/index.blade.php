@@ -1,15 +1,33 @@
 <?php
 
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Url;
 use Livewire\Volt\Component;
+use Livewire\WithPagination;
 use App\Domains\ProjectManagement\Actions\DeleteProjectAction;
 use App\Domains\ProjectManagement\Models\Project;
 
 new #[Layout('layouts.app')] class extends Component {
+    use WithPagination;
+
+    #[Url]
+    public string $search = '';
+
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
+    }
+
     public function with(): array
     {
         return [
-            'projects' => Project::with('client')->latest()->get(),
+            'projects' => Project::query()
+                ->with('client')
+                ->when($this->search !== '', fn ($query) => $query->where(fn ($query) => $query
+                    ->where('project_number', 'like', '%'.$this->search.'%')
+                    ->orWhere('title', 'like', '%'.$this->search.'%')))
+                ->latest()
+                ->paginate(15),
         ];
     }
 
@@ -35,6 +53,12 @@ new #[Layout('layouts.app')] class extends Component {
             <x-button :href="route('projects.create')">Add project</x-button>
         </x-slot>
     </x-page-header>
+
+    <div class="mt-6 flex items-center gap-4">
+        <div class="w-full sm:max-w-xs">
+            <x-search-input placeholder="Search projects…" />
+        </div>
+    </div>
     
     <x-table>
                         <thead class="bg-gray-50">
@@ -77,4 +101,8 @@ new #[Layout('layouts.app')] class extends Component {
                             @endforelse
                         </tbody>
     </x-table>
+
+    <div class="mt-6">
+        {{ $projects->links() }}
+    </div>
 </div>

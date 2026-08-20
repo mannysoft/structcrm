@@ -1,15 +1,34 @@
 <?php
 
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Url;
 use Livewire\Volt\Component;
+use Livewire\WithPagination;
 use App\Domains\ProjectManagement\Actions\DeleteTaskAction;
 use App\Domains\ProjectManagement\Models\Task;
 
 new #[Layout('layouts.app')] class extends Component {
+    use WithPagination;
+
+    #[Url]
+    public string $search = '';
+
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
+    }
+
     public function with(): array
     {
         return [
-            'tasks' => Task::with(['project', 'assignee'])->latest()->get(),
+            'tasks' => Task::query()
+                ->with(['project', 'assignee'])
+                ->when($this->search !== '', fn ($query) => $query->where(fn ($query) => $query
+                    ->where('title', 'like', '%'.$this->search.'%')
+                    ->orWhere('description', 'like', '%'.$this->search.'%')
+                    ->orWhereHas('project', fn ($q) => $q->where('title', 'like', '%'.$this->search.'%'))))
+                ->latest()
+                ->paginate(15),
         ];
     }
 
@@ -35,6 +54,12 @@ new #[Layout('layouts.app')] class extends Component {
             <x-button :href="route('tasks.create')">Add task</x-button>
         </x-slot>
     </x-page-header>
+
+    <div class="mt-6 flex items-center gap-4">
+        <div class="w-full sm:max-w-xs">
+            <x-search-input placeholder="Search tasks…" />
+        </div>
+    </div>
 
     <x-table>
                         <thead class="bg-gray-50">
@@ -79,4 +104,8 @@ new #[Layout('layouts.app')] class extends Component {
                             @endforelse
                         </tbody>
     </x-table>
+
+    <div class="mt-6">
+        {{ $tasks->links() }}
+    </div>
 </div>

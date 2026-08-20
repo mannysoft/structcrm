@@ -1,15 +1,34 @@
 <?php
 
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Url;
 use Livewire\Volt\Component;
+use Livewire\WithPagination;
 use App\Domains\Sales\Actions\DeletePurchaseOrderAction;
 use App\Domains\Sales\Models\PurchaseOrder;
 
 new #[Layout('layouts.app')] class extends Component {
+    use WithPagination;
+
+    #[Url]
+    public string $search = '';
+
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
+    }
+
     public function with(): array
     {
         return [
-            'purchaseOrders' => PurchaseOrder::with(['project', 'supplier'])->latest()->get(),
+            'purchaseOrders' => PurchaseOrder::query()
+                ->with(['project', 'supplier'])
+                ->when($this->search !== '', fn ($query) => $query->where(fn ($query) => $query
+                    ->where('po_number', 'like', '%'.$this->search.'%')
+                    ->orWhereHas('project', fn ($q) => $q->where('title', 'like', '%'.$this->search.'%'))
+                    ->orWhereHas('supplier', fn ($q) => $q->where('name', 'like', '%'.$this->search.'%'))))
+                ->latest()
+                ->paginate(15),
         ];
     }
 
@@ -35,6 +54,12 @@ new #[Layout('layouts.app')] class extends Component {
             <x-button :href="route('purchase_orders.create')">Add purchase order</x-button>
         </x-slot>
     </x-page-header>
+
+    <div class="mt-6 flex items-center gap-4">
+        <div class="w-full sm:max-w-xs">
+            <x-search-input placeholder="Search purchase orders…" />
+        </div>
+    </div>
 
     <x-table>
                         <thead class="bg-gray-50">
@@ -75,4 +100,8 @@ new #[Layout('layouts.app')] class extends Component {
                             @endforelse
                         </tbody>
     </x-table>
+
+    <div class="mt-6">
+        {{ $purchaseOrders->links() }}
+    </div>
 </div>

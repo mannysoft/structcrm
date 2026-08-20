@@ -1,15 +1,33 @@
 <?php
 
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Url;
 use Livewire\Volt\Component;
+use Livewire\WithPagination;
 use App\Domains\ProjectManagement\Actions\DeleteProjectPhotoAction;
 use App\Domains\ProjectManagement\Models\ProjectPhoto;
 
 new #[Layout('layouts.app')] class extends Component {
+    use WithPagination;
+
+    #[Url]
+    public string $search = '';
+
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
+    }
+
     public function with(): array
     {
         return [
-            'photos' => ProjectPhoto::with('project', 'uploader')->latest()->get(),
+            'photos' => ProjectPhoto::query()
+                ->with('project', 'uploader')
+                ->when($this->search !== '', fn ($query) => $query->where(fn ($query) => $query
+                    ->where('caption', 'like', '%'.$this->search.'%')
+                    ->orWhereHas('project', fn ($q) => $q->where('title', 'like', '%'.$this->search.'%'))))
+                ->latest()
+                ->paginate(15),
         ];
     }
 
@@ -35,6 +53,12 @@ new #[Layout('layouts.app')] class extends Component {
             <x-button :href="route('project_photos.create')">Upload photo</x-button>
         </x-slot>
     </x-page-header>
+
+    <div class="mt-6 flex items-center gap-4">
+        <div class="w-full sm:max-w-xs">
+            <x-search-input placeholder="Search photos…" />
+        </div>
+    </div>
 
     <x-table>
                         <thead class="bg-gray-50">
@@ -72,4 +96,8 @@ new #[Layout('layouts.app')] class extends Component {
                             @endforelse
                         </tbody>
     </x-table>
+
+    <div class="mt-6">
+        {{ $photos->links() }}
+    </div>
 </div>

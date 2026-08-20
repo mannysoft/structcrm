@@ -1,15 +1,33 @@
 <?php
 
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Url;
 use Livewire\Volt\Component;
+use Livewire\WithPagination;
 use App\Domains\Finance\Actions\DeleteBoqItemAction;
 use App\Domains\Finance\Models\BoqItem;
 
 new #[Layout('layouts.app')] class extends Component {
+    use WithPagination;
+
+    #[Url]
+    public string $search = '';
+
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
+    }
+
     public function with(): array
     {
         return [
-            'boqItems' => BoqItem::with(['project', 'costCode'])->latest()->get(),
+            'boqItems' => BoqItem::query()
+                ->with(['project', 'costCode'])
+                ->when($this->search !== '', fn ($query) => $query->where(fn ($query) => $query
+                    ->where('item_code', 'like', '%'.$this->search.'%')
+                    ->orWhere('description', 'like', '%'.$this->search.'%')))
+                ->latest()
+                ->paginate(15),
         ];
     }
 
@@ -36,6 +54,12 @@ new #[Layout('layouts.app')] class extends Component {
             <x-button :href="route('boq_items.create')">Add item</x-button>
         </x-slot>
     </x-page-header>
+
+    <div class="mt-6 flex items-center gap-4">
+        <div class="w-full sm:max-w-xs">
+            <x-search-input placeholder="Search BOQ items…" />
+        </div>
+    </div>
 
     <x-table>
                         <thead class="bg-gray-50">
@@ -82,4 +106,8 @@ new #[Layout('layouts.app')] class extends Component {
                             @endforelse
                         </tbody>
     </x-table>
+
+    <div class="mt-6">
+        {{ $boqItems->links() }}
+    </div>
 </div>

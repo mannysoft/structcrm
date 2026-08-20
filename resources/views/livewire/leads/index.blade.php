@@ -1,15 +1,34 @@
 <?php
 
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Url;
 use Livewire\Volt\Component;
+use Livewire\WithPagination;
 use App\Domains\Sales\Actions\DeleteLeadAction;
 use App\Domains\Sales\Models\Lead;
 
 new #[Layout('layouts.app')] class extends Component {
+    use WithPagination;
+
+    #[Url]
+    public string $search = '';
+
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
+    }
+
     public function with(): array
     {
         return [
-            'leads' => Lead::latest()->get(),
+            'leads' => Lead::query()
+                ->when($this->search !== '', fn ($query) => $query->where(fn ($query) => $query
+                    ->where('first_name', 'like', '%'.$this->search.'%')
+                    ->orWhere('last_name', 'like', '%'.$this->search.'%')
+                    ->orWhere('email', 'like', '%'.$this->search.'%')
+                    ->orWhere('phone', 'like', '%'.$this->search.'%')))
+                ->latest()
+                ->paginate(15),
         ];
     }
 
@@ -35,6 +54,12 @@ new #[Layout('layouts.app')] class extends Component {
             <x-button :href="route('leads.create')">Add lead</x-button>
         </x-slot>
     </x-page-header>
+
+    <div class="mt-6 flex items-center gap-4">
+        <div class="w-full sm:max-w-xs">
+            <x-search-input placeholder="Search leads…" />
+        </div>
+    </div>
     
     <x-table>
                         <thead class="bg-gray-50">
@@ -75,4 +100,8 @@ new #[Layout('layouts.app')] class extends Component {
                             @endforelse
                         </tbody>
     </x-table>
+
+    <div class="mt-6">
+        {{ $leads->links() }}
+    </div>
 </div>

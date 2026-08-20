@@ -1,14 +1,26 @@
 <?php
 
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Url;
 use Livewire\Volt\Component;
+use Livewire\WithPagination;
 use App\Domains\Sales\Services\ClientService;
 
 new #[Layout('layouts.app')] class extends Component {
+    use WithPagination;
+
+    #[Url]
+    public string $search = '';
+
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
+    }
+
     public function with(ClientService $service): array
     {
         return [
-            'clients' => $service->list(auth()->user()->company_id),
+            'clients' => $service->paginate(auth()->user()->company_id, $this->search),
         ];
     }
 
@@ -32,6 +44,12 @@ new #[Layout('layouts.app')] class extends Component {
             <x-button :href="route('clients.create')">Add client</x-button>
         </x-slot>
     </x-page-header>
+
+    <div class="mt-6 flex items-center gap-4">
+        <div class="w-full sm:max-w-xs">
+            <x-search-input placeholder="Search clients…" />
+        </div>
+    </div>
 
     <x-table>
                         <thead class="bg-gray-50">
@@ -70,4 +88,8 @@ new #[Layout('layouts.app')] class extends Component {
                             @endforelse
                         </tbody>
     </x-table>
+
+    <div class="mt-6">
+        {{ $clients->links() }}
+    </div>
 </div>

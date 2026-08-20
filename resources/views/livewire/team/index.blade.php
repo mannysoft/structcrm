@@ -1,13 +1,17 @@
 <?php
 
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Url;
 use Livewire\Attributes\Validate;
 use Livewire\Volt\Component;
+use Livewire\WithPagination;
 use App\Domains\CompanyManagement\Actions\InviteStaffUserAction;
 use App\Domains\CompanyManagement\Actions\UpdateStaffUserRoleAction;
 use App\Models\User;
 
 new #[Layout('layouts.app')] class extends Component {
+    use WithPagination;
+
     private const ALL_ROLES = ['owner', 'administrator', 'project_manager', 'engineer', 'foreman', 'staff', 'accountant'];
 
     #[Validate('required|email|max:255')]
@@ -15,6 +19,14 @@ new #[Layout('layouts.app')] class extends Component {
 
     #[Validate('required|string')]
     public string $role = 'staff';
+
+    #[Url]
+    public string $search = '';
+
+    public function updatedSearch(): void
+    {
+        $this->resetPage();
+    }
 
     public function mount(): void
     {
@@ -27,8 +39,11 @@ new #[Layout('layouts.app')] class extends Component {
             'users' => User::query()
                 ->where('company_id', auth()->user()->company_id)
                 ->where('type', User::TYPE_STAFF)
+                ->when($this->search !== '', fn ($query) => $query->where(fn ($query) => $query
+                    ->where('name', 'like', '%'.$this->search.'%')
+                    ->orWhere('email', 'like', '%'.$this->search.'%')))
                 ->orderBy('name')
-                ->get(),
+                ->paginate(15),
             'roles' => $this->availableRoles(),
             'allRoles' => self::ALL_ROLES,
         ];
@@ -122,6 +137,12 @@ new #[Layout('layouts.app')] class extends Component {
         </div>
     </div>
 
+    <div class="mt-6 flex items-center gap-4">
+        <div class="w-full sm:max-w-xs">
+            <x-search-input placeholder="Search team…" />
+        </div>
+    </div>
+
     <x-table>
                         <thead class="bg-gray-50">
                             <tr>
@@ -160,4 +181,8 @@ new #[Layout('layouts.app')] class extends Component {
                             @endforelse
                         </tbody>
     </x-table>
+
+    <div class="mt-6">
+        {{ $users->links() }}
+    </div>
 </div>
