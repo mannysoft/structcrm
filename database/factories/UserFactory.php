@@ -73,4 +73,16 @@ class UserFactory extends Factory
             'email_verified_at' => null,
         ]);
     }
+
+    /**
+     * Indicate that the user opted in to marketing emails the given number
+     * of days ago (defaults to today).
+     */
+    public function marketingOptIn(int $daysAgo = 0): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'marketing_opt_in' => true,
+            'marketing_consented_at' => now()->subDays($daysAgo),
+        ]);
+    }
 }

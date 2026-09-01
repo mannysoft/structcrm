@@ -17,7 +17,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
-#[Fillable(['company_id', 'client_id', 'type', 'name', 'email', 'password'])]
+#[Fillable(['company_id', 'client_id', 'type', 'name', 'email', 'password', 'marketing_opt_in', 'marketing_consented_at'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -64,6 +64,8 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'marketing_opt_in' => 'boolean',
+            'marketing_consented_at' => 'datetime',
         ];
     }
 }

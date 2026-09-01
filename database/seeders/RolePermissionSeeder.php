@@ -42,6 +42,7 @@ class RolePermissionSeeder extends Seeder
         'manage_time_entries',
         'manage_equipment',
         'manage_maintenance_logs',
+        'manage_marketing',
     ];
 
     public function run(): void

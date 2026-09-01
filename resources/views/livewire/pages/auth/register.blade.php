@@ -18,7 +18,8 @@ state([
     'name' => '',
     'email' => '',
     'password' => '',
-    'password_confirmation' => ''
+    'password_confirmation' => '',
+    'marketing_opt_in' => false,
 ]);
 
 rules([
@@ -26,6 +27,7 @@ rules([
     'name' => ['required', 'string', 'max:255'],
     'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
     'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+    'marketing_opt_in' => ['boolean'],
 ]);
 
 $register = function () {
@@ -36,6 +38,7 @@ $register = function () {
         userName: $validated['name'],
         email: $validated['email'],
         password: $validated['password'],
+        marketingOptIn: (bool) $validated['marketing_opt_in'],
     ));
 
     event(new Registered($user));
@@ -91,6 +94,15 @@ $register = function () {
                             name="password_confirmation" required autocomplete="new-password" />
 
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+        </div>
+
+        <!-- Marketing Opt-in -->
+        <div class="mt-4">
+            <label for="marketing_opt_in" class="inline-flex items-center">
+                <input wire:model="marketing_opt_in" id="marketing_opt_in" type="checkbox" class="rounded border-gray-300 text-brand-600 shadow-sm focus:ring-brand-500" name="marketing_opt_in">
+                <span class="ms-2 text-sm text-gray-600">{{ __("I'd like to receive product updates and marketing emails.") }}</span>
+            </label>
+            <x-input-error :messages="$errors->get('marketing_opt_in')" class="mt-2" />
         </div>
 
         <div class="flex items-center justify-end mt-4">

@@ -2,6 +2,7 @@
 
 use App\Domains\Finance\Controllers\BoqImportController;
 use App\Http\Controllers\Auth\ClientAuthenticatedSessionController;
+use App\Http\Controllers\MarketingUnsubscribeController;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
@@ -84,6 +85,10 @@ Route::middleware('auth')->group(function () {
     Volt::route('estimates', 'estimates.index')->name('estimates.index');
     Volt::route('estimates/create', 'estimates.create')->name('estimates.create');
     Volt::route('estimates/{estimate}/edit', 'estimates.edit')->name('estimates.edit');
+
+    Volt::route('marketing/campaigns', 'marketing.campaigns.index')->name('marketing.campaigns.index');
+    Volt::route('marketing/campaigns/create', 'marketing.campaigns.create')->name('marketing.campaigns.create');
+    Volt::route('marketing/campaigns/{campaign}/edit', 'marketing.campaigns.edit')->name('marketing.campaigns.edit');
 });
 
 require __DIR__.'/auth.php';
@@ -99,6 +104,10 @@ Volt::route('portal/set-password/{user}', 'portal.set-password')
 Volt::route('staff/set-password/{user}', 'pages.auth.set-password')
     ->middleware('signed')
     ->name('staff.set-password');
+
+Route::get('marketing/unsubscribe/{user}', MarketingUnsubscribeController::class)
+    ->middleware('signed')
+    ->name('marketing.unsubscribe');
 
 Route::middleware('auth:client')->group(function () {
     Volt::route('portal', 'portal.index')->name('portal.index');

@@ -24,6 +24,8 @@ final class CreateCompanyAndUserAction
                 'name' => $data->userName,
                 'email' => $data->email,
                 'password' => Hash::make($data->password),
+                'marketing_opt_in' => $data->marketingOptIn,
+                'marketing_consented_at' => $data->marketingOptIn ? now() : null,
             ]);
 
             $user->assignRole('owner');

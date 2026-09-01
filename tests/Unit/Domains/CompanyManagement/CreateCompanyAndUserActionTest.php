@@ -32,3 +32,21 @@ test('create company and user action provisions new tenant', function () {
     $this->assertNotNull($company);
     $this->assertSame('Stark Industries', $company->name);
 });
+
+test('create company and user action records marketing consent', function () {
+
+    $action = app(CreateCompanyAndUserAction::class);
+
+    $dto = new RegisterTenantData(
+        companyName: 'Stark Industries',
+        userName: 'Tony Stark',
+        email: 'tony@stark.com',
+        password: 'password123',
+        marketingOptIn: true,
+    );
+
+    $user = $action->execute($dto);
+
+    $this->assertTrue($user->marketing_opt_in);
+    $this->assertNotNull($user->marketing_consented_at);
+});

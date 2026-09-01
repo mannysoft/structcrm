@@ -11,5 +11,6 @@ final readonly class RegisterTenantData
         public string $userName,
         public string $email,
         public string $password,
+        public bool $marketingOptIn = false,
     ) {}
 }
