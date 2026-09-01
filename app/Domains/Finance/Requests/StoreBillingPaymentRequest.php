@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Domains\Finance\Requests;
 
-use App\Domains\Finance\Models\Billing;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreBillingPaymentRequest extends FormRequest

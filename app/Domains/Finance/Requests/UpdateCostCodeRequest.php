@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domains\Finance\Requests;
 
+use App\Domains\Finance\Enums\CostCodeType;
 use Illuminate\Validation\Rule;
 
 class UpdateCostCodeRequest extends StoreCostCodeRequest
@@ -23,7 +24,7 @@ class UpdateCostCodeRequest extends StoreCostCodeRequest
         return [
             'code' => ['required', 'string', 'max:50', Rule::unique('cost_codes', 'code')->where('company_id', $companyId)->whereNull('deleted_at')->ignore($costCodeId)],
             'name' => ['required', 'string', 'max:255'],
-            'type' => ['required', Rule::enum(\App\Domains\Finance\Enums\CostCodeType::class)],
+            'type' => ['required', Rule::enum(CostCodeType::class)],
             'parent_id' => ['nullable', 'integer', Rule::exists('cost_codes', 'id')->where('company_id', $companyId)],
         ];
     }
