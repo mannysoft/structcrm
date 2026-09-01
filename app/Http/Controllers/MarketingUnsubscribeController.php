@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Domains\Marketing\Jobs\SyncResendContactJob;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
 
@@ -19,6 +20,8 @@ class MarketingUnsubscribeController extends Controller
                 'marketing_opt_in' => false,
                 'marketing_consented_at' => null,
             ]);
+
+            SyncResendContactJob::dispatch($user->id);
         }
 
         return view('marketing.unsubscribed');
