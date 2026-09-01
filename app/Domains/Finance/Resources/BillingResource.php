@@ -26,6 +26,7 @@ class BillingResource extends JsonResource
             'net_amount' => $this->net_amount / 100,
             'currency' => $this->currency,
             'status' => $this->status->value,
+            'collection_status' => $this->collectionStatus(),
             'certified_at' => $this->certified_at?->toIso8601String(),
             'due_date' => $this->due_date?->format('Y-m-d'),
             'paid_amount' => $this->paidAmount() / 100,

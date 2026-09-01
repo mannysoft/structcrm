@@ -70,6 +70,7 @@ new #[Layout('layouts.app')] class extends Component {
                                 <x-table.th>Net Billing</x-table.th>
                                 <x-table.th>Balance</x-table.th>
                                 <x-table.th>Status</x-table.th>
+                                <x-table.th>Collection</x-table.th>
                                 <x-table.th>
                                     <span class="sr-only">Actions</span>
                                 </x-table.th>
@@ -86,6 +87,17 @@ new #[Layout('layouts.app')] class extends Component {
                                     <x-table.td>
                                         <x-badge tone="sky">{{ ucfirst(str_replace('_', ' ', $billing->status->value)) }}</x-badge>
                                     </x-table.td>
+                                    <x-table.td>
+                                        @php
+                                            $collectionTone = match ($billing->collectionStatus()) {
+                                                'paid' => 'green',
+                                                'overdue' => 'red',
+                                                'partially_paid' => 'amber',
+                                                default => 'gray',
+                                            };
+                                        @endphp
+                                        <x-badge :tone="$collectionTone">{{ ucfirst(str_replace('_', ' ', $billing->collectionStatus())) }}</x-badge>
+                                    </x-table.td>
                                     <x-table.td class="text-right font-medium">
                                         <a href="{{ route('billings.edit', $billing) }}" wire:navigate class="text-brand-600 hover:text-brand-700">Edit</a>
                                         <x-confirm-delete :uuid="$billing->uuid" class="ml-4">Delete</x-confirm-delete>
@@ -93,7 +105,7 @@ new #[Layout('layouts.app')] class extends Component {
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="7">
+                                    <td colspan="8">
                                         <x-empty-state title="No billings found." description="Add a billing to get started.">
                                             <x-slot name="action">
                                                 <x-button :href="route('billings.create')">Add billing</x-button>

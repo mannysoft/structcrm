@@ -9,6 +9,7 @@ use App\Common\ValueObjects\Money;
 use App\Domains\CompanyManagement\Models\Company;
 use App\Domains\Finance\Enums\BillingStatus;
 use App\Domains\Finance\Observers\BillingObserver;
+use App\Domains\ProjectManagement\Models\Document;
 use App\Domains\ProjectManagement\Models\Project;
 use Database\Factories\BillingFactory;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
@@ -161,5 +162,35 @@ class Billing extends Model
     public function payments(): HasMany
     {
         return $this->hasMany(BillingPayment::class);
+    }
+
+    /**
+     * Get the supporting documents attached to the billing.
+     *
+     * @return HasMany<Document, $this>
+     */
+    public function documents(): HasMany
+    {
+        return $this->hasMany(Document::class, 'billing_id');
+    }
+
+    /**
+     * Derive the collection status from the billing's balance and due date.
+     */
+    public function collectionStatus(): string
+    {
+        if ($this->balanceAmount() <= 0) {
+            return 'paid';
+        }
+
+        if ($this->due_date !== null && $this->due_date->isPast()) {
+            return 'overdue';
+        }
+
+        if ($this->paidAmount() > 0) {
+            return 'partially_paid';
+        }
+
+        return 'outstanding';
     }
 }

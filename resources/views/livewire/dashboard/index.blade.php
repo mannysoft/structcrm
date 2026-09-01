@@ -35,16 +35,19 @@ new #[Layout('layouts.app')] class extends Component {
         $activeProjects = $projects->filter(fn (Project $project) => in_array($project->status, $activeStatuses, true))->count();
 
         $projectedProfit = 0;
+        $totalCostVariance = 0;
         $projectsAtRisk = [];
 
         foreach ($projects as $project) {
             $data = $profitability->forProject($project);
 
             $projectedProfit += $data->projectedProfit;
+            $totalCostVariance += $data->costVariance;
 
             $projectsAtRisk[] = [
                 'title' => $project->title,
                 'margin' => $data->projectedMargin,
+                'variance' => $data->costVariance,
             ];
         }
 
@@ -56,6 +59,7 @@ new #[Layout('layouts.app')] class extends Component {
             'outstandingBilling' => $outstandingBilling,
             'overdueCollections' => $overdueCollections,
             'projectedProfit' => $projectedProfit,
+            'totalCostVariance' => $totalCostVariance,
             'currency' => $currency,
             'projectsAtRisk' => $atRisk,
         ];
@@ -125,6 +129,20 @@ new #[Layout('layouts.app')] class extends Component {
             </div>
             <dd class="mt-3 text-3xl font-semibold tracking-tight text-emerald-600">{{ number_format($projectedProfit / 100, 2) }} <span class="text-base font-medium text-emerald-400">{{ $currency }}</span></dd>
         </div>
+
+        <div class="rounded-xl bg-white p-5 shadow-sm ring-1 ring-gray-900/5">
+            <div class="flex items-center gap-3">
+                <span class="flex size-10 shrink-0 items-center justify-center rounded-lg {{ $totalCostVariance < 0 ? 'bg-red-50 text-red-600' : 'bg-emerald-50 text-emerald-600' }}">
+                    <svg class="size-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z" />
+                    </svg>
+                </span>
+                <dt class="text-sm font-medium text-gray-500">Cost Variance</dt>
+            </div>
+            <dd class="mt-3 text-3xl font-semibold tracking-tight {{ $totalCostVariance < 0 ? 'text-red-600' : 'text-emerald-600' }}">
+                {{ $totalCostVariance < 0 ? '-' : '' }}{{ number_format(abs($totalCostVariance) / 100, 2) }} <span class="text-base font-medium {{ $totalCostVariance < 0 ? 'text-red-400' : 'text-emerald-400' }}">{{ $currency }}</span>
+            </dd>
+        </div>
     </dl>
 
     <div class="mt-8 overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
@@ -137,8 +155,13 @@ new #[Layout('layouts.app')] class extends Component {
                 @forelse ($projectsAtRisk as $project)
                     <li class="flex items-center justify-between px-4 py-4 sm:px-6">
                         <span class="text-sm font-medium text-gray-900">{{ $project['title'] }}</span>
-                        <span class="inline-flex items-center gap-1 text-sm font-semibold {{ $project['margin'] < 10 ? 'text-red-600' : 'text-amber-600' }}">
-                            {{ number_format($project['margin'], 1) }}%
+                        <span class="flex items-center gap-4 text-sm">
+                            <span class="text-xs font-medium {{ $project['variance'] < 0 ? 'text-red-600' : 'text-emerald-600' }}">
+                                {{ $project['variance'] < 0 ? '-' : '' }}{{ number_format(abs($project['variance']) / 100, 2) }} {{ $currency }} variance
+                            </span>
+                            <span class="font-semibold {{ $project['margin'] < 10 ? 'text-red-600' : 'text-amber-600' }}">
+                                {{ number_format($project['margin'], 1) }}%
+                            </span>
                         </span>
                     </li>
                 @empty
