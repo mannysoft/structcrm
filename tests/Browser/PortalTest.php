@@ -53,23 +53,24 @@ it('lets a client sign in and manage their projects', function () {
         $browser->visit('/portal/login');
         $browser->driver->manage()->deleteAllCookies();
         $browser->visit('/portal/login')
+            ->waitForLivewireToLoad()
             ->assertSee('Client Portal')
             ->type('#email', $portalUser->email)
             ->type('#password', 'password')
-            ->press('Sign in')
+            ->waitForLivewire()->press('Sign in')
             ->waitForLocation('/portal')
             ->assertPathIs('/portal')
             ->assertSee('Active Projects')
             ->assertSee($project->title);
 
-        $browser->press('Approve')
+        $browser->waitForLivewire()->press('Approve')
             ->waitForText('No pending change orders.');
 
         // `wire:confirm` opens a native confirm() dialog; accept it
         // automatically so the mark-as-paid action proceeds.
         $browser->script('window.confirm = function () { return true; };');
 
-        $browser->press('Mark as paid')
+        $browser->waitForLivewire()->press('Mark as paid')
             ->waitForText('No open invoices.');
     });
 });

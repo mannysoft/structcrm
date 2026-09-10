@@ -9,9 +9,10 @@ it('creates a cost code', function () {
         loginAsStaff($browser, $user);
 
         $browser->visit('/cost-codes/create')
+            ->waitForLivewireToLoad()
             ->type('#code', 'CC-001')
             ->type('#name', 'Site preparation')
-            ->press('Save')
+            ->waitForLivewire()->press('Save')
             ->waitForLocation('/cost-codes')
             ->assertPathIs('/cost-codes');
     });
@@ -25,11 +26,12 @@ it('creates a contract', function () {
         loginAsStaff($browser, $user);
 
         $browser->visit('/contracts/create')
+            ->waitForLivewireToLoad()
             ->select('#project_id', (string) $project->id)
             ->pause(500)
             ->type('#title', 'Main construction contract')
             ->type('#contract_value', '5000000')
-            ->press('Save')
+            ->waitForLivewire()->press('Save')
             ->waitForLocation('/contracts')
             ->assertPathIs('/contracts');
     });
@@ -43,13 +45,14 @@ it('creates a BOQ item', function () {
         loginAsStaff($browser, $user);
 
         $browser->visit('/boq-items/create')
+            ->waitForLivewireToLoad()
             ->select('#project_id', (string) $project->id)
             ->pause(500)
             ->type('#description', 'Concrete pouring')
             ->type('#quantity', '10')
             ->type('#unit', 'm3')
             ->type('#unit_price', '4500')
-            ->press('Save')
+            ->waitForLivewire()->press('Save')
             ->waitForLocation('/boq-items')
             ->assertPathIs('/boq-items');
     });
@@ -68,11 +71,12 @@ it('imports BOQ items from a CSV file', function () {
         loginAsStaff($browser, $user);
 
         $browser->visit('/boq-items/import')
+            ->waitForLivewireToLoad()
             ->select('#project_id', (string) $project->id)
             ->pause(500)
             ->attach('#file', $path)
             ->pause(500)
-            ->press('Import')
+            ->waitForLivewire()->press('Import')
             ->waitForLocation('/boq-items')
             ->assertPathIs('/boq-items');
     });
@@ -86,13 +90,14 @@ it('creates a budget with line items', function () {
         loginAsStaff($browser, $user);
 
         $browser->visit('/budgets/create')
+            ->waitForLivewireToLoad()
             ->select('#project_id', (string) $project->id)
             ->pause(500)
             ->addRepeaterItem('Add item', [
                 'input[x-model="item.description"]' => 'Foundation works',
                 'input[x-model="item.unit_price"]' => '150000',
             ])
-            ->press('Save')
+            ->waitForLivewire()->press('Save')
             ->waitForLocation('/budgets')
             ->assertPathIs('/budgets');
     });
@@ -106,12 +111,13 @@ it('creates a progress report with accomplishment items', function () {
         loginAsStaff($browser, $user);
 
         $browser->visit('/progress-reports/create')
+            ->waitForLivewireToLoad()
             ->select('#project_id', (string) $project->id)
             ->pause(500)
             ->addRepeaterItem('Add item', [
                 'input[x-model="item.description"]' => 'Excavation',
             ])
-            ->press('Save')
+            ->waitForLivewire()->press('Save')
             ->waitForLocation('/progress-reports')
             ->assertPathIs('/progress-reports');
     });
@@ -125,6 +131,7 @@ it('creates a billing with line items', function () {
         loginAsStaff($browser, $user);
 
         $browser->visit('/billings/create')
+            ->waitForLivewireToLoad()
             ->select('#project_id', (string) $project->id)
             ->pause(500)
             ->setInputValue('#period_start', '2026-01-01')
@@ -133,7 +140,7 @@ it('creates a billing with line items', function () {
                 'input[x-model="item.description"]' => 'Progress billing #1',
                 'input[x-model="item.unit_price"]' => '200000',
             ])
-            ->press('Save')
+            ->waitForLivewire()->press('Save')
             ->waitForLocation('/billings')
             ->assertPathIs('/billings');
     });

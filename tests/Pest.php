@@ -72,11 +72,13 @@ function loginAsStaff(Browser $browser, User $user): void
     $browser->visit('/login');
     $browser->driver->manage()->deleteAllCookies();
     $browser->visit('/login')
+        ->waitForLivewireToLoad()
         ->assertSee('LOG IN')
         ->type('email', $user->email)
         ->type('password', 'password')
-        ->press('LOG IN')
-        ->waitForLocation('/dashboard');
+        ->waitForLivewire()->press('LOG IN')
+        ->waitForLocation('/dashboard')
+        ->waitForLivewireToLoad();
 }
 
 /**
@@ -97,7 +99,7 @@ Browser::macro('setInputValue', function (string $selector, string $value) {
  * @param  array<string, string>  $fields
  */
 Browser::macro('addRepeaterItem', function (string $buttonLabel, array $fields) {
-    $this->press($buttonLabel);
+    $this->waitForLivewire()->press($buttonLabel);
 
     foreach ($fields as $selector => $value) {
         $this->type($selector, $value);

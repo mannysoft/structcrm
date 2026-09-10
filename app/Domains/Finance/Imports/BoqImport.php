@@ -9,8 +9,13 @@ use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
 class BoqImport implements ToArray, WithHeadingRow
 {
-    public function array(array $array): array
+    /**
+     * @var array<int, array<string, mixed>>
+     */
+    public array $rows = [];
+
+    public function array(array $array): void
     {
-        return $array;
+        $this->rows = $array;
     }
 }

@@ -9,8 +9,9 @@ it('updates the profile information', function () {
         loginAsStaff($browser, $user);
 
         $browser->visit('/profile')
+            ->waitForLivewireToLoad()
             ->type('#name', 'Updated Name')
-            ->press('SAVE')
+            ->waitForLivewire()->press('SAVE')
             ->waitForText('Saved.');
     });
 });

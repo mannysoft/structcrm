@@ -14,10 +14,11 @@ it('logs in and reaches the dashboard', function () {
 
     $this->browse(function (Browser $browser) use ($user) {
         $browser->visit('/login')
+            ->waitForLivewireToLoad()
             ->assertSee('LOG IN')
             ->type('email', $user->email)
             ->type('password', 'password')
-            ->press('LOG IN')
+            ->waitForLivewire()->press('LOG IN')
             ->waitForLocation('/dashboard')
             ->assertPathIs('/dashboard')
             ->assertSee('Dashboard');

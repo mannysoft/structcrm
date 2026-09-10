@@ -10,11 +10,12 @@ it('invites a team member', function () {
         loginAsStaff($browser, $user);
 
         $browser->visit('/team')
+            ->waitForLivewireToLoad()
             ->assertSee('Team')
             ->assertSee('Invite a team member')
             ->type('#email', $email)
             ->select('#role', 'engineer')
-            ->press('Send invitation')
+            ->waitForLivewire()->press('Send invitation')
             ->waitForText($email)
             ->assertSee($email);
     });

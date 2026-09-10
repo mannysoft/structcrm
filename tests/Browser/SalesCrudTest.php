@@ -10,9 +10,10 @@ it('creates a lead', function () {
         loginAsStaff($browser, $user);
 
         $browser->visit('/leads/create')
+            ->waitForLivewireToLoad()
             ->type('#first_name', 'Maria')
             ->type('#last_name', 'Santos')
-            ->press('Save')
+            ->waitForLivewire()->press('Save')
             ->waitForLocation('/leads')
             ->assertPathIs('/leads');
     });
@@ -25,8 +26,9 @@ it('creates a supplier', function () {
         loginAsStaff($browser, $user);
 
         $browser->visit('/suppliers/create')
+            ->waitForLivewireToLoad()
             ->type('#name', 'BuildMart Supply')
-            ->press('Save')
+            ->waitForLivewire()->press('Save')
             ->waitForLocation('/suppliers')
             ->assertPathIs('/suppliers');
     });
@@ -40,11 +42,12 @@ it('creates an expense', function () {
         loginAsStaff($browser, $user);
 
         $browser->visit('/expenses/create')
+            ->waitForLivewireToLoad()
             ->select('#project_id', (string) $project->id)
             ->pause(500)
             ->type('#amount', '12500')
             ->setInputValue('#date', '2026-01-15')
-            ->press('Save')
+            ->waitForLivewire()->press('Save')
             ->waitForLocation('/expenses')
             ->assertPathIs('/expenses');
     });
@@ -58,11 +61,12 @@ it('creates a change order without items', function () {
         loginAsStaff($browser, $user);
 
         $browser->visit('/change-orders/create')
+            ->waitForLivewireToLoad()
             ->select('#project_id', (string) $project->id)
             ->pause(500)
             ->type('#description', 'Additional structural steel')
             ->type('#amount', '85000')
-            ->press('Save')
+            ->waitForLivewire()->press('Save')
             ->waitForLocation('/change-orders')
             ->assertPathIs('/change-orders');
     });
@@ -76,6 +80,7 @@ it('creates an invoice with line items', function () {
         loginAsStaff($browser, $user);
 
         $browser->visit('/invoices/create')
+            ->waitForLivewireToLoad()
             ->select('#project_id', (string) $project->id)
             ->pause(500)
             ->setInputValue('#issue_date', '2026-01-01')
@@ -84,7 +89,7 @@ it('creates an invoice with line items', function () {
                 'input[x-model="item.description"]' => 'General works',
                 'input[x-model="item.unit_price"]' => '5000',
             ])
-            ->press('Save')
+            ->waitForLivewire()->press('Save')
             ->waitForLocation('/invoices')
             ->assertPathIs('/invoices');
     });
@@ -97,12 +102,13 @@ it('creates an estimate with line items', function () {
         loginAsStaff($browser, $user);
 
         $browser->visit('/estimates/create')
+            ->waitForLivewireToLoad()
             ->type('#title', 'Warehouse fit-out')
             ->addRepeaterItem('Add item', [
                 'input[x-model="item.description"]' => 'Painting',
                 'input[x-model="item.unit_price"]' => '3000',
             ])
-            ->press('Save')
+            ->waitForLivewire()->press('Save')
             ->waitForLocation('/estimates')
             ->assertPathIs('/estimates');
     });
@@ -117,6 +123,7 @@ it('creates a purchase order with line items', function () {
         loginAsStaff($browser, $user);
 
         $browser->visit('/purchase-orders/create')
+            ->waitForLivewireToLoad()
             ->select('#project_id', (string) $project->id)
             ->pause(500)
             ->select('#supplier_id', (string) $supplier->id)
@@ -125,7 +132,7 @@ it('creates a purchase order with line items', function () {
                 'input[x-model="item.description"]' => 'Rebar',
                 'input[x-model="item.unit_price"]' => '2000',
             ])
-            ->press('Save')
+            ->waitForLivewire()->press('Save')
             ->waitForLocation('/purchase-orders')
             ->assertPathIs('/purchase-orders');
     });

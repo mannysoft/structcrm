@@ -9,9 +9,10 @@ it('updates company settings', function () {
         loginAsStaff($browser, $user);
 
         $browser->visit('/companies/settings')
+            ->waitForLivewireToLoad()
             ->type('#name', 'Updated Construct Co.')
             ->type('#email', 'hello@construct.test')
-            ->press('Save')
+            ->waitForLivewire()->press('Save')
             ->waitForLocation('/companies')
             ->assertPathIs('/companies');
     });

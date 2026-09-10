@@ -11,11 +11,12 @@ it('creates a project', function () {
         loginAsStaff($browser, $user);
 
         $browser->visit('/projects/create')
+            ->waitForLivewireToLoad()
             ->assertSee('Title')
             ->type('#title', 'Riverside Office Build')
             ->select('#client_id', (string) $client->id)
             ->type('#budget', '250000')
-            ->press('Save')
+            ->waitForLivewire()->press('Save')
             ->waitForLocation('/projects')
             ->assertPathIs('/projects')
             ->assertSee('Riverside Office Build');

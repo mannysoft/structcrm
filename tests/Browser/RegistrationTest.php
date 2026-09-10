@@ -7,13 +7,14 @@ it('registers a new company and user', function () {
 
     $this->browse(function (Browser $browser) use ($email) {
         $browser->visit('/register')
+            ->waitForLivewireToLoad()
             ->assertSee('REGISTER')
             ->type('#company_name', 'Dusk Builders')
             ->type('#name', 'Dusk Owner')
             ->type('#email', $email)
             ->type('#password', 'password')
             ->type('#password_confirmation', 'password')
-            ->press('REGISTER')
+            ->waitForLivewire()->press('REGISTER')
             ->waitForLocation('/dashboard')
             ->assertPathIs('/dashboard')
             ->assertSee('Dashboard');
@@ -29,7 +30,7 @@ it('logs out an authenticated staff user', function () {
     $this->browse(function (Browser $browser) use ($user) {
         loginAsStaff($browser, $user);
 
-        $browser->press('Log Out')
+        $browser->waitForLivewire()->press('Log Out')
             ->waitForLocation('/')
             ->assertPathIs('/');
     });
