@@ -2,22 +2,22 @@
 
 use App\Livewire\Forms\LoginForm;
 use Illuminate\Support\Facades\Session;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
 
-use function Livewire\Volt\form;
-use function Livewire\Volt\layout;
+new #[Layout('layouts.guest')] class extends Component {
+    public LoginForm $form;
 
-layout('layouts.guest');
+    public function login(): void
+    {
+        $this->validate();
 
-form(LoginForm::class);
+        $this->form->authenticate();
 
-$login = function () {
-    $this->validate();
+        Session::regenerate();
 
-    $this->form->authenticate();
-
-    Session::regenerate();
-
-    $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+    }
 };
 
 ?>

@@ -1,7 +1,7 @@
 <?php
 
 use Livewire\Attributes\Layout;
-use Livewire\Volt\Component;
+use Livewire\Component;
 use App\Domains\ProjectManagement\Enums\ProjectStatus;
 use App\Domains\ProjectManagement\Models\Project;
 use App\Domains\Sales\Actions\DecideChangeOrderAction;

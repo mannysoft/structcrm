@@ -2,7 +2,7 @@
 
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
-use Livewire\Volt\Component;
+use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Domains\ProjectManagement\Actions\CreateProjectPhotoAction;
 use App\Domains\ProjectManagement\DTOs\ProjectPhotoData;

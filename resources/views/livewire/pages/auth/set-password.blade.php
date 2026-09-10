@@ -2,7 +2,7 @@
 
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
-use Livewire\Volt\Component;
+use Livewire\Component;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 

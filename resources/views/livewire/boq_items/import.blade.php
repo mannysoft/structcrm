@@ -2,7 +2,7 @@
 
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
-use Livewire\Volt\Component;
+use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Domains\Finance\Actions\ImportBoqAction;
 use App\Domains\Finance\Imports\BoqImport;

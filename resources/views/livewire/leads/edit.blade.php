@@ -2,7 +2,7 @@
 
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
-use Livewire\Volt\Component;
+use Livewire\Component;
 use App\Domains\Sales\Actions\UpdateLeadAction;
 use App\Domains\Sales\DTOs\LeadData;
 use App\Domains\Sales\Enums\LeadStatus;

@@ -2,7 +2,7 @@
 
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
-use Livewire\Volt\Component;
+use Livewire\Component;
 use App\Domains\Sales\Actions\InviteClientUserAction;
 use App\Domains\Sales\DTOs\ClientData;
 use App\Domains\Sales\Models\Client;

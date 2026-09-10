@@ -1,7 +1,7 @@
 <?php
 
 use Livewire\Attributes\Layout;
-use Livewire\Volt\Component;
+use Livewire\Component;
 use App\Domains\CompanyManagement\Models\Company;
 use App\Domains\Finance\Models\Billing;
 use App\Domains\Finance\Models\BillingPayment;

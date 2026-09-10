@@ -2,7 +2,7 @@
 
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
-use Livewire\Volt\Component;
+use Livewire\Component;
 use App\Domains\ProjectManagement\Actions\CreateTimeEntryAction;
 use App\Domains\ProjectManagement\DTOs\TimeEntryData;
 use App\Domains\ProjectManagement\Models\Project;

@@ -2,7 +2,7 @@
 
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
-use Livewire\Volt\Component;
+use Livewire\Component;
 use App\Domains\ProjectManagement\Actions\CreateEquipmentAction;
 use App\Domains\ProjectManagement\DTOs\EquipmentData;
 use App\Domains\ProjectManagement\Enums\EquipmentStatus;

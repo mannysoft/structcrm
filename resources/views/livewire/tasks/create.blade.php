@@ -2,7 +2,7 @@
 
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
-use Livewire\Volt\Component;
+use Livewire\Component;
 use App\Domains\ProjectManagement\Actions\CreateTaskAction;
 use App\Domains\ProjectManagement\DTOs\TaskData;
 use App\Domains\ProjectManagement\Enums\TaskPriority;

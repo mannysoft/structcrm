@@ -4,11 +4,10 @@ use App\Domains\Finance\Controllers\BoqImportController;
 use App\Http\Controllers\Auth\ClientAuthenticatedSessionController;
 use App\Http\Controllers\MarketingUnsubscribeController;
 use Illuminate\Support\Facades\Route;
-use Livewire\Volt\Volt;
 
 Route::view('/', 'welcome');
 
-Volt::route('dashboard', 'dashboard.index')
+Route::livewire('dashboard', 'dashboard.index')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
@@ -17,91 +16,91 @@ Route::view('profile', 'profile')
     ->name('profile');
 
 Route::middleware('auth')->group(function () {
-    Volt::route('projects', 'projects.index')->name('projects.index');
-    Volt::route('projects/create', 'projects.create')->name('projects.create');
-    Volt::route('projects/{project}/edit', 'projects.edit')->name('projects.edit');
-    Volt::route('companies', 'companies.index')->name('companies.index');
-    Volt::route('companies/settings', 'companies.settings')->name('companies.settings');
-    Volt::route('team', 'team.index')->name('team.index');
-    Volt::route('leads', 'leads.index')->name('leads.index');
-    Volt::route('leads/create', 'leads.create')->name('leads.create');
-    Volt::route('leads/{lead}/edit', 'leads.edit')->name('leads.edit');
-    Volt::route('clients', 'clients.index')->name('clients.index');
-    Volt::route('clients/create', 'clients.create')->name('clients.create');
-    Volt::route('clients/{client}/edit', 'clients.edit')->name('clients.edit');
-    Volt::route('tasks', 'tasks.index')->name('tasks.index');
-    Volt::route('tasks/create', 'tasks.create')->name('tasks.create');
-    Volt::route('tasks/{task}/edit', 'tasks.edit')->name('tasks.edit');
-    Volt::route('cost-codes', 'cost_codes.index')->name('cost_codes.index');
-    Volt::route('cost-codes/create', 'cost_codes.create')->name('cost_codes.create');
-    Volt::route('cost-codes/{costCode}/edit', 'cost_codes.edit')->name('cost_codes.edit');
-    Volt::route('contracts', 'contracts.index')->name('contracts.index');
-    Volt::route('contracts/create', 'contracts.create')->name('contracts.create');
-    Volt::route('contracts/{contract}/edit', 'contracts.edit')->name('contracts.edit');
-    Volt::route('boq-items', 'boq_items.index')->name('boq_items.index');
-    Volt::route('boq-items/create', 'boq_items.create')->name('boq_items.create');
-    Volt::route('boq-items/import', 'boq_items.import')->name('boq_items.import');
-    Volt::route('boq-items/{boqItem}/edit', 'boq_items.edit')->name('boq_items.edit');
+    Route::livewire('projects', 'projects.index')->name('projects.index');
+    Route::livewire('projects/create', 'projects.create')->name('projects.create');
+    Route::livewire('projects/{project}/edit', 'projects.edit')->name('projects.edit');
+    Route::livewire('companies', 'companies.index')->name('companies.index');
+    Route::livewire('companies/settings', 'companies.settings')->name('companies.settings');
+    Route::livewire('team', 'team.index')->name('team.index');
+    Route::livewire('leads', 'leads.index')->name('leads.index');
+    Route::livewire('leads/create', 'leads.create')->name('leads.create');
+    Route::livewire('leads/{lead}/edit', 'leads.edit')->name('leads.edit');
+    Route::livewire('clients', 'clients.index')->name('clients.index');
+    Route::livewire('clients/create', 'clients.create')->name('clients.create');
+    Route::livewire('clients/{client}/edit', 'clients.edit')->name('clients.edit');
+    Route::livewire('tasks', 'tasks.index')->name('tasks.index');
+    Route::livewire('tasks/create', 'tasks.create')->name('tasks.create');
+    Route::livewire('tasks/{task}/edit', 'tasks.edit')->name('tasks.edit');
+    Route::livewire('cost-codes', 'cost_codes.index')->name('cost_codes.index');
+    Route::livewire('cost-codes/create', 'cost_codes.create')->name('cost_codes.create');
+    Route::livewire('cost-codes/{costCode}/edit', 'cost_codes.edit')->name('cost_codes.edit');
+    Route::livewire('contracts', 'contracts.index')->name('contracts.index');
+    Route::livewire('contracts/create', 'contracts.create')->name('contracts.create');
+    Route::livewire('contracts/{contract}/edit', 'contracts.edit')->name('contracts.edit');
+    Route::livewire('boq-items', 'boq_items.index')->name('boq_items.index');
+    Route::livewire('boq-items/create', 'boq_items.create')->name('boq_items.create');
+    Route::livewire('boq-items/import', 'boq_items.import')->name('boq_items.import');
+    Route::livewire('boq-items/{boqItem}/edit', 'boq_items.edit')->name('boq_items.edit');
     Route::get('boq-items/template', [BoqImportController::class, 'template'])->name('boq_items.template');
-    Volt::route('budgets', 'budgets.index')->name('budgets.index');
-    Volt::route('budgets/create', 'budgets.create')->name('budgets.create');
-    Volt::route('budgets/{budget}/edit', 'budgets.edit')->name('budgets.edit');
-    Volt::route('progress-reports', 'progress_reports.index')->name('progress_reports.index');
-    Volt::route('progress-reports/create', 'progress_reports.create')->name('progress_reports.create');
-    Volt::route('progress-reports/{progressReport}/edit', 'progress_reports.edit')->name('progress_reports.edit');
-    Volt::route('billings', 'billings.index')->name('billings.index');
-    Volt::route('billings/create', 'billings.create')->name('billings.create');
-    Volt::route('billings/{billing}/edit', 'billings.edit')->name('billings.edit');
-    Volt::route('daily-logs', 'daily_logs.index')->name('daily_logs.index');
-    Volt::route('daily-logs/create', 'daily_logs.create')->name('daily_logs.create');
-    Volt::route('daily-logs/{dailyLog}/edit', 'daily_logs.edit')->name('daily_logs.edit');
-    Volt::route('project-photos', 'project_photos.index')->name('project_photos.index');
-    Volt::route('project-photos/create', 'project_photos.create')->name('project_photos.create');
-    Volt::route('documents', 'documents.index')->name('documents.index');
-    Volt::route('documents/create', 'documents.create')->name('documents.create');
-    Volt::route('time-entries', 'time_entries.index')->name('time_entries.index');
-    Volt::route('time-entries/create', 'time_entries.create')->name('time_entries.create');
-    Volt::route('time-entries/{timeEntry}/edit', 'time_entries.edit')->name('time_entries.edit');
-    Volt::route('equipment', 'equipment.index')->name('equipment.index');
-    Volt::route('equipment/create', 'equipment.create')->name('equipment.create');
-    Volt::route('equipment/{equipment}/edit', 'equipment.edit')->name('equipment.edit');
-    Volt::route('maintenance-logs', 'maintenance_logs.index')->name('maintenance_logs.index');
-    Volt::route('maintenance-logs/create', 'maintenance_logs.create')->name('maintenance_logs.create');
-    Volt::route('suppliers', 'suppliers.index')->name('suppliers.index');
-    Volt::route('suppliers/create', 'suppliers.create')->name('suppliers.create');
-    Volt::route('suppliers/{supplier}/edit', 'suppliers.edit')->name('suppliers.edit');
-    Volt::route('expenses', 'expenses.index')->name('expenses.index');
-    Volt::route('expenses/create', 'expenses.create')->name('expenses.create');
-    Volt::route('expenses/{expense}/edit', 'expenses.edit')->name('expenses.edit');
-    Volt::route('change-orders', 'change_orders.index')->name('change_orders.index');
-    Volt::route('change-orders/create', 'change_orders.create')->name('change_orders.create');
-    Volt::route('change-orders/{changeOrder}/edit', 'change_orders.edit')->name('change_orders.edit');
-    Volt::route('purchase-orders', 'purchase_orders.index')->name('purchase_orders.index');
-    Volt::route('purchase-orders/create', 'purchase_orders.create')->name('purchase_orders.create');
-    Volt::route('purchase-orders/{purchaseOrder}/edit', 'purchase_orders.edit')->name('purchase_orders.edit');
-    Volt::route('invoices', 'invoices.index')->name('invoices.index');
-    Volt::route('invoices/create', 'invoices.create')->name('invoices.create');
-    Volt::route('invoices/{invoice}/edit', 'invoices.edit')->name('invoices.edit');
-    Volt::route('estimates', 'estimates.index')->name('estimates.index');
-    Volt::route('estimates/create', 'estimates.create')->name('estimates.create');
-    Volt::route('estimates/{estimate}/edit', 'estimates.edit')->name('estimates.edit');
+    Route::livewire('budgets', 'budgets.index')->name('budgets.index');
+    Route::livewire('budgets/create', 'budgets.create')->name('budgets.create');
+    Route::livewire('budgets/{budget}/edit', 'budgets.edit')->name('budgets.edit');
+    Route::livewire('progress-reports', 'progress_reports.index')->name('progress_reports.index');
+    Route::livewire('progress-reports/create', 'progress_reports.create')->name('progress_reports.create');
+    Route::livewire('progress-reports/{progressReport}/edit', 'progress_reports.edit')->name('progress_reports.edit');
+    Route::livewire('billings', 'billings.index')->name('billings.index');
+    Route::livewire('billings/create', 'billings.create')->name('billings.create');
+    Route::livewire('billings/{billing}/edit', 'billings.edit')->name('billings.edit');
+    Route::livewire('daily-logs', 'daily_logs.index')->name('daily_logs.index');
+    Route::livewire('daily-logs/create', 'daily_logs.create')->name('daily_logs.create');
+    Route::livewire('daily-logs/{dailyLog}/edit', 'daily_logs.edit')->name('daily_logs.edit');
+    Route::livewire('project-photos', 'project_photos.index')->name('project_photos.index');
+    Route::livewire('project-photos/create', 'project_photos.create')->name('project_photos.create');
+    Route::livewire('documents', 'documents.index')->name('documents.index');
+    Route::livewire('documents/create', 'documents.create')->name('documents.create');
+    Route::livewire('time-entries', 'time_entries.index')->name('time_entries.index');
+    Route::livewire('time-entries/create', 'time_entries.create')->name('time_entries.create');
+    Route::livewire('time-entries/{timeEntry}/edit', 'time_entries.edit')->name('time_entries.edit');
+    Route::livewire('equipment', 'equipment.index')->name('equipment.index');
+    Route::livewire('equipment/create', 'equipment.create')->name('equipment.create');
+    Route::livewire('equipment/{equipment}/edit', 'equipment.edit')->name('equipment.edit');
+    Route::livewire('maintenance-logs', 'maintenance_logs.index')->name('maintenance_logs.index');
+    Route::livewire('maintenance-logs/create', 'maintenance_logs.create')->name('maintenance_logs.create');
+    Route::livewire('suppliers', 'suppliers.index')->name('suppliers.index');
+    Route::livewire('suppliers/create', 'suppliers.create')->name('suppliers.create');
+    Route::livewire('suppliers/{supplier}/edit', 'suppliers.edit')->name('suppliers.edit');
+    Route::livewire('expenses', 'expenses.index')->name('expenses.index');
+    Route::livewire('expenses/create', 'expenses.create')->name('expenses.create');
+    Route::livewire('expenses/{expense}/edit', 'expenses.edit')->name('expenses.edit');
+    Route::livewire('change-orders', 'change_orders.index')->name('change_orders.index');
+    Route::livewire('change-orders/create', 'change_orders.create')->name('change_orders.create');
+    Route::livewire('change-orders/{changeOrder}/edit', 'change_orders.edit')->name('change_orders.edit');
+    Route::livewire('purchase-orders', 'purchase_orders.index')->name('purchase_orders.index');
+    Route::livewire('purchase-orders/create', 'purchase_orders.create')->name('purchase_orders.create');
+    Route::livewire('purchase-orders/{purchaseOrder}/edit', 'purchase_orders.edit')->name('purchase_orders.edit');
+    Route::livewire('invoices', 'invoices.index')->name('invoices.index');
+    Route::livewire('invoices/create', 'invoices.create')->name('invoices.create');
+    Route::livewire('invoices/{invoice}/edit', 'invoices.edit')->name('invoices.edit');
+    Route::livewire('estimates', 'estimates.index')->name('estimates.index');
+    Route::livewire('estimates/create', 'estimates.create')->name('estimates.create');
+    Route::livewire('estimates/{estimate}/edit', 'estimates.edit')->name('estimates.edit');
 
-    Volt::route('marketing/campaigns', 'marketing.campaigns.index')->name('marketing.campaigns.index');
-    Volt::route('marketing/campaigns/create', 'marketing.campaigns.create')->name('marketing.campaigns.create');
-    Volt::route('marketing/campaigns/{campaign}/edit', 'marketing.campaigns.edit')->name('marketing.campaigns.edit');
+    Route::livewire('marketing/campaigns', 'marketing.campaigns.index')->name('marketing.campaigns.index');
+    Route::livewire('marketing/campaigns/create', 'marketing.campaigns.create')->name('marketing.campaigns.create');
+    Route::livewire('marketing/campaigns/{campaign}/edit', 'marketing.campaigns.edit')->name('marketing.campaigns.edit');
 });
 
 require __DIR__.'/auth.php';
 // Client Portal — external client access (client guard)
 Route::middleware('guest')->group(function () {
-    Volt::route('portal/login', 'portal.login')->name('portal.login');
+    Route::livewire('portal/login', 'portal.login')->name('portal.login');
 });
 
-Volt::route('portal/set-password/{user}', 'portal.set-password')
+Route::livewire('portal/set-password/{user}', 'portal.set-password')
     ->middleware('signed')
     ->name('portal.set-password');
 
-Volt::route('staff/set-password/{user}', 'pages.auth.set-password')
+Route::livewire('staff/set-password/{user}', 'pages.auth.set-password')
     ->middleware('signed')
     ->name('staff.set-password');
 
@@ -110,7 +109,7 @@ Route::get('marketing/unsubscribe/{user}', MarketingUnsubscribeController::class
     ->name('marketing.unsubscribe');
 
 Route::middleware('auth:client')->group(function () {
-    Volt::route('portal', 'portal.index')->name('portal.index');
+    Route::livewire('portal', 'portal.index')->name('portal.index');
     Route::post('portal/logout', [ClientAuthenticatedSessionController::class, 'destroy'])
         ->name('portal.logout');
 });

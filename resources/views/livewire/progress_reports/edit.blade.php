@@ -2,7 +2,7 @@
 
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
-use Livewire\Volt\Component;
+use Livewire\Component;
 use App\Domains\Finance\Actions\UpdateProgressReportAction;
 use App\Domains\Finance\DTOs\ProgressReportData;
 use App\Domains\Finance\Enums\ProgressReportStatus;

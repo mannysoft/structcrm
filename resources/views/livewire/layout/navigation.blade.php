@@ -1,11 +1,15 @@
 <?php
 
 use App\Livewire\Actions\Logout;
+use Livewire\Component;
 
-$logout = function (Logout $logout) {
-    $logout();
+new class extends Component {
+    public function logout(Logout $logout): void
+    {
+        $logout();
 
-    $this->redirect('/', navigate: true);
+        $this->redirect('/', navigate: true);
+    }
 };
 
 ?>

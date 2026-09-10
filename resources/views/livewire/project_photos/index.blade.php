@@ -2,7 +2,7 @@
 
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Url;
-use Livewire\Volt\Component;
+use Livewire\Component;
 use Livewire\WithPagination;
 use App\Domains\ProjectManagement\Actions\DeleteProjectPhotoAction;
 use App\Domains\ProjectManagement\Models\ProjectPhoto;

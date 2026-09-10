@@ -2,36 +2,32 @@
 
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Session;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Validate;
+use Livewire\Component;
 
-use function Livewire\Volt\layout;
-use function Livewire\Volt\rules;
-use function Livewire\Volt\state;
+new #[Layout('layouts.guest')] class extends Component {
+    #[Validate('required|string|email')]
+    public string $email = '';
 
-layout('layouts.guest');
+    public function sendPasswordResetLink(): void
+    {
+        $this->validate();
 
-state(['email' => '']);
+        $status = Password::sendResetLink(
+            $this->only('email')
+        );
 
-rules(['email' => ['required', 'string', 'email']]);
+        if ($status != Password::RESET_LINK_SENT) {
+            $this->addError('email', __($status));
 
-$sendPasswordResetLink = function () {
-    $this->validate();
+            return;
+        }
 
-    // We will send the password reset link to this user. Once we have attempted
-    // to send the link, we will examine the response then see the message we
-    // need to show to the user. Finally, we'll send out a proper response.
-    $status = Password::sendResetLink(
-        $this->only('email')
-    );
+        $this->reset('email');
 
-    if ($status != Password::RESET_LINK_SENT) {
-        $this->addError('email', __($status));
-
-        return;
+        Session::flash('status', __($status));
     }
-
-    $this->reset('email');
-
-    Session::flash('status', __($status));
 };
 
 ?>

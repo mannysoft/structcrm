@@ -2,7 +2,7 @@
 
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
-use Livewire\Volt\Component;
+use Livewire\Component;
 use App\Domains\Finance\Actions\CreateCostCodeAction;
 use App\Domains\Finance\DTOs\CostCodeData;
 use App\Domains\Finance\Enums\CostCodeType;

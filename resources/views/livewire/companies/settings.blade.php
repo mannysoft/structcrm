@@ -1,7 +1,7 @@
 <?php
 
 use Livewire\Attributes\Layout;
-use Livewire\Volt\Component;
+use Livewire\Component;
 use Livewire\Attributes\Validate;
 use Livewire\WithFileUploads;
 use App\Domains\CompanyManagement\Actions\UpdateCompanyAction;

@@ -3,7 +3,7 @@
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Url;
 use Livewire\Attributes\Validate;
-use Livewire\Volt\Component;
+use Livewire\Component;
 use Livewire\WithPagination;
 use App\Domains\CompanyManagement\Actions\InviteStaffUserAction;
 use App\Domains\CompanyManagement\Actions\UpdateStaffUserRoleAction;

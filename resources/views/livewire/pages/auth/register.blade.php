@@ -6,46 +6,51 @@ use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
 
-use function Livewire\Volt\layout;
-use function Livewire\Volt\rules;
-use function Livewire\Volt\state;
+new #[Layout('layouts.guest')] class extends Component {
+    public string $company_name = '';
 
-layout('layouts.guest');
+    public string $name = '';
 
-state([
-    'company_name' => '',
-    'name' => '',
-    'email' => '',
-    'password' => '',
-    'password_confirmation' => '',
-    'marketing_opt_in' => false,
-]);
+    public string $email = '';
 
-rules([
-    'company_name' => ['required', 'string', 'max:255'],
-    'name' => ['required', 'string', 'max:255'],
-    'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-    'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
-    'marketing_opt_in' => ['boolean'],
-]);
+    public string $password = '';
 
-$register = function () {
-    $validated = $this->validate();
+    public string $password_confirmation = '';
 
-    $user = app(CreateCompanyAndUserAction::class)->execute(new RegisterTenantData(
-        companyName: $validated['company_name'],
-        userName: $validated['name'],
-        email: $validated['email'],
-        password: $validated['password'],
-        marketingOptIn: (bool) $validated['marketing_opt_in'],
-    ));
+    public bool $marketing_opt_in = false;
 
-    event(new Registered($user));
+    public function rules(): array
+    {
+        return [
+            'company_name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+            'marketing_opt_in' => ['boolean'],
+        ];
+    }
 
-    Auth::login($user);
+    public function register(): void
+    {
+        $validated = $this->validate();
 
-    $this->redirect(route('dashboard', absolute: false), navigate: true);
+        $user = app(CreateCompanyAndUserAction::class)->execute(new RegisterTenantData(
+            companyName: $validated['company_name'],
+            userName: $validated['name'],
+            email: $validated['email'],
+            password: $validated['password'],
+            marketingOptIn: (bool) $validated['marketing_opt_in'],
+        ));
+
+        event(new Registered($user));
+
+        Auth::login($user);
+
+        $this->redirect(route('dashboard', absolute: false), navigate: true);
+    }
 };
 
 ?>

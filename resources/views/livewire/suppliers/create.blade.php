@@ -2,7 +2,7 @@
 
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
-use Livewire\Volt\Component;
+use Livewire\Component;
 use App\Domains\Sales\Actions\CreateSupplierAction;
 use App\Domains\Sales\DTOs\SupplierData;
 

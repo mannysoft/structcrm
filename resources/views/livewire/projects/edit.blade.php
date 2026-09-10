@@ -2,7 +2,7 @@
 
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
-use Livewire\Volt\Component;
+use Livewire\Component;
 use App\Common\ValueObjects\Money;
 use App\Domains\ProjectManagement\Actions\UpdateProjectAction;
 use App\Domains\ProjectManagement\DTOs\ProjectData;

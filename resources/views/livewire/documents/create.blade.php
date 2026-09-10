@@ -2,7 +2,7 @@
 
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
-use Livewire\Volt\Component;
+use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Domains\ProjectManagement\Actions\CreateDocumentAction;
 use App\Domains\ProjectManagement\DTOs\DocumentData;

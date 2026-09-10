@@ -2,32 +2,31 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Validate;
+use Livewire\Component;
 
-use function Livewire\Volt\layout;
-use function Livewire\Volt\rules;
-use function Livewire\Volt\state;
+new #[Layout('layouts.guest')] class extends Component {
+    #[Validate('required|string')]
+    public string $password = '';
 
-layout('layouts.guest');
+    public function confirmPassword(): void
+    {
+        $this->validate();
 
-state(['password' => '']);
+        if (! Auth::guard('web')->validate([
+            'email' => Auth::user()->email,
+            'password' => $this->password,
+        ])) {
+            throw ValidationException::withMessages([
+                'password' => __('auth.password'),
+            ]);
+        }
 
-rules(['password' => ['required', 'string']]);
+        session(['auth.password_confirmed_at' => time()]);
 
-$confirmPassword = function () {
-    $this->validate();
-
-    if (! Auth::guard('web')->validate([
-        'email' => Auth::user()->email,
-        'password' => $this->password,
-    ])) {
-        throw ValidationException::withMessages([
-            'password' => __('auth.password'),
-        ]);
+        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
     }
-
-    session(['auth.password_confirmed_at' => time()]);
-
-    $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
 };
 
 ?>

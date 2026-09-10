@@ -1,7 +1,7 @@
 <?php
 
 use Livewire\Attributes\Layout;
-use Livewire\Volt\Component;
+use Livewire\Component;
 use Livewire\Attributes\Validate;
 use App\Domains\Sales\Actions\CreateLeadAction;
 use App\Domains\Sales\DTOs\LeadData;

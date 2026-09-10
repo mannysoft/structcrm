@@ -2,7 +2,7 @@
 
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
-use Livewire\Volt\Component;
+use Livewire\Component;
 use App\Domains\Marketing\Actions\UpdateMarketingCampaignAction;
 use App\Domains\Marketing\Models\MarketingCampaign;
 
