@@ -114,7 +114,7 @@ Browser::macro('addRepeaterItem', function (string $buttonLabel, array $fields) 
  * Wait until Livewire has finished its initial render on the current page.
  */
 Browser::macro('waitForLivewireToLoad', function () {
-    /** @var \Laravel\Dusk\Browser $this */
+    /** @var Browser $this */
     return $this->waitUsing(6, 25, function () {
         return $this->driver->executeScript('return !! window.Livewire.initialRenderIsFinished');
     });
@@ -126,7 +126,7 @@ Browser::macro('waitForLivewireToLoad', function () {
  * `->waitForLivewire()->press('Save')`.
  */
 Browser::macro('waitForLivewire', function ($callback = null) {
-    /** @var \Laravel\Dusk\Browser $this */
+    /** @var Browser $this */
     $id = str()->random();
 
     $this->script([
@@ -160,7 +160,8 @@ Browser::macro('waitForLivewire', function ($callback = null) {
         }, 'Livewire request was never triggered');
     }
 
-    return new class($this, $id) {
+    return new class($this, $id)
+    {
         protected $browser;
 
         protected $id;
