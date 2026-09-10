@@ -109,6 +109,78 @@ Browser::macro('addRepeaterItem', function (string $buttonLabel, array $fields) 
 });
 
 /**
+ * Wait until Livewire has finished its initial render on the current page.
+ */
+Browser::macro('waitForLivewireToLoad', function () {
+    /** @var \Laravel\Dusk\Browser $this */
+    return $this->waitUsing(6, 25, function () {
+        return $this->driver->executeScript('return !! window.Livewire.initialRenderIsFinished');
+    });
+});
+
+/**
+ * Wait for the Livewire commit triggered by a following action to finish
+ * syncing and morphing. Use as a higher-order method:
+ * `->waitForLivewire()->press('Save')`.
+ */
+Browser::macro('waitForLivewire', function ($callback = null) {
+    /** @var \Laravel\Dusk\Browser $this */
+    $id = str()->random();
+
+    $this->script([
+        "window.duskIsWaitingForLivewireRequest{$id} = true",
+        "let pendingLivewireCommits{$id} = 0
+
+        window.Livewire.hook('commit', ({ respond }) => {
+            if (window.duskIsWaitingForLivewireRequest{$id} === undefined) return
+
+            pendingLivewireCommits{$id}++
+
+            respond(() => {
+                pendingLivewireCommits{$id}--
+
+                // The commit has finished syncing and morphing. Wait one frame
+                // so any immediately-following commit can join this wait too.
+                requestAnimationFrame(() => {
+                    if (pendingLivewireCommits{$id} === 0) {
+                        delete window.duskIsWaitingForLivewireRequest{$id}
+                    }
+                })
+            })
+        })",
+    ]);
+
+    if ($callback) {
+        $callback($this);
+
+        return $this->waitUsing(6, 25, function () use ($id) {
+            return $this->driver->executeScript("return window.duskIsWaitingForLivewireRequest{$id} === undefined");
+        }, 'Livewire request was never triggered');
+    }
+
+    return new class($this, $id) {
+        protected $browser;
+
+        protected $id;
+
+        public function __construct($browser, $id)
+        {
+            $this->browser = $browser;
+            $this->id = $id;
+        }
+
+        public function __call($method, $params)
+        {
+            return tap($this->browser->{$method}(...$params), function ($browser) {
+                $browser->waitUsing(6, 25, function () use ($browser) {
+                    return $browser->driver->executeScript("return window.duskIsWaitingForLivewireRequest{$this->id} === undefined");
+                }, 'Livewire request was never triggered');
+            });
+        }
+    };
+});
+
+/**
  * Write a temporary file and return its absolute path.
  */
 function createTempFile(string $filename, string $contents): string
