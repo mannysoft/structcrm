@@ -99,7 +99,9 @@ Browser::macro('setInputValue', function (string $selector, string $value) {
  * @param  array<string, string>  $fields
  */
 Browser::macro('addRepeaterItem', function (string $buttonLabel, array $fields) {
-    $this->waitForLivewire()->press($buttonLabel);
+    // Repeater "Add" buttons use Alpine @click (client-side, no Livewire
+    // request), so do not wrap the press in waitForLivewire().
+    $this->press($buttonLabel);
 
     foreach ($fields as $selector => $value) {
         $this->type($selector, $value);
