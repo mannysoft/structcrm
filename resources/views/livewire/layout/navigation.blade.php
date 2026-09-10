@@ -16,11 +16,18 @@ new class extends Component {
 
     public function with(): array
     {
+        $isClient = auth('client')->check();
+
+        $user = $isClient ? auth('client')->user() : auth()->user();
+
+        $query = Project::query()->where('company_id', $user->company_id);
+
+        if ($isClient) {
+            $query->where('client_id', $user->client_id);
+        }
+
         return [
-            'projects' => Project::query()
-                ->where('company_id', auth()->user()->company_id)
-                ->latest()
-                ->get(['id', 'title']),
+            'projects' => $query->latest()->get(['id', 'title']),
         ];
     }
 
