@@ -3,7 +3,7 @@
 namespace Tests\Feature\Auth;
 
 use App\Models\User;
-use Livewire\Volt\Volt;
+use Livewire\Livewire;
 
 test('registration screen can be rendered', function () {
 
@@ -11,12 +11,12 @@ test('registration screen can be rendered', function () {
 
     $response
         ->assertOk()
-        ->assertSeeVolt('pages.auth.register');
+        ->assertSeeLivewire('pages.auth.register');
 });
 
 test('new users can register', function () {
 
-    $component = Volt::test('pages.auth.register')
+    $component = Livewire::test('pages.auth.register')
         ->set('company_name', 'Acme Builders')
         ->set('name', 'Test User')
         ->set('email', 'test@example.com')
@@ -38,7 +38,7 @@ test('new users can register', function () {
 
 test('new users can opt in to marketing emails', function () {
 
-    $component = Volt::test('pages.auth.register')
+    $component = Livewire::test('pages.auth.register')
         ->set('company_name', 'Acme Builders')
         ->set('name', 'Test User')
         ->set('email', 'test@example.com')
@@ -58,7 +58,7 @@ test('new users can opt in to marketing emails', function () {
 
 test('new users are not opted in to marketing by default', function () {
 
-    $component = Volt::test('pages.auth.register')
+    $component = Livewire::test('pages.auth.register')
         ->set('company_name', 'Acme Builders')
         ->set('name', 'Test User')
         ->set('email', 'test@example.com')

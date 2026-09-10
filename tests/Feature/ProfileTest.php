@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
-use Livewire\Volt\Volt;
+use Livewire\Livewire;
 
 test('profile page is displayed', function () {
 
@@ -13,9 +13,9 @@ test('profile page is displayed', function () {
 
     $response
         ->assertOk()
-        ->assertSeeVolt('profile.update-profile-information-form')
-        ->assertSeeVolt('profile.update-password-form')
-        ->assertSeeVolt('profile.delete-user-form');
+        ->assertSeeLivewire('profile.update-profile-information-form')
+        ->assertSeeLivewire('profile.update-password-form')
+        ->assertSeeLivewire('profile.delete-user-form');
 });
 
 test('profile information can be updated', function () {
@@ -24,7 +24,7 @@ test('profile information can be updated', function () {
 
     $this->actingAs($user);
 
-    $component = Volt::test('profile.update-profile-information-form')
+    $component = Livewire::test('profile.update-profile-information-form')
         ->set('name', 'Test User')
         ->set('email', 'test@example.com')
         ->call('updateProfileInformation');
@@ -46,7 +46,7 @@ test('email verification status is unchanged when the email address is unchanged
 
     $this->actingAs($user);
 
-    $component = Volt::test('profile.update-profile-information-form')
+    $component = Livewire::test('profile.update-profile-information-form')
         ->set('name', 'Test User')
         ->set('email', $user->email)
         ->call('updateProfileInformation');
@@ -64,7 +64,7 @@ test('user can delete their account', function () {
 
     $this->actingAs($user);
 
-    $component = Volt::test('profile.delete-user-form')
+    $component = Livewire::test('profile.delete-user-form')
         ->set('password', 'password')
         ->call('deleteUser');
 
@@ -82,7 +82,7 @@ test('correct password must be provided to delete account', function () {
 
     $this->actingAs($user);
 
-    $component = Volt::test('profile.delete-user-form')
+    $component = Livewire::test('profile.delete-user-form')
         ->set('password', 'wrong-password')
         ->call('deleteUser');
 

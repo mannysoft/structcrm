@@ -8,13 +8,13 @@ use App\Domains\Marketing\Jobs\SyncResendContactJob;
 use App\Models\User;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\URL;
-use Livewire\Volt\Volt;
+use Livewire\Livewire;
 
 test('signing up with marketing opt-in queues a Resend contact sync', function () {
 
     Queue::fake();
 
-    $component = Volt::test('pages.auth.register')
+    $component = Livewire::test('pages.auth.register')
         ->set('company_name', 'Acme Builders')
         ->set('name', 'Test User')
         ->set('email', 'test@example.com')
@@ -33,7 +33,7 @@ test('signing up without marketing opt-in does not queue a Resend sync', functio
 
     Queue::fake();
 
-    $component = Volt::test('pages.auth.register')
+    $component = Livewire::test('pages.auth.register')
         ->set('company_name', 'Acme Builders')
         ->set('name', 'Test User')
         ->set('email', 'test@example.com')

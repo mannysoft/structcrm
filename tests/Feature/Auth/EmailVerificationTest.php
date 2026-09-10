@@ -14,7 +14,7 @@ test('email verification screen can be rendered', function () {
     $response = $this->actingAs($user)->get('/verify-email');
 
     $response
-        ->assertSeeVolt('pages.auth.verify-email')
+        ->assertSeeLivewire('pages.auth.verify-email')
         ->assertStatus(200);
 });
 

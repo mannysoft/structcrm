@@ -7,7 +7,7 @@ namespace Tests\Feature\Domains\Marketing;
 use App\Domains\Marketing\Models\MarketingCampaign;
 use App\Domains\Marketing\Models\MarketingCampaignStep;
 use App\Models\User;
-use Livewire\Volt\Volt;
+use Livewire\Livewire;
 
 test('campaigns page requires authentication', function () {
 
@@ -49,7 +49,7 @@ test('owner can create a campaign with steps', function () {
 
     $this->actingAs($user);
 
-    $component = Volt::test('marketing.campaigns.create')
+    $component = Livewire::test('marketing.campaigns.create')
         ->set('name', 'Onboarding')
         ->set('is_active', true)
         ->set('steps', [
@@ -81,7 +81,7 @@ test('owner can update a campaign and its steps', function () {
 
     $this->actingAs($user);
 
-    $component = Volt::test('marketing.campaigns.edit', ['campaign' => $campaign])
+    $component = Livewire::test('marketing.campaigns.edit', ['campaign' => $campaign])
         ->set('name', 'New name')
         ->set('steps', [
             ['id' => $step->id, 'subject' => 'New subject', 'delay_days' => 5, 'body' => '<p>Updated</p>'],
@@ -106,7 +106,7 @@ test('owner can delete a campaign', function () {
 
     $this->actingAs($user);
 
-    Volt::test('marketing.campaigns.index')
+    Livewire::test('marketing.campaigns.index')
         ->call('delete', $campaign->uuid);
 
     $this->assertModelMissing($campaign);
