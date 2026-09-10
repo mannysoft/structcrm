@@ -1,9 +1,36 @@
 <?php
 
+use App\Domains\ProjectManagement\Models\Project;
 use App\Livewire\Actions\Logout;
 use Livewire\Component;
 
 new class extends Component {
+    public ?string $activeProjectId = null;
+
+    public function mount(): void
+    {
+        $projectId = session('active_project_id');
+
+        $this->activeProjectId = $projectId ? (string) $projectId : null;
+    }
+
+    public function with(): array
+    {
+        return [
+            'projects' => Project::query()
+                ->where('company_id', auth()->user()->company_id)
+                ->latest()
+                ->get(['id', 'title']),
+        ];
+    }
+
+    public function updatedActiveProjectId(?string $value): void
+    {
+        session(['active_project_id' => $value ? (int) $value : null]);
+
+        $this->redirect(url()->previous() ?: route('dashboard'));
+    }
+
     public function logout(Logout $logout): void
     {
         $logout();
@@ -129,6 +156,19 @@ $logoutIcon = 'M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25
                 </span>
                 <span class="text-sm font-semibold text-gray-900">{{ config('app.name') }}</span>
             </a>
+        </div>
+
+        <!-- Active project picker -->
+        <div class="shrink-0 border-b border-gray-200 px-3 py-3">
+            <label for="activeProjectId" class="px-1 text-xs font-semibold uppercase tracking-wider text-gray-400">Project</label>
+            <div class="mt-1">
+                <select wire:model.live="activeProjectId" id="activeProjectId" class="block w-full rounded-lg border-0 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-brand-600 sm:text-sm sm:leading-6">
+                    <option value="">All projects</option>
+                    @foreach ($projects as $project)
+                        <option value="{{ $project->id }}">{{ $project->title }}</option>
+                    @endforeach
+                </select>
+            </div>
         </div>
 
         <!-- Navigation -->

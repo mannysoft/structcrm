@@ -10,6 +10,10 @@ use App\Domains\ProjectManagement\Enums\PhotoCategory;
 use App\Domains\ProjectManagement\Models\Project;
 
 new #[Layout('layouts.app')] class extends Component {
+    public function mount(): void
+    {
+        $this->project_id = session('active_project_id') ? (string) session('active_project_id') : '';
+    }
     use WithFileUploads;
 
     #[Validate('required|integer|exists:projects,id')]

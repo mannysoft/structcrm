@@ -10,6 +10,10 @@ use App\Domains\Sales\Enums\PurchaseOrderStatus;
 use App\Domains\Sales\Models\Supplier;
 
 new #[Layout('layouts.app')] class extends Component {
+    public function mount(): void
+    {
+        $this->project_id = session('active_project_id') ? (string) session('active_project_id') : '';
+    }
     #[Validate('required|integer|exists:projects,id')]
     public string $project_id = '';
 

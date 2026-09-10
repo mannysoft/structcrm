@@ -26,6 +26,7 @@ new #[Layout('layouts.app')] class extends Component {
                 ->when($this->search !== '', fn ($query) => $query->where(fn ($query) => $query
                     ->where('notes', 'like', '%'.$this->search.'%')
                     ->orWhereHas('project', fn ($q) => $q->where('title', 'like', '%'.$this->search.'%'))))
+                ->when(session('active_project_id'), fn ($query) => $query->where('project_id', session('active_project_id')))
                 ->latest()
                 ->paginate(15),
         ];

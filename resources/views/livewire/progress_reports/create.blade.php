@@ -27,6 +27,7 @@ new #[Layout('layouts.app')] class extends Component {
     public function mount(): void
     {
         $this->report_date = now()->format('Y-m-d');
+        $this->project_id = session('active_project_id') ? (string) session('active_project_id') : '';
     }
 
     public function with(): array

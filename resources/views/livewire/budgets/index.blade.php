@@ -24,6 +24,7 @@ new #[Layout('layouts.app')] class extends Component {
             'budgets' => Budget::query()
                 ->with(['project', 'items'])
                 ->when($this->search !== '', fn ($query) => $query->whereHas('project', fn ($q) => $q->where('title', 'like', '%'.$this->search.'%')))
+                ->when(session('active_project_id'), fn ($query) => $query->where('project_id', session('active_project_id')))
                 ->latest()
                 ->paginate(15),
         ];

@@ -11,6 +11,10 @@ use App\Domains\ProjectManagement\Models\Project;
 use Carbon\CarbonImmutable;
 
 new #[Layout('layouts.app')] class extends Component {
+    public function mount(): void
+    {
+        $this->project_id = session('active_project_id') ? (string) session('active_project_id') : '';
+    }
     #[Validate('required|integer|exists:projects,id')]
     public string $project_id = '';
 
