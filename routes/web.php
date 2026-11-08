@@ -11,6 +11,10 @@ Route::livewire('dashboard', 'dashboard.index')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
+Route::livewire('assistant', 'assistant.index')
+    ->middleware(['auth', 'verified'])
+    ->name('assistant.index');
+
 Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');

@@ -69,6 +69,10 @@ new #[Layout('layouts.app')] class extends Component {
 <div>
     <x-page-header title="Dashboard" description="Know your cost. Bill faster. Protect your profit." />
 
+    <div class="mt-6">
+        <livewire:assistant.quick-ask />
+    </div>
+
     <dl class="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         <div class="rounded-xl bg-white p-5 shadow-sm ring-1 ring-gray-900/5">
             <div class="flex items-center gap-3">

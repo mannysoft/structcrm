@@ -23,6 +23,7 @@ use App\Domains\Sales\Controllers\InvoiceController;
 use App\Domains\Sales\Controllers\LeadController;
 use App\Domains\Sales\Controllers\PurchaseOrderController;
 use App\Domains\Sales\Controllers\SupplierController;
+use App\Http\Controllers\Ai\AssistantController;
 use App\Http\Controllers\Auth\ApiTokenController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,6 +33,10 @@ Route::post('login', [ApiTokenController::class, 'store'])
 
 Route::middleware(['auth:sanctum', 'throttle:api'])->group(function () {
     Route::post('logout', [ApiTokenController::class, 'destroy'])->name('api.logout');
+
+    Route::post('assistant', AssistantController::class)
+        ->middleware('throttle:ai')
+        ->name('api.assistant');
 
     Route::name('api.')->group(function () {
         Route::apiResource('companies', CompanyController::class);
