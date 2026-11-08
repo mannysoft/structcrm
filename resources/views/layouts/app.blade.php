@@ -41,6 +41,12 @@
             </div>
         @endif
 
+        @if (auth()->check() && ! auth()->user()->isClient())
+            @persist('assistant-drawer')
+                <livewire:assistant.drawer />
+            @endpersist
+        @endif
+
         @livewireScripts
     </body>
 </html>

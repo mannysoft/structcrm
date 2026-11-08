@@ -82,7 +82,7 @@ $icons = [
 $navigation = [
     'Overview' => [
         ['label' => 'Dashboard', 'route' => 'dashboard', 'active' => 'dashboard', 'icon' => 'dashboard'],
-        ['label' => 'AI Assistant', 'route' => 'assistant.index', 'active' => 'assistant.*', 'icon' => 'assistant'],
+        ['label' => 'AI Assistant', 'route' => 'assistant.index', 'active' => 'assistant.*', 'icon' => 'assistant', 'event' => 'open-assistant'],
     ],
     'Projects & Operations' => [
         ['label' => 'Projects', 'route' => 'projects.index', 'active' => 'projects.*', 'icon' => 'projects'],
@@ -188,12 +188,25 @@ $logoutIcon = 'M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25
                     <div class="mt-2 space-y-1">
                         @foreach ($items as $item)
                             @php($active = request()->routeIs($item['active']))
-                            <a href="{{ route($item['route']) }}" wire:navigate class="{{ $active ? 'bg-brand-50 text-brand-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }} group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium">
-                                <svg class="size-5 shrink-0 {{ $active ? 'text-brand-600' : 'text-gray-400 group-hover:text-gray-500' }}" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="{{ $icons[$item['icon']] }}" />
-                                </svg>
-                                <span class="truncate">{{ $item['label'] }}</span>
-                            </a>
+                            @if (isset($item['event']))
+                                <button
+                                    type="button"
+                                    x-on:click="$dispatch('{{ $item['event'] }}')"
+                                    class="{{ $active ? 'bg-brand-50 text-brand-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }} group flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm font-medium"
+                                >
+                                    <svg class="size-5 shrink-0 {{ $active ? 'text-brand-600' : 'text-gray-400 group-hover:text-gray-500' }}" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="{{ $icons[$item['icon']] }}" />
+                                    </svg>
+                                    <span class="truncate">{{ $item['label'] }}</span>
+                                </button>
+                            @else
+                                <a href="{{ route($item['route']) }}" wire:navigate class="{{ $active ? 'bg-brand-50 text-brand-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }} group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium">
+                                    <svg class="size-5 shrink-0 {{ $active ? 'text-brand-600' : 'text-gray-400 group-hover:text-gray-500' }}" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="{{ $icons[$item['icon']] }}" />
+                                    </svg>
+                                    <span class="truncate">{{ $item['label'] }}</span>
+                                </a>
+                            @endif
                         @endforeach
                     </div>
                 </div>

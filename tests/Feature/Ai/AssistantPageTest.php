@@ -30,12 +30,38 @@ test('client portal users cannot open the assistant', function () {
         ->assertForbidden();
 });
 
-test('the dashboard renders the ask ai panel', function () {
+test('the dashboard renders the ask ai launcher', function () {
     $company = Company::factory()->create();
     $user = User::factory()->create(['company_id' => $company->id]);
 
     $this->actingAs($user)
         ->get('/dashboard')
         ->assertOk()
-        ->assertSee('Ask AI');
+        ->assertSee('Ask AI')
+        ->assertSee('Open assistant');
+});
+
+test('staff pages mount the global assistant drawer', function () {
+    $company = Company::factory()->create();
+    $user = User::factory()->create(['company_id' => $company->id]);
+
+    $this->actingAs($user)
+        ->get('/projects')
+        ->assertOk()
+        ->assertSee('Your CRM copilot')
+        ->assertSee('Open AI assistant');
+});
+
+test('client portal pages do not mount the assistant drawer', function () {
+    $company = Company::factory()->create();
+    $client = \App\Domains\Sales\Models\Client::factory()->create(['company_id' => $company->id]);
+    $clientUser = User::factory()->client()->create([
+        'company_id' => $company->id,
+        'client_id' => $client->id,
+    ]);
+
+    $this->actingAs($clientUser, 'client')
+        ->get('/portal')
+        ->assertOk()
+        ->assertDontSee('Your CRM copilot');
 });
