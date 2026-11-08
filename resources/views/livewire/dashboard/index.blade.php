@@ -69,6 +69,8 @@ new #[Layout('layouts.app')] class extends Component {
 <div>
     <x-page-header title="Dashboard" description="Know your cost. Bill faster. Protect your profit." />
 
+    <livewire:dashboard.getting-started />
+
     <div class="mt-6">
         <livewire:assistant.quick-ask />
     </div>

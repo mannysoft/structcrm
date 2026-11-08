@@ -8,6 +8,7 @@ use App\Domains\CompanyManagement\Actions\UpdateCompanyAction;
 use App\Domains\CompanyManagement\DTOs\CompanyData;
 use App\Domains\CompanyManagement\Enums\Currency;
 use App\Domains\CompanyManagement\Models\Company;
+use App\Domains\CompanyManagement\Services\GettingStartedService;
 
 new #[Layout('layouts.app')] class extends Component {
     use WithFileUploads;
@@ -51,12 +52,37 @@ new #[Layout('layouts.app')] class extends Component {
         $this->currency = $company->currency->value ?? 'USD';
     }
 
-    public function with(): array
+    public function with(GettingStartedService $gettingStarted): array
     {
+        $company = auth()->user()?->company;
+
         return [
             'currencies' => Currency::cases(),
             'timezones' => timezone_identifiers_list(),
+            'gettingStartedProgress' => $company instanceof Company ? $gettingStarted->progress($company) : null,
         ];
+    }
+
+    public function dismissGettingStarted(GettingStartedService $gettingStarted): void
+    {
+        $company = auth()->user()?->company;
+
+        if ($company instanceof Company) {
+            $gettingStarted->dismiss($company);
+
+            session()->flash('status', 'Getting started checklist hidden from the dashboard.');
+        }
+    }
+
+    public function restoreGettingStarted(GettingStartedService $gettingStarted): void
+    {
+        $company = auth()->user()?->company;
+
+        if ($company instanceof Company) {
+            $gettingStarted->restore($company);
+
+            session()->flash('status', 'Getting started checklist shown on the dashboard.');
+        }
     }
 
     public function save(UpdateCompanyAction $action)
@@ -171,4 +197,33 @@ new #[Layout('layouts.app')] class extends Component {
             <x-button type="submit">Save</x-button>
         </div>
     </form>
+
+    @if ($gettingStartedProgress)
+        <div class="mt-6 rounded-xl bg-white shadow-sm ring-1 ring-gray-900/5">
+            <div class="flex flex-wrap items-center justify-between gap-4 px-4 py-5 sm:px-8">
+                <div>
+                    <h2 class="text-base font-semibold text-gray-900">Getting started checklist</h2>
+                    <p class="mt-1 text-sm text-gray-500">
+                        @if ($gettingStartedProgress->isComplete())
+                            All setup steps are complete.
+                        @elseif ($gettingStartedProgress->isDismissed)
+                            {{ $gettingStartedProgress->completed() }} of {{ $gettingStartedProgress->total() }} steps complete · hidden from the dashboard.
+                        @else
+                            {{ $gettingStartedProgress->completed() }} of {{ $gettingStartedProgress->total() }} steps complete · shown on the dashboard.
+                        @endif
+                    </p>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <x-button :href="route('getting_started.index')" variant="secondary" size="sm">View checklist</x-button>
+
+                    @if ($gettingStartedProgress->isDismissed)
+                        <x-button type="button" wire:click="restoreGettingStarted" size="sm">Show on dashboard</x-button>
+                    @else
+                        <x-button type="button" wire:click="dismissGettingStarted" variant="secondary" size="sm">Hide from dashboard</x-button>
+                    @endif
+                </div>
+            </div>
+        </div>
+    @endif
 </div>

@@ -33,6 +33,7 @@ class Company extends Model
         'tax_number',
         'timezone',
         'currency',
+        'getting_started_dismissed_at',
     ];
 
     /**
@@ -42,6 +43,7 @@ class Company extends Model
     {
         return [
             'currency' => Currency::class,
+            'getting_started_dismissed_at' => 'datetime',
         ];
     }
 
