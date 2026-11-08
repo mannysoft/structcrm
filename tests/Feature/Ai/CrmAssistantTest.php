@@ -16,7 +16,7 @@ test('the assistant exposes the full tool suite', function () {
 
     $tools = (new CrmAssistant($user))->tools();
 
-    expect($tools)->toHaveCount(78)
+    expect($tools)->toHaveCount(121)
         ->and($tools)->each->toBeInstanceOf(Tool::class);
 });
 

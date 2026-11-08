@@ -7,7 +7,6 @@ namespace App\Ai\Tools\Marketing;
 use App\Ai\Tools\Concerns\FormatsCompanyRecords;
 use App\Ai\Tools\Concerns\InteractsWithCompanyData;
 use App\Domains\Marketing\Actions\UpdateMarketingCampaignAction;
-use App\Domains\Marketing\Models\MarketingCampaign;
 use Illuminate\Contracts\JsonSchema\JsonSchema;
 use Laravel\Ai\Contracts\Tool;
 use Laravel\Ai\Tools\Request;
@@ -42,7 +41,7 @@ final class UpdateMarketingCampaign implements Tool
         ]);
 
         return $this->attempt(function () use ($validated): array {
-            $campaign = $this->findRecord(MarketingCampaign::class, $validated['campaign'], 'marketing campaign', ['name']);
+            $campaign = $this->findMarketingCampaign($validated['campaign']);
             $this->authorize('update', $campaign);
 
             $existingSteps = $campaign->steps->map(fn ($step) => [

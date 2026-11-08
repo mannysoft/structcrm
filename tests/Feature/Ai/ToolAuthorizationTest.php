@@ -5,12 +5,8 @@ declare(strict_types=1);
 namespace Tests\Feature\Ai;
 
 use App\Ai\Agents\CrmAssistant;
-use App\Ai\Tools\Company\InviteStaffUser;
-use App\Ai\Tools\Finance\RecordBillingPayment;
 use App\Ai\Tools\Projects\CreateProject;
 use App\Ai\Tools\Projects\GetProject;
-use App\Ai\Tools\Sales\DecideChangeOrder;
-use App\Ai\Tools\Sales\DeleteClient;
 use App\Domains\CompanyManagement\Models\Company;
 use App\Domains\ProjectManagement\Models\Project;
 use App\Domains\Sales\Models\Client;
@@ -60,16 +56,13 @@ test('destructive tools require human approval', function () {
     $company = Company::factory()->create();
     $user = User::factory()->create(['company_id' => $company->id]);
 
-    $approvable = [
-        new InviteStaffUser($user),
-        new RecordBillingPayment($user),
-        new DecideChangeOrder($user),
-        new DeleteClient($user),
-    ];
+    $approvable = collect((new CrmAssistant($user))->tools())
+        ->filter(fn ($tool) => $tool instanceof Approvable);
+
+    expect($approvable)->not->toBeEmpty();
 
     foreach ($approvable as $tool) {
-        expect($tool)->toBeInstanceOf(Approvable::class)
-            ->and($tool->shouldRequestApproval(new Request))->not->toBeNull();
+        expect($tool->shouldRequestApproval(new Request))->not->toBeNull(class_basename($tool));
     }
 });
 

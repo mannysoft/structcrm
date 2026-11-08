@@ -5,14 +5,37 @@ declare(strict_types=1);
 namespace Tests\Feature\Ai;
 
 use App\Ai\Tools\Projects\CreateDailyLog;
+use App\Ai\Tools\Projects\CreateDocument;
+use App\Ai\Tools\Projects\CreateEquipment;
+use App\Ai\Tools\Projects\CreateMaintenanceLog;
 use App\Ai\Tools\Projects\CreateProject;
+use App\Ai\Tools\Projects\CreateProjectPhoto;
 use App\Ai\Tools\Projects\CreateTask;
+use App\Ai\Tools\Projects\CreateTimeEntry;
+use App\Ai\Tools\Projects\DeleteDailyLog;
+use App\Ai\Tools\Projects\DeleteDocument;
+use App\Ai\Tools\Projects\DeleteEquipment;
+use App\Ai\Tools\Projects\DeleteMaintenanceLog;
+use App\Ai\Tools\Projects\DeleteProjectPhoto;
+use App\Ai\Tools\Projects\DeleteTimeEntry;
+use App\Ai\Tools\Projects\GetDailyLog;
 use App\Ai\Tools\Projects\GetProject;
 use App\Ai\Tools\Projects\ListTasks;
+use App\Ai\Tools\Projects\UpdateDailyLog;
+use App\Ai\Tools\Projects\UpdateDocument;
+use App\Ai\Tools\Projects\UpdateMaintenanceLog;
+use App\Ai\Tools\Projects\UpdateProjectPhoto;
 use App\Ai\Tools\Projects\UpdateTask;
+use App\Ai\Tools\Projects\UpdateTimeEntry;
 use App\Domains\CompanyManagement\Models\Company;
 use App\Domains\ProjectManagement\Models\DailyLog;
+use App\Domains\ProjectManagement\Models\Document;
+use App\Domains\ProjectManagement\Models\Equipment;
+use App\Domains\ProjectManagement\Models\MaintenanceLog;
+use App\Domains\ProjectManagement\Models\Project;
+use App\Domains\ProjectManagement\Models\ProjectPhoto;
 use App\Domains\ProjectManagement\Models\Task;
+use App\Domains\ProjectManagement\Models\TimeEntry;
 use App\Domains\Sales\Models\Client;
 use App\Models\User;
 use Laravel\Ai\Tools\Request;
@@ -128,4 +151,193 @@ test('site supervisors can record daily logs for their own projects', function (
     expect($log['ok'])->toBeTrue()
         ->and($log['data']['log']['crew_count'])->toBe(12)
         ->and(DailyLog::query()->count())->toBe(1);
+});
+
+test('the assistant can update and delete daily logs, time entries and documents', function () {
+    $company = Company::factory()->create(['currency' => 'PHP']);
+    $client = Client::factory()->create(['company_id' => $company->id]);
+    $owner = User::factory()->create(['company_id' => $company->id]);
+    $project = Project::factory()->create([
+        'company_id' => $company->id,
+        'client_id' => $client->id,
+    ]);
+
+    $log = json_decode(
+        (string) (new CreateDailyLog($owner))->handle(new Request([
+            'project' => $project->uuid,
+            'log_date' => '2026-11-05',
+            'work_performed' => 'Slab poured.',
+            'crew_count' => 8,
+        ])),
+        true,
+    );
+
+    $logUuid = $log['data']['log']['uuid'];
+
+    $updatedLog = json_decode(
+        (string) (new UpdateDailyLog($owner))->handle(new Request([
+            'log' => $logUuid,
+            'crew_count' => 15,
+            'issues' => 'Concrete delivery delayed.',
+        ])),
+        true,
+    );
+
+    expect($updatedLog['ok'])->toBeTrue()
+        ->and($updatedLog['data']['log']['crew_count'])->toBe(15)
+        ->and($updatedLog['data']['log']['issues'])->toBe('Concrete delivery delayed.');
+
+    $detail = json_decode((string) (new GetDailyLog($owner))->handle(new Request(['log' => $logUuid])), true);
+
+    expect($detail['ok'])->toBeTrue()
+        ->and($detail['data']['log']['work_performed'])->toBe('Slab poured.');
+
+    $entry = json_decode(
+        (string) (new CreateTimeEntry($owner))->handle(new Request([
+            'project' => $project->uuid,
+            'clock_in_at' => '2026-11-05 07:00',
+        ])),
+        true,
+    );
+
+    $updatedEntry = json_decode(
+        (string) (new UpdateTimeEntry($owner))->handle(new Request([
+            'entry' => $entry['data']['entry']['uuid'],
+            'clock_out_at' => '2026-11-05 16:30',
+            'break_minutes' => 45,
+        ])),
+        true,
+    );
+
+    expect($updatedEntry['ok'])->toBeTrue()
+        ->and($updatedEntry['data']['entry']['break_minutes'])->toBe(45)
+        ->and($updatedEntry['data']['entry']['clock_out_at'])->toContain('16:30');
+
+    $document = json_decode(
+        (string) (new CreateDocument($owner))->handle(new Request([
+            'project' => $project->uuid,
+            'name' => 'Ground floor plan',
+            'category' => 'blueprint',
+            'file_path' => 'documents/plan.pdf',
+        ])),
+        true,
+    );
+
+    $updatedDocument = json_decode(
+        (string) (new UpdateDocument($owner))->handle(new Request([
+            'document' => $document['data']['document']['uuid'],
+            'name' => 'Ground floor plan rev B',
+        ])),
+        true,
+    );
+
+    expect($updatedDocument['ok'])->toBeTrue()
+        ->and($updatedDocument['data']['document']['name'])->toBe('Ground floor plan rev B');
+
+    $deletedDocument = json_decode(
+        (string) (new DeleteDocument($owner))->handle(new Request(['document' => $updatedDocument['data']['document']['uuid']])),
+        true,
+    );
+    $deletedEntry = json_decode(
+        (string) (new DeleteTimeEntry($owner))->handle(new Request(['entry' => $entry['data']['entry']['uuid']])),
+        true,
+    );
+    $deletedLog = json_decode(
+        (string) (new DeleteDailyLog($owner))->handle(new Request(['log' => $logUuid])),
+        true,
+    );
+
+    expect($deletedDocument['ok'])->toBeTrue()
+        ->and($deletedEntry['ok'])->toBeTrue()
+        ->and($deletedLog['ok'])->toBeTrue()
+        ->and(Document::query()->count())->toBe(0)
+        ->and(TimeEntry::query()->count())->toBe(0)
+        ->and(DailyLog::query()->count())->toBe(0);
+});
+
+test('the assistant can manage project photos, equipment and maintenance logs', function () {
+    $company = Company::factory()->create(['currency' => 'PHP']);
+    $client = Client::factory()->create(['company_id' => $company->id]);
+    $owner = User::factory()->create(['company_id' => $company->id]);
+    $project = Project::factory()->create([
+        'company_id' => $company->id,
+        'client_id' => $client->id,
+    ]);
+
+    $photo = json_decode(
+        (string) (new CreateProjectPhoto($owner))->handle(new Request([
+            'project' => $project->uuid,
+            'category' => 'during',
+            'file_path' => 'photos/slab.jpg',
+            'caption' => 'Slab pour',
+        ])),
+        true,
+    );
+
+    expect($photo['ok'])->toBeTrue()
+        ->and($photo['data']['photo']['uploaded_by'])->toBe($owner->name);
+
+    $updatedPhoto = json_decode(
+        (string) (new UpdateProjectPhoto($owner))->handle(new Request([
+            'photo' => $photo['data']['photo']['uuid'],
+            'category' => 'after',
+            'caption' => 'Slab cured',
+        ])),
+        true,
+    );
+
+    expect($updatedPhoto['ok'])->toBeTrue()
+        ->and($updatedPhoto['data']['photo']['category'])->toBe('after')
+        ->and($updatedPhoto['data']['photo']['caption'])->toBe('Slab cured');
+
+    $equipment = json_decode(
+        (string) (new CreateEquipment($owner))->handle(new Request([
+            'name' => 'Excavator 320',
+            'type' => 'heavy_machinery',
+            'service_due_at' => '2026-12-01',
+        ])),
+        true,
+    );
+
+    $log = json_decode(
+        (string) (new CreateMaintenanceLog($owner))->handle(new Request([
+            'equipment' => $equipment['data']['equipment']['uuid'],
+            'service_date' => '2026-11-06',
+            'description' => 'Hydraulic hose replaced.',
+            'cost' => 1250.5,
+        ])),
+        true,
+    );
+
+    $updatedLog = json_decode(
+        (string) (new UpdateMaintenanceLog($owner))->handle(new Request([
+            'log' => $log['data']['log']['uuid'],
+            'cost' => 1500,
+            'description' => 'Hydraulic hose and pump seal replaced.',
+        ])),
+        true,
+    );
+
+    expect($updatedLog['ok'])->toBeTrue()
+        ->and($updatedLog['data']['log']['cost'])->toEqual(1500);
+
+    $deletedPhoto = json_decode(
+        (string) (new DeleteProjectPhoto($owner))->handle(new Request(['photo' => $photo['data']['photo']['uuid']])),
+        true,
+    );
+    $deletedLog = json_decode(
+        (string) (new DeleteMaintenanceLog($owner))->handle(new Request(['log' => $log['data']['log']['uuid']])),
+        true,
+    );
+    $deletedEquipment = json_decode(
+        (string) (new DeleteEquipment($owner))->handle(new Request(['equipment' => $equipment['data']['equipment']['uuid']])),
+        true,
+    );
+
+    expect($deletedPhoto['ok'])->toBeTrue()
+        ->and($deletedLog['ok'])->toBeTrue()
+        ->and($deletedEquipment['ok'])->toBeTrue()
+        ->and(ProjectPhoto::query()->count())->toBe(0)
+        ->and(MaintenanceLog::query()->count())->toBe(0)
+        ->and(Equipment::query()->count())->toBe(0);
 });

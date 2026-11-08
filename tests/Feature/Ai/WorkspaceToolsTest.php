@@ -10,6 +10,8 @@ use App\Ai\Tools\Finance\CreateContract;
 use App\Ai\Tools\Finance\CreateCostCode;
 use App\Ai\Tools\Finance\CreateProgressReport;
 use App\Ai\Tools\Marketing\CreateMarketingCampaign;
+use App\Ai\Tools\Marketing\DeleteMarketingCampaign;
+use App\Ai\Tools\Marketing\ListMarketingEmailLogs;
 use App\Ai\Tools\Projects\CreateEquipment;
 use App\Ai\Tools\Projects\CreateMaintenanceLog;
 use App\Ai\Tools\Sales\CreateChangeOrder;
@@ -17,6 +19,7 @@ use App\Ai\Tools\Sales\CreatePurchaseOrder;
 use App\Ai\Tools\Sales\CreateSupplier;
 use App\Domains\CompanyManagement\Models\Company;
 use App\Domains\Marketing\Models\MarketingCampaign;
+use App\Domains\Marketing\Models\MarketingEmailLog;
 use App\Domains\ProjectManagement\Models\Equipment;
 use App\Domains\ProjectManagement\Models\MaintenanceLog;
 use App\Domains\ProjectManagement\Models\Project;
@@ -204,4 +207,42 @@ test('the assistant can manage equipment and marketing campaigns', function () {
     expect($campaign['ok'])->toBeTrue()
         ->and($campaign['data']['campaign']['steps'])->toHaveCount(2)
         ->and(MarketingCampaign::query()->count())->toBe(1);
+});
+
+test('the assistant can list marketing email history and delete a campaign', function () {
+    $company = Company::factory()->create();
+    $user = User::factory()->create(['company_id' => $company->id]);
+
+    $campaign = json_decode(
+        (string) (new CreateMarketingCampaign($user))->handle(new Request([
+            'name' => 'Receivables follow-up',
+            'steps' => [
+                ['subject' => 'Invoice reminder', 'body' => 'Your invoice is due.', 'delay_days' => 0],
+            ],
+        ])),
+        true,
+    );
+
+    $campaignUuid = $campaign['data']['campaign']['uuid'];
+    $campaignId = MarketingCampaign::query()->where('uuid', $campaignUuid)->value('id');
+
+    MarketingEmailLog::factory()->create([
+        'campaign_id' => $campaignId,
+        'user_id' => $user->id,
+        'campaign_step_id' => MarketingCampaign::query()->findOrFail($campaignId)->steps()->value('id'),
+        'subject' => 'Invoice reminder',
+        'sent_at' => now(),
+    ]);
+
+    $emails = json_decode((string) (new ListMarketingEmailLogs($user))->handle(new Request(['campaign' => $campaignUuid])), true);
+
+    expect($emails['ok'])->toBeTrue()
+        ->and($emails['data']['count'])->toBe(1)
+        ->and($emails['data']['emails'][0]['subject'])->toBe('Invoice reminder')
+        ->and($emails['data']['emails'][0]['recipient'])->toBe($user->email);
+
+    $deleted = json_decode((string) (new DeleteMarketingCampaign($user))->handle(new Request(['campaign' => $campaignUuid])), true);
+
+    expect($deleted['ok'])->toBeTrue()
+        ->and(MarketingCampaign::query()->count())->toBe(0);
 });

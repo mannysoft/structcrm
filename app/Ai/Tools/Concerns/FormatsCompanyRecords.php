@@ -459,6 +459,88 @@ trait FormatsCompanyRecords
     }
 
     /**
+     * @return array<int, array<string, mixed>>
+     */
+    protected function estimateItems(Estimate $estimate): array
+    {
+        return $estimate->items->map(fn ($item) => [
+            'description' => $item->description,
+            'quantity' => (float) $item->quantity,
+            'unit_price' => $this->toDecimal($item->unit_price),
+            'total' => $this->toDecimal($item->total),
+        ])->all();
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    protected function invoiceItems(Invoice $invoice): array
+    {
+        return $invoice->items->map(fn ($item) => [
+            'description' => $item->description,
+            'quantity' => (float) $item->quantity,
+            'unit_price' => $this->toDecimal($item->unit_price),
+            'total' => $this->toDecimal($item->total),
+        ])->all();
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    protected function purchaseOrderItems(PurchaseOrder $purchaseOrder): array
+    {
+        return $purchaseOrder->items->map(fn ($item) => [
+            'description' => $item->description,
+            'quantity' => (float) $item->quantity,
+            'unit_price' => $this->toDecimal($item->unit_price),
+            'total' => $this->toDecimal($item->total),
+        ])->all();
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    protected function changeOrderItems(ChangeOrder $changeOrder): array
+    {
+        return $changeOrder->items->map(fn ($item) => [
+            'category' => $this->enumValue($item->category),
+            'description' => $item->description,
+            'amount' => $this->toDecimal($item->amount),
+        ])->all();
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    protected function budgetItems(Budget $budget): array
+    {
+        return $budget->items->map(fn ($item) => [
+            'description' => $item->description,
+            'quantity' => (float) $item->quantity,
+            'unit' => $item->unit,
+            'unit_price' => $this->toDecimal($item->unit_price),
+            'total' => $this->toDecimal($item->total),
+            'cost_code_id' => $item->cost_code_id,
+            'boq_item_id' => $item->boq_item_id,
+        ])->all();
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    protected function progressReportItems(ProgressReport $report): array
+    {
+        return $report->items->map(fn ($item) => [
+            'description' => $item->description,
+            'quantity' => (float) $item->quantity,
+            'percent_complete' => (float) $item->percent_complete,
+            'accomplished_amount' => $this->toDecimal($item->accomplished_amount),
+            'boq_item_id' => $item->boq_item_id,
+            'cost_code_id' => $item->cost_code_id,
+        ])->all();
+    }
+
+    /**
      * @return array<string, mixed>
      */
     protected function campaignSummary(MarketingCampaign $campaign): array

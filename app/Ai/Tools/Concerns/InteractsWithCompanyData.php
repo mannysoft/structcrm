@@ -6,6 +6,7 @@ namespace App\Ai\Tools\Concerns;
 
 use App\Ai\Tools\ToolFailure;
 use App\Domains\CompanyManagement\Models\Company;
+use App\Domains\Marketing\Models\MarketingCampaign;
 use App\Models\User;
 use BackedEnum;
 use Carbon\CarbonImmutable;
@@ -138,6 +139,38 @@ trait InteractsWithCompanyData
         }
 
         return $record;
+    }
+
+    /**
+     * Resolve a marketing campaign by UUID, name or numeric id.
+     *
+     * Marketing campaigns are platform-wide rather than company-scoped, so
+     * access is enforced by the manage_marketing policy instead of a
+     * company_id column.
+     */
+    protected function findMarketingCampaign(?string $identifier): MarketingCampaign
+    {
+        $identifier = trim((string) $identifier);
+
+        if ($identifier === '') {
+            throw new ToolFailure('A marketing campaign identifier is required. Use the campaign list tool to find one.');
+        }
+
+        $campaign = MarketingCampaign::query()
+            ->where(function ($query) use ($identifier) {
+                $query->where('uuid', $identifier)->orWhere('name', $identifier);
+
+                if (ctype_digit($identifier)) {
+                    $query->orWhere('id', (int) $identifier);
+                }
+            })
+            ->first();
+
+        if (! $campaign instanceof MarketingCampaign) {
+            throw new ToolFailure("No marketing campaign matching [{$identifier}] was found.");
+        }
+
+        return $campaign;
     }
 
     /**
