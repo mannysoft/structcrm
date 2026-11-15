@@ -85,6 +85,9 @@ const config: Config = {
       logo: {
         alt: 'StructCRM logo',
         src: 'img/logo.svg',
+        // Docusaurus hides the `src` variant in dark mode, so the same mark is
+        // declared for both themes.
+        srcDark: 'img/logo.svg',
       },
       items: [
         {
