@@ -62,7 +62,7 @@ cannot evidence.
 3. Skips users already logged for that step.
 4. Sends and writes `marketing_email_logs`.
 
-:::danger Platform-wide
+:::danger[Platform-wide]
 The query is not scoped by company. Every opted-in user in the database is eligible for every
 active campaign, regardless of tenant. Use this module for product-level announcements, not
 per-tenant marketing.

@@ -98,6 +98,19 @@ Dusk runs against `.env.dusk.local` (SQLite at `database/dusk.sqlite`, base URL 
 
 ## Documentation
 
+Public documentation is published at **<https://mannysoft.github.io/structcrm/>**:
+
+- [Getting started](https://mannysoft.github.io/structcrm/docs/getting-started/requirements) — installation, configuration, demo data
+- [User guide](https://mannysoft.github.io/structcrm/docs/user-guide/overview) — every module and workflow
+- [Developer guide](https://mannysoft.github.io/structcrm/docs/developer-guide/architecture) — architecture, patterns, testing
+- [REST API](https://mannysoft.github.io/structcrm/docs/api/authentication) — authentication and endpoints
+- [Operations](https://mannysoft.github.io/structcrm/docs/operations/environment-variables) — configuration and deployment
+
+The site is built with Docusaurus from [`docs-site/`](docs-site/README.md). Run it locally with
+`cd docs-site && npm install && npm run start`.
+
+Internal design material:
+
 - [Product Requirements (PRD)](docs/PRD.md)
 - [Architecture](docs/ARCHITECTURE.md)
 - [Database schema](docs/DATABASE.md)

@@ -32,7 +32,7 @@ php artisan serve
 Open [http://localhost:8000](http://localhost:8000). You will land on the marketing page; use **Log in** to sign
 in with a seeded account (see [demo accounts](/docs/getting-started/seeding-and-demo-data#demo-staff-accounts)).
 
-:::tip Shortcut
+:::tip[Shortcut]
 `composer run setup` performs install, `.env` creation, key generation, migration, asset
 install and build in one command. It does **not** seed roles or demo users, so run
 `php artisan db:seed` afterwards if you want them.

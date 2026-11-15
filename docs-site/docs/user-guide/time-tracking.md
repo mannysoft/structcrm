@@ -36,7 +36,7 @@ overlapping entries for the same person — review before exporting.
 - Time entries are operational data: they do **not** create expenses or feed billing.
   To cost labour, create an [expense](/docs/user-guide/expenses) with category `labor`.
 
-:::note Geometry has no effect
+:::note[Geometry has no effect]
 Latitude and longitude are stored, but there is no geofencing, no map view and no
 enforcement of where a clock-in happens.
 :::

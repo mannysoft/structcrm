@@ -75,7 +75,7 @@ Open the billing and use the **Payments** panel on the edit screen. Each payment
 Payments are separate rows, so partial payments are supported. Outstanding billing on the
 [dashboard](/docs/user-guide/dashboard) is `Σ net amount − Σ payments`.
 
-:::tip Overdue collections
+:::tip[Overdue collections]
 A billing counts as overdue when it has a `due date` in the past **and** an unpaid
 remainder. Setting a due date is therefore the single most useful thing you can do for
 cash-flow visibility.

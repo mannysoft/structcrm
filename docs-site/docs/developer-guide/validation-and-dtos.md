@@ -46,7 +46,7 @@ Rules of thumb:
 - **Use `Rule::enum()`** for every status field; never `in:` lists.
 - **`toDTO()` reads `validated()`**, not `input()` — validated data only.
 
-:::warning Kebab-case resources
+:::warning[Kebab-case resources]
 For kebab-case API resources (`cost-codes`, `boq-items`, `progress-reports`, `change-orders`,
 `daily-logs`, `purchase-orders`) the route parameter is **snake_case**. In a form request use
 `$this->route('cost_code')`; `$this->route('costCode')` returns `null` and silently

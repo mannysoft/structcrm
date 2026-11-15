@@ -49,7 +49,7 @@ and the auth pair.
 
 `*` = required.
 
-:::note File fields
+:::note[File fields]
 `photo`, `file` and `receipt` are validated as uploads. The API expects multipart form data
 for those two resources — everything else is JSON.
 :::

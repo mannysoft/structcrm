@@ -72,6 +72,6 @@ user can hide the noise without unlocking anything.
 5. Add a feature test asserting the redirect and the unlock (see
    `tests/Feature/GettingStartedTest.php`).
 
-:::note Rule of record
+:::note[Rule of record]
 This workflow is recorded in `.ai/rules/routes.md`. Read it before adding a create route.
 :::

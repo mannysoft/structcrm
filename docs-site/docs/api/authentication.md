@@ -33,7 +33,7 @@ HTTP/1.1 201 Created
 `device_name` is required and becomes the token's label (`personal_access_tokens.name`).
 Store the token securely — it is shown once.
 
-:::warning Staff accounts only
+:::warning[Staff accounts only]
 The login endpoint filters on `users.type = staff`. Client portal accounts can never obtain
 an API token, even with correct credentials.
 :::

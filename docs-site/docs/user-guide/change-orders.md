@@ -40,7 +40,7 @@ That new budget becomes the **current** budget for the project, so projected cos
 profit reflect the change immediately. Rejection clears `approved_at` and leaves budgets
 untouched.
 
-:::caution Re-approving
+:::caution[Re-approving]
 Approving the same change order twice creates a second revised budget — the value is added
 twice. The UI normally prevents this by only offering the action on pending orders; the AI
 assistant asks for confirmation for the same reason.

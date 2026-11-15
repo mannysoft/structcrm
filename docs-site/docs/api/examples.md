@@ -64,7 +64,7 @@ curl -s -X POST "$API/clients" \
 }
 ```
 
-:::warning Known gap: clients expose only a UUID
+:::warning[Known gap: clients expose only a UUID]
 `StoreProjectRequest` expects `client_id` as the **integer** primary key, but
 `ClientResource` only returns the UUID. To create a project through the API you must know
 the integer id — read it from an existing project's `client_id`, from the database, or use

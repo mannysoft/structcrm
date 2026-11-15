@@ -54,7 +54,7 @@ public Money $unitPrice {
 }
 ```
 
-:::danger The two hook rules
+:::danger[The two hook rules]
 1. **The hook name must differ from the column.** A hook named `unitPrice` reading
    `$this->unitPrice` recurses forever. Read `unit_price`.
 2. **Never attach a hook to a column that may hold a negative number.** `Money` rejects

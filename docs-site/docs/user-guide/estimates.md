@@ -54,7 +54,7 @@ There is no one-click conversion. The intended flow is:
    [BOQ](/docs/user-guide/bill-of-quantities).
 5. Mark the estimate `converted` and the lead `converted`.
 
-:::caution Quantity is a whole number here
+:::caution[Quantity is a whole number here]
 Estimate and invoice line quantities are validated as integers. Use a small unit (e.g.
 "each" instead of "sq.m.") if you need fractional quantities, or round up.
 :::

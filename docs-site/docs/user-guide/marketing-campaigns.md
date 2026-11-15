@@ -9,7 +9,7 @@ description: Build sequenced email campaigns for opted-in users, and understand 
 The marketing module sends **consent-based** email sequences to people who opted in when
 they registered. Requires `manage_marketing` (owner and administrator have it).
 
-:::warning Scope
+:::warning[Scope]
 Campaigns are **platform-wide**, not per-tenant. The sending command selects every
 `users` row with `marketing_opt_in = true` in the database, regardless of company. Treat
 this as an operator feature (product announcements, onboarding), not a tenant CRM tool.

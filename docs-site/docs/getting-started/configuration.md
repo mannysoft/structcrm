@@ -41,7 +41,7 @@ QUEUE_CONNECTION=database
 Switch to MySQL for production (see [Installation](/docs/getting-started/installation#database-choice)).
 Redis is supported by Laravel but not required or configured by the app.
 
-:::warning Changing the queue driver
+:::warning[Changing the queue driver]
 If you move to `QUEUE_CONNECTION=redis` or `sync`, update your worker and deployment
 process accordingly. On `sync`, queued mail (invitations, marketing campaigns) is sent
 inside the HTTP request.

@@ -26,7 +26,7 @@ https://your-host.example.com/api/projects
 Route parameters are resolved by UUID (`getRouteKeyName()` returns `uuid`), so
 `/api/projects/{uuid}` works and `/api/projects/{integer}` returns `404`.
 
-:::warning Foreign keys are integer ids, and not every parent exposes one
+:::warning[Foreign keys are integer ids, and not every parent exposes one]
 `project_id`, `client_id`, `supplier_id`, `lead_id` and `manager_id` are validated with
 `Rule::exists(table, 'id')`, so they take the **integer** key. Only `ProjectResource`
 returns `client_id`; `ClientResource`, `SupplierResource` and `LeadResource` return just

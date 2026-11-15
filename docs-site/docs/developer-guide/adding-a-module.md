@@ -59,7 +59,7 @@ final class Submittal extends Model
 }
 ```
 
-:::danger Always override `uniqueIds()`
+:::danger[Always override `uniqueIds()`]
 `HasUuids` alone makes `uniqueIds()` return `['id']`, which tries to UUID the integer
 primary key and breaks inserts. Return `['uuid']` explicitly — this is recorded in
 `.ai/rules/domains.md`.

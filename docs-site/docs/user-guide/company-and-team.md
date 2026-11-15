@@ -39,7 +39,7 @@ lets you invite people.
    `/staff/set-password/{user}`.
 4. The recipient chooses a password and is signed in.
 
-:::note Mail delivery
+:::note[Mail delivery]
 Invitations are queued. Without a queue worker (or with `MAIL_MAILER=log`) the email never
 arrives — check `storage/logs/laravel.log` in development, or run `composer run dev`.
 :::

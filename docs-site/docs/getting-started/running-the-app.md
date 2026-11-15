@@ -30,7 +30,7 @@ php artisan queue:work            # production-style worker
 php artisan schedule:work         # run the scheduler locally
 ```
 
-:::note Front-end changes not showing?
+:::note[Front-end changes not showing?]
 Re-run `npm run build` (or keep `npm run dev` running). A stale manifest is the most
 common cause of missing styles.
 :::

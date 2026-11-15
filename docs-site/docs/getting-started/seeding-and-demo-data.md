@@ -57,7 +57,7 @@ role. The password for every account is `password`.
 php artisan db:seed
 ```
 
-:::danger Demo credentials
+:::danger[Demo credentials]
 These accounts are for local evaluation only. Never seed them into a public deployment.
 :::
 

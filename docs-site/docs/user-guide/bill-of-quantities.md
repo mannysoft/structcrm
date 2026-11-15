@@ -53,7 +53,7 @@ Download the sample template from the import screen
 - Unmatched cost codes become `null`; nothing fails.
 - Nothing is deduplicated: importing the same file twice doubles the BOQ.
 
-:::warning Check the count
+:::warning[Check the count]
 The import reports how many rows were created. Compare it with your spreadsheet before
 billing anything.
 :::
