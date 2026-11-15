@@ -1,0 +1,130 @@
+/**
+ * StructCRM documentation theme.
+ *
+ * The palette mirrors the application's Tailwind theme in
+ * `resources/css/app.css` (electric blue brand, amber accent).
+ */
+
+:root {
+  --ifm-color-primary: #1f5cf0;
+  --ifm-color-primary-dark: #1747dc;
+  --ifm-color-primary-darker: #163fc9;
+  --ifm-color-primary-darkest: #193bb2;
+  --ifm-color-primary-light: #3579fb;
+  --ifm-color-primary-lighter: #599bff;
+  --ifm-color-primary-lightest: #8ebeff;
+
+  --structcrm-accent: #f59e0b;
+  --ifm-code-font-size: 92%;
+  --ifm-heading-font-weight: 650;
+  --docusaurus-highlighted-code-line-bg: rgba(31, 92, 240, 0.1);
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #599bff;
+  --ifm-color-primary-dark: #3579fb;
+  --ifm-color-primary-darker: #1f5cf0;
+  --ifm-color-primary-darkest: #1747dc;
+  --ifm-color-primary-light: #8ebeff;
+  --ifm-color-primary-lighter: #bcd7ff;
+  --ifm-color-primary-lightest: #d9e8ff;
+
+  --docusaurus-highlighted-code-line-bg: rgba(89, 155, 255, 0.2);
+}
+
+/* Dashboard-style tables are common in this documentation. */
+.markdown table {
+  display: table;
+  width: 100%;
+}
+
+.markdown table th {
+  white-space: nowrap;
+}
+
+/* ---------- Landing page ---------- */
+
+.hero-banner {
+  padding: 4.5rem 1rem 3.5rem;
+  border-radius: 1.5rem;
+  background:
+    radial-gradient(circle at 85% 15%, rgba(245, 158, 11, 0.18), transparent 55%),
+    radial-gradient(circle at 10% 90%, rgba(31, 92, 240, 0.22), transparent 60%),
+    var(--ifm-background-surface-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  text-align: center;
+}
+
+.hero-eyebrow {
+  margin-bottom: 1rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ifm-color-primary);
+}
+
+.hero-title {
+  margin-bottom: 1rem;
+  font-size: clamp(2.6rem, 6vw, 4rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.hero-subtitle {
+  max-width: 44rem;
+  margin: 0 auto 2rem;
+  font-size: 1.15rem;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.home-section-title {
+  margin: 3.5rem 0 1.25rem;
+  font-size: 1.5rem;
+}
+
+.home-card-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+}
+
+.home-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 1.35rem;
+  border-radius: 1rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  background: var(--ifm-background-surface-color);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.home-card:hover {
+  border-color: var(--ifm-color-primary);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px -16px rgba(20, 33, 85, 0.45);
+  text-decoration: none;
+  color: inherit;
+}
+
+.home-card__title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--ifm-color-primary);
+}
+
+.home-card__body {
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--ifm-color-emphasis-700);
+}

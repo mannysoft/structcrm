@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#142155"/>
+  <circle cx="1010" cy="120" r="190" fill="#1f5cf0" fill-opacity="0.28"/>
+  <circle cx="120" cy="560" r="150" fill="#f59e0b" fill-opacity="0.16"/>
+  <g transform="translate(96 168)">
+    <rect width="96" height="96" rx="24" fill="#1f5cf0"/>
+    <rect x="26" y="54" width="10" height="22" rx="3" fill="#ffffff"/>
+    <rect x="43" y="40" width="10" height="36" rx="3" fill="#ffffff" fill-opacity="0.9"/>
+    <rect x="60" y="26" width="10" height="50" rx="3" fill="#ffffff" fill-opacity="0.75"/>
+    <circle cx="75" cy="21" r="7" fill="#f59e0b"/>
+  </g>
+  <text x="96" y="352" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="92" font-weight="700" fill="#ffffff">StructCRM</text>
+  <text x="96" y="424" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="36" fill="#bcd7ff">Construction project management &amp; CRM — open source</text>
+  <text x="96" y="486" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="28" fill="#8ebeff">User guide · Developer guide · REST API · Operations</text>
+</svg>

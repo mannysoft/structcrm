@@ -1,0 +1,89 @@
+---
+title: StructCRM documentation
+description: Documentation for StructCRM — an open-source, multi-tenant construction project management and CRM platform built with Laravel and Livewire.
+hide_table_of_contents: true
+---
+
+import Link from '@docusaurus/Link';
+
+<section className="hero-banner">
+  <p className="hero-eyebrow">Open source · MIT licensed</p>
+  <h1 className="hero-title">StructCRM</h1>
+  <p className="hero-subtitle">
+    Multi-tenant construction project management and CRM for general contractors,
+    subcontractors and field crews. Track clients and leads, run projects and field
+    records, control BOQ, budgets and progress billings — all in one Laravel
+    application.
+  </p>
+  <div className="hero-actions">
+    <Link className="button button--primary button--lg" to="/docs/getting-started/installation">
+      Get started
+    </Link>
+    <Link className="button button--secondary button--lg" to="/docs/user-guide/overview">
+      Read the user guide
+    </Link>
+  </div>
+</section>
+
+<h2 className="home-section-title">Start where you are</h2>
+
+<div className="home-card-grid">
+  <Link className="home-card" to="/docs/getting-started/installation">
+    <span className="home-card__title">I am setting it up</span>
+    <span className="home-card__body">
+      Requirements, installation, configuration and demo data — from a clean checkout to a
+      running app.
+    </span>
+  </Link>
+  <Link className="home-card" to="/docs/user-guide/overview">
+    <span className="home-card__title">I am using it</span>
+    <span className="home-card__body">
+      Day-to-day workflows for every module: CRM, projects, field logs, commercial and
+      finance, the client portal and the AI assistant.
+    </span>
+  </Link>
+  <Link className="home-card" to="/docs/developer-guide/architecture">
+    <span className="home-card__title">I am building on it</span>
+    <span className="home-card__body">
+      Architecture, domain patterns, multi-tenancy, money handling, testing and the
+      conventions that keep the codebase consistent.
+    </span>
+  </Link>
+  <Link className="home-card" to="/docs/api/authentication">
+    <span className="home-card__title">I am integrating</span>
+    <span className="home-card__body">
+      Token-authenticated REST API for every module, with conventions, examples and
+      rate limits.
+    </span>
+  </Link>
+  <Link className="home-card" to="/docs/operations/deployment">
+    <span className="home-card__title">I am deploying it</span>
+    <span className="home-card__body">
+      Environment reference, queues, storage, mail and production deployment guidance.
+    </span>
+  </Link>
+  <Link className="home-card" to="/docs/contributing/contributing">
+    <span className="home-card__title">I want to contribute</span>
+    <span className="home-card__body">
+      Development workflow, coding and documentation conventions, and the community
+      policies.
+    </span>
+  </Link>
+</div>
+
+<h2 className="home-section-title">What is inside</h2>
+
+| Capability | What you get |
+| :--- | :--- |
+| **Company and team** | Single database multi-tenancy with `company_id` scoping, staff invitations and seven staff roles. |
+| **CRM** | Clients, a lead pipeline and supplier records. |
+| **Projects and field** | Projects, tasks, daily logs, site photos, documents, time tracking, equipment and maintenance logs. |
+| **Commercial and finance** | Contracts, cost codes, BOQ (with Excel import), budgets, progress reports, progress billings and payments, invoices, expenses, change orders and purchase orders. |
+| **Client portal** | A separate external login where clients track progress, approve change orders and settle invoices. |
+| **AI assistant** | A conversational agent that can read and change company data, with human approval for risky actions. |
+| **REST API** | Sanctum token authentication and JSON endpoints for every module. |
+
+:::tip New to the project?
+Skim the [introduction](/docs/intro) first — it maps every persona to the section of the
+documentation they need.
+:::
