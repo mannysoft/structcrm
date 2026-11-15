@@ -1,7 +1,7 @@
 ---
 title: Roles and permissions
 sidebar_position: 2
-description: The seven staff roles, the modules each can use, and how permissions are enforced.
+description: The seeded staff roles, the modules each can use, and how permissions are enforced.
 ---
 
 # Roles and permissions

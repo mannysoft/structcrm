@@ -8,7 +8,7 @@ description: The roles, permissions and demo accounts that seeding creates, and 
 
 ## Roles and permissions
 
-`RolePermissionSeeder` creates every permission and assigns it to the seven staff roles.
+`RolePermissionSeeder` creates every permission and assigns it to the eight staff roles.
 
 Permissions are coarse-grained and mirrored by the model policies:
 

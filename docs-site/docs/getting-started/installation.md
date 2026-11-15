@@ -46,7 +46,7 @@ install and build in one command. It does **not** seed roles or demo users, so r
    `database` sessions/cache/queue and the `log` mail driver.
 3. **`php artisan key:generate`** — writes `APP_KEY`, required for encryption and sessions.
 4. **`php artisan migrate --seed`** — creates the schema and runs `DatabaseSeeder`, which
-   installs the seven staff roles plus demo users.
+   installs the staff roles and permissions plus demo users.
 5. **`npm install && npm run build`** — compiles Tailwind 4 and the Vite entrypoints into
    `public/build`. Without this the app throws
    `Illuminate\Foundation\ViteException: Unable to locate file in Vite manifest`.

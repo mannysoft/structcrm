@@ -32,7 +32,7 @@ overhead of an enterprise suite.
 
 | Area | Capabilities |
 | :--- | :--- |
-| **Company & team** | Single-database multi-tenancy enforced by a global tenant scope, staff invitations by email, seven staff roles with granular `manage_*` permissions |
+| **Company & team** | Single-database multi-tenancy enforced by a global tenant scope, staff invitations by email, eight seeded staff roles with granular `manage_*` permissions |
 | **CRM** | Clients, leads with a status pipeline, suppliers |
 | **Projects & field** | Projects, tasks, daily logs, site photos, documents, time tracking, equipment, maintenance logs |
 | **Commercial** | Contracts, cost codes, bills of quantities (manual or Excel import), budgets and budget revisions, progress reports, progress billings and payments, estimates |

@@ -88,9 +88,16 @@ StructCRM caches little: permissions (spatie), the compiled config/routes/views,
 
 ## Sessions
 
-Sessions use the database driver. The `sessions` table grows until Laravel's lottery clears
-it (`session.lottery`). On high-traffic deployments consider Redis or a scheduled
-`php artisan session:clear` if you cannot tolerate the retention.
+Sessions use the database driver. Laravel prunes expired rows probabilistically
+(`session.lottery`), so the `sessions` table can still grow on busy deployments. Either move
+sessions to Redis, or schedule a cleanup of your own:
+
+```php
+// routes/console.php
+Schedule::call(fn () => DB::table('sessions')
+    ->where('last_activity', '<', now()->subDays(7)->timestamp)
+    ->delete())->daily();
+```
 
 ## A working production topology
 

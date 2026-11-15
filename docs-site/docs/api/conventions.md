@@ -107,5 +107,7 @@ Delete is soft for most models: the row keeps `deleted_at` and disappears from r
 
 ## Content type
 
-Send `Content-Type: application/json` and `Accept: application/json`. File uploads are not
-supported through the API today — use the web UI for photos, documents and receipts.
+Send `Content-Type: application/json` and `Accept: application/json` for everything except
+the upload endpoints (project photos, documents, expense receipts), which expect
+`multipart/form-data`. Files are written to the default filesystem disk by the form request
+(`project-photos/`, `documents/`, `receipts/`).
